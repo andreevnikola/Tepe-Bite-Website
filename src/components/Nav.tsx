@@ -6,6 +6,7 @@ import { useAtom } from 'jotai';
 import { langAtom, type Lang } from '@/store/lang';
 import { IconArrow, IconMenu, IconClose, IconShop } from '@/components/icons';
 
+
 export default function Nav() {
   const [lang, setLang] = useAtom(langAtom);
   const [scrolled, setScrolled] = useState(false);
@@ -26,19 +27,20 @@ export default function Nav() {
     lang === 'bg'
       ? [
           ['/', 'Начало'],
-          [`${p}#produkt`, 'Продуктът'],
+          ['/product', 'Продуктът'],
           ['/initiatives', 'Нашите инициативи'],
           [`${p}#za-nas`, 'За нас'],
         ]
       : [
           ['/', 'Home'],
-          [`${p}#produkt`, 'The Product'],
+          ['/product', 'The Product'],
           ['/initiatives', 'Our Initiatives'],
           [`${p}#za-nas`, 'About'],
         ];
 
   const isActive = (href: string) => {
     if (href === '/') return isHome;
+    if (href === '/product') return pathname === '/product';
     if (href === '/initiatives') return pathname === '/initiatives';
     return false;
   };
