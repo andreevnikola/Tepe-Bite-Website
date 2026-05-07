@@ -1,26 +1,26 @@
-'use client';
-import Image from 'next/image';
-import { useAtomValue } from 'jotai';
-import { langAtom } from '@/store/lang';
+"use client";
+import { langAtom } from "@/store/lang";
+import { useAtomValue } from "jotai";
+import Image from "next/image";
 
 export default function InitiativesPromo() {
   const lang = useAtomValue(langAtom);
 
   const stats = [
     {
-      num: '1+',
-      bg: 'активна инициатива',
-      en: 'active initiative',
+      num: "1+",
+      bg: "активна инициатива",
+      en: "active initiative",
     },
     {
-      num: '100%',
-      bg: 'прозрачност',
-      en: 'transparency',
+      num: "100%",
+      bg: "прозрачност",
+      en: "transparency",
     },
     {
-      num: 'Пловдив',
-      bg: 'вдъхновение',
-      en: 'inspiration',
+      num: "Пловдив",
+      bg: "вдъхновение",
+      en: "inspiration",
     },
   ];
 
@@ -29,22 +29,22 @@ export default function InitiativesPromo() {
       id="initsiatiви"
       className="section-spacing"
       style={{
-        background: 'var(--plum)',
-        color: 'white',
-        position: 'relative',
-        overflow: 'hidden',
+        background: "var(--plum)",
+        color: "white",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       {/* Hills motif */}
       <svg
         style={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          width: '100%',
+          width: "100%",
           opacity: 0.08,
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
         viewBox="0 0 1200 200"
         preserveAspectRatio="none"
@@ -64,61 +64,61 @@ export default function InitiativesPromo() {
         width={320}
         height={320}
         style={{
-          position: 'absolute',
+          position: "absolute",
           right: -40,
           bottom: -30,
           width: 320,
-          height: 'auto',
+          height: "auto",
           opacity: 0.07,
-          filter: 'brightness(0) invert(1)',
-          pointerEvents: 'none',
-          userSelect: 'none',
+          filter: "brightness(0) invert(1)",
+          pointerEvents: "none",
+          userSelect: "none",
         }}
       />
 
       {/* Glow blob */}
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: -60,
           right: -60,
           width: 300,
           height: 300,
-          borderRadius: '50%',
-          background: 'oklch(88% 0.06 315 / 0.12)',
-          filter: 'blur(60px)',
+          borderRadius: "50%",
+          background: "oklch(88% 0.06 315 / 0.12)",
+          filter: "blur(60px)",
         }}
       />
 
       <div
         className="section-inner"
-        style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}
+        style={{ textAlign: "center", position: "relative", zIndex: 1 }}
       >
         <div
           className="label-tag"
-          style={{ color: 'oklch(85% 0.08 315)', marginBottom: 20 }}
+          style={{ color: "oklch(85% 0.08 315)", marginBottom: 20 }}
         >
-          {lang === 'bg' ? 'Нашите инициативи' : 'Our Initiatives'}
+          {lang === "bg" ? "Нашите инициативи" : "Our Initiatives"}
         </div>
 
         <h2
           className="heading-lg"
-          style={{ color: 'white', maxWidth: 620, margin: '0 auto 20px' }}
+          style={{ color: "white", maxWidth: 730, margin: "0 auto 20px" }}
         >
-          {lang === 'bg' ? (
+          {lang === "bg" ? (
             <>
-              Виж как{' '}
-              <span style={{ color: 'var(--caramel)', fontStyle: 'italic' }}>
+              Виж как{" "}
+              <span style={{ color: "var(--caramel)", fontStyle: "italic" }}>
                 ТЕПЕ bite
-              </span>{' '}
+              </span>{" "}
               подпомага Пловдив
             </>
           ) : (
             <>
-              See how{' '}
-              <span style={{ color: 'var(--caramel)', fontStyle: 'italic' }}>
+              See how{" "}
+              <span style={{ color: "var(--caramel)", fontStyle: "italic" }}>
                 ТЕПЕ bite
-              </span>{' '}
+              </span>{" "}
               supports Plovdiv
             </>
           )}
@@ -126,35 +126,35 @@ export default function InitiativesPromo() {
 
         <p
           style={{
-            color: 'oklch(88% 0.03 310)',
-            maxWidth: 560,
-            margin: '0 auto 40px',
-            fontSize: '1.05rem',
+            color: "oklch(88% 0.03 310)",
+            maxWidth: 750,
+            margin: "0 auto 40px",
+            fontSize: "1.05rem",
           }}
         >
-          {lang === 'bg' ? (
+          {lang === "bg" ? (
             <>
-              Прозрачни сме за резултатите от всяка инициатива.{' '}
+              Прозрачни сме за резултатите ни.{" "}
               <a
                 href="/initiatives.html"
                 style={{
-                  color: 'var(--caramel)',
-                  textDecoration: 'underline',
+                  color: "var(--caramel)",
+                  textDecoration: "underline",
                   textUnderlineOffset: 3,
                 }}
               >
-                Виж нашите инициативи
+                Разгледай нашите социални проекти
               </a>
               .
             </>
           ) : (
             <>
-              We are transparent about our results.{' '}
+              We are transparent about our results.{" "}
               <a
                 href="/initiatives.html"
                 style={{
-                  color: 'var(--caramel)',
-                  textDecoration: 'underline',
+                  color: "var(--caramel)",
+                  textDecoration: "underline",
                   textUnderlineOffset: 3,
                 }}
               >
@@ -167,21 +167,21 @@ export default function InitiativesPromo() {
 
         <div
           style={{
-            display: 'flex',
+            display: "flex",
             gap: 48,
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            justifyContent: "center",
+            flexWrap: "wrap",
             marginBottom: 48,
           }}
         >
           {stats.map((s, i) => (
-            <div key={i} style={{ textAlign: 'center' }}>
+            <div key={i} style={{ textAlign: "center" }}>
               <div
                 style={{
-                  fontFamily: 'var(--font-head)',
-                  fontSize: '2.5rem',
+                  fontFamily: "var(--font-head)",
+                  fontSize: "2.5rem",
                   fontWeight: 700,
-                  color: 'var(--caramel)',
+                  color: "var(--caramel)",
                   lineHeight: 1,
                 }}
               >
@@ -189,12 +189,12 @@ export default function InitiativesPromo() {
               </div>
               <div
                 style={{
-                  color: 'oklch(78% 0.04 310)',
-                  fontSize: '0.85rem',
+                  color: "oklch(78% 0.04 310)",
+                  fontSize: "0.85rem",
                   marginTop: 6,
                 }}
               >
-                {lang === 'bg' ? s.bg : s.en}
+                {lang === "bg" ? s.bg : s.en}
               </div>
             </div>
           ))}
