@@ -1,15 +1,15 @@
-import Providers from '@/components/Providers';
-import Nav from '@/components/Nav';
-import Hero from '@/components/Hero';
-import WhySection from '@/components/WhySection';
-import ProductSection from '@/components/ProductSection';
-import InitiativesPromo from '@/components/InitiativesPromo';
-import FirstInitiative from '@/components/FirstInitiative';
-import HowItHelps from '@/components/HowItHelps';
-import TrustSection from '@/components/TrustSection';
-import OrderCTA from '@/components/OrderCTA';
-import Community from '@/components/Community';
-import Footer from '@/components/Footer';
+import Community from "@/components/Community";
+import FirstInitiative from "@/components/FirstInitiative";
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
+import HowItHelps from "@/components/HowItHelps";
+import InitiativesPromo from "@/components/InitiativesPromo";
+import Nav from "@/components/Nav";
+import OrderCTA from "@/components/OrderCTA";
+import ProductSection from "@/components/ProductSection";
+import Providers from "@/components/Providers";
+import TrustSection from "@/components/TrustSection";
+import WhySection from "@/components/WhySection";
 
 export default function Home() {
   return (

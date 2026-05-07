@@ -4,12 +4,15 @@ import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
 
-const HERO_HEADLINE_BG = "Вкусно за теб. Смислено за общността.";
-const HERO_HEADLINE_EN = "Delicious for you. Thoughtful for the community.";
+const HERO_HEADLINE_BG = ["Вкусно за теб.", "Смислено за общността."];
+const HERO_HEADLINE_EN = [
+  "Delicious for you.",
+  "Thoughtful for the community.",
+];
 
 const badges = {
   bg: [
-    { val: "5.7 g", label: "нетни въглехидрати" },
+    { val: "5.7 g", label: "въглехидрати" },
     { val: "8 g", label: "фибри" },
     { val: "7 g", label: "протеин" },
     { val: "1.4 g", label: "захари" },
@@ -34,7 +37,7 @@ export default function Hero() {
         background: `radial-gradient(ellipse 80% 60% at 60% 30%, oklch(88% 0.05 315 / 0.22), transparent), var(--bg)`,
         display: "flex",
         alignItems: "center",
-        paddingTop: 100,
+        paddingTop: 150,
         paddingBottom: 80,
         paddingLeft: "clamp(20px, 5vw, 80px)",
         paddingRight: "clamp(20px, 5vw, 80px)",
@@ -138,14 +141,19 @@ export default function Hero() {
               />
             </div>
 
-            <h1 className="heading-xl" style={{ marginBottom: 24 }}>
-              {lang === "bg" ? HERO_HEADLINE_BG : HERO_HEADLINE_EN}
+            <h1 className="heading-xl font-bold leading-tight mb-8">
+              <span className="block whitespace-nowrap !text-[clamp(24px,9vw,54px)]">
+                {lang === "bg" ? HERO_HEADLINE_BG[0] : HERO_HEADLINE_EN[0]}
+              </span>
+              <span className="block whitespace-nowrap !text-[clamp(24px,7vw,48px)]">
+                {lang === "bg" ? HERO_HEADLINE_BG[1] : HERO_HEADLINE_EN[1]}
+              </span>
             </h1>
 
             <p
+              className="text-justify w-full"
               style={{
                 fontSize: "clamp(1rem, 1.5vw, 1.15rem)",
-                maxWidth: 500,
                 marginBottom: 40,
                 zIndex: 100,
               }}
@@ -186,7 +194,10 @@ export default function Hero() {
                 <IconShop />
                 {lang === "bg" ? "Поръчай" : "Order Now"}
               </a>
-              <a href="#initsiatiви" className="btn btn-secondary">
+              <a
+                href="#initsiatiви"
+                className="btn btn-secondary max-lg:grow justify-center"
+              >
                 {lang === "bg" ? "Виж инициативите" : "See Initiatives"}
                 <IconArrow />
               </a>
@@ -197,6 +208,7 @@ export default function Hero() {
               {badgeList.map(({ val, label }, i) => (
                 <div
                   key={i}
+                  className="max-lg:grow"
                   style={{
                     background: i === 4 ? "var(--plum)" : "var(--surface)",
                     color: i === 4 ? "white" : "var(--text)",
@@ -296,7 +308,7 @@ export default function Hero() {
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 970px) {
           .hero-grid {
             grid-template-columns: 1fr !important;
             display: flex !important;

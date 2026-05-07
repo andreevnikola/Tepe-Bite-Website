@@ -64,15 +64,15 @@ export default function TrustSection() {
 
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            display: "flex",
+            flexWrap: "wrap",
             gap: 24,
           }}
         >
           {items.map((c, i) => (
             <div
               key={i}
-              className={`card ${i === items.length - 1 ? "trust-last" : ""}`}
+              className={`card trust-card ${i === items.length - 1 ? "trust-last" : ""}`}
               style={{ padding: "32px 28px" }}
             >
               <div
@@ -109,9 +109,23 @@ export default function TrustSection() {
       </div>
 
       <style>{`
-        @media (max-width: 859px) {
-          .trust-last {
-            grid-column: 1 / -1;
+        .trust-card {
+          flex: 1 1 calc((100% - 48px) / 3);
+        }
+
+        @media (max-width: 1000px) {
+          .trust-card {
+            flex: 1 1 calc((100% - 24px) / 2);
+          }
+
+          .trust-card.trust-last {
+            flex-basis: 100%;
+          }
+        }
+
+        @media (max-width: 650px) {
+          .trust-card {
+            flex-basis: 100%;
           }
         }
       `}</style>

@@ -1,7 +1,6 @@
 "use client";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
 
 export default function InitiativesPromo() {
   const lang = useAtomValue(langAtom);
@@ -35,6 +34,28 @@ export default function InitiativesPromo() {
         overflow: "hidden",
       }}
     >
+      {/* Solid silhouette logo sticking out behind wave */}
+      <div
+        style={{
+          position: "absolute",
+          right: -60,
+          bottom: -10,
+          width: "50vw",
+          maxWidth: 350,
+          minWidth: 250,
+          height: "auto",
+          aspectRatio: "1 / 1",
+          backgroundColor: "rgb(82, 51, 95)",
+          pointerEvents: "none",
+          userSelect: "none",
+          zIndex: 0,
+          maskImage: "url(/logo-nav.png)",
+          maskSize: "contain",
+          maskPosition: "center",
+          maskRepeat: "no-repeat",
+        }}
+      />
+
       {/* Hills motif */}
       <svg
         style={{
@@ -43,8 +64,9 @@ export default function InitiativesPromo() {
           left: 0,
           right: 0,
           width: "100%",
-          opacity: 0.08,
+          opacity: 1,
           pointerEvents: "none",
+          zIndex: 1,
         }}
         viewBox="0 0 1200 200"
         preserveAspectRatio="none"
@@ -52,29 +74,9 @@ export default function InitiativesPromo() {
       >
         <path
           d="M0 200 L0 160 Q200 80 400 120 Q600 160 800 90 Q1000 30 1200 80 L1200 200 Z"
-          fill="white"
+          fill="rgb(82, 51, 95)"
         />
       </svg>
-
-      {/* Faded brand mark */}
-      <Image
-        src="/logo-full.png"
-        alt=""
-        aria-hidden="true"
-        width={320}
-        height={320}
-        style={{
-          position: "absolute",
-          right: -40,
-          bottom: -30,
-          width: 320,
-          height: "auto",
-          opacity: 0.07,
-          filter: "brightness(0) invert(1)",
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-      />
 
       {/* Glow blob */}
       <div
@@ -103,7 +105,7 @@ export default function InitiativesPromo() {
 
         <h2
           className="heading-lg"
-          style={{ color: "white", maxWidth: 730, margin: "0 auto 20px" }}
+          style={{ color: "white", maxWidth: 880, margin: "0 auto 20px" }}
         >
           {lang === "bg" ? (
             <>
@@ -124,7 +126,7 @@ export default function InitiativesPromo() {
           )}
         </h2>
 
-        <p
+        <span
           style={{
             color: "oklch(88% 0.03 310)",
             maxWidth: 750,
@@ -134,7 +136,9 @@ export default function InitiativesPromo() {
         >
           {lang === "bg" ? (
             <>
-              Прозрачни сме за резултатите ни.{" "}
+              <p style={{ color: "oklch(88% 0.03 310)" }}>
+                Прозрачни сме за резултатите ни.
+              </p>
               <a
                 href="/initiatives.html"
                 style={{
@@ -163,9 +167,10 @@ export default function InitiativesPromo() {
               .
             </>
           )}
-        </p>
+        </span>
 
         <div
+          className="mt-16 md:mt-8"
           style={{
             display: "flex",
             gap: 48,

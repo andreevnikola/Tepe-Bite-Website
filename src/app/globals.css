@@ -66,12 +66,12 @@
 @layer utilities {
   .heading-xl {
     font-family: var(--font-head);
-    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-    line-height: 1.12;
+    font-size: clamp(2rem, 4.8vw, 3.2rem);
+    line-height: 1.15;
     color: var(--plum);
     font-weight: 900;
     letter-spacing: -0.02em;
-    text-wrap: pretty;
+    text-wrap: balance;
   }
 
   .heading-lg {

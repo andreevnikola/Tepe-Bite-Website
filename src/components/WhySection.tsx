@@ -151,15 +151,15 @@ export default function WhySection() {
         {/* Pillar cards */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            display: "flex",
+            flexWrap: "wrap",
             gap: 24,
           }}
         >
           {items.map((p, i) => (
             <div
               key={i}
-              className={`card w-full ${i === items.length - 1 ? "pillar-last" : ""}`}
+              className={`card pillar-card ${i === items.length - 1 ? "pillar-last" : ""}`}
               style={{
                 padding: "40px 32px",
                 textAlign: "left",
@@ -193,9 +193,23 @@ export default function WhySection() {
       </div>
 
       <style>{`
-        @media (max-width: 926px) {
-          .pillar-last {
-            grid-column: 1 / -1;
+        .pillar-card {
+          flex: 1 1 calc((100% - 48px) / 3);
+        }
+
+        @media (max-width: 1000px) {
+          .pillar-card {
+            flex: 1 1 calc((100% - 24px) / 2);
+          }
+
+          .pillar-card.pillar-last {
+            flex-basis: 100%;
+          }
+        }
+
+        @media (max-width: 650px) {
+          .pillar-card {
+            flex-basis: 100%;
           }
         }
 
