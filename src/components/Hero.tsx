@@ -1,25 +1,24 @@
-'use client';
-import Image from 'next/image';
-import { useAtomValue } from 'jotai';
-import { langAtom } from '@/store/lang';
-import { IconShop, IconArrow } from '@/components/icons';
+"use client";
+import { IconArrow, IconShop } from "@/components/icons";
+import { langAtom } from "@/store/lang";
+import { useAtomValue } from "jotai";
+import Image from "next/image";
 
-const HERO_HEADLINE = 'Вкусно за теб. Смислено за общността.';
+const HERO_HEADLINE_BG = "Вкусно за теб. Смислено за общността.";
+const HERO_HEADLINE_EN = "Delicious for you. Thoughtful for the community.";
 
 const badges = {
   bg: [
-    { val: '5.7 g', label: 'нетни въглехидрати' },
-    { val: '8 g', label: 'фибри' },
-    { val: '7 g', label: 'протеин' },
-    { val: '1.4 g', label: 'захари' },
-    { val: 'Пловдив', label: '🏔' },
+    { val: "5.7 g", label: "нетни въглехидрати" },
+    { val: "8 g", label: "фибри" },
+    { val: "7 g", label: "протеин" },
+    { val: "1.4 g", label: "захари" },
   ],
   en: [
-    { val: '5.7 g', label: 'net carbs' },
-    { val: '8 g', label: 'fibre' },
-    { val: '7 g', label: 'protein' },
-    { val: '1.4 g', label: 'sugars' },
-    { val: 'Plovdiv', label: '🏔' },
+    { val: "5.7 g", label: "net carbs" },
+    { val: "8 g", label: "fibre" },
+    { val: "7 g", label: "protein" },
+    { val: "1.4 g", label: "sugars" },
   ],
 };
 
@@ -31,16 +30,16 @@ export default function Hero() {
     <section
       id="hero"
       style={{
-        minHeight: '100vh',
+        minHeight: "100vh",
         background: `radial-gradient(ellipse 80% 60% at 60% 30%, oklch(88% 0.05 315 / 0.22), transparent), var(--bg)`,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         paddingTop: 100,
         paddingBottom: 80,
-        paddingLeft: 'clamp(20px, 5vw, 80px)',
-        paddingRight: 'clamp(20px, 5vw, 80px)',
-        position: 'relative',
-        overflow: 'hidden',
+        paddingLeft: "clamp(20px, 5vw, 80px)",
+        paddingRight: "clamp(20px, 5vw, 80px)",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       {/* Background blobs */}
@@ -49,7 +48,7 @@ export default function Hero() {
         style={{
           width: 480,
           height: 480,
-          background: 'oklch(88% 0.06 315)',
+          background: "oklch(88% 0.06 315)",
           top: -100,
           right: -60,
         }}
@@ -59,22 +58,22 @@ export default function Hero() {
         style={{
           width: 320,
           height: 320,
-          background: 'oklch(88% 0.08 55)',
+          background: "oklch(88% 0.08 55)",
           bottom: -80,
-          left: '10%',
+          left: "10%",
         }}
       />
 
       {/* Hill silhouette */}
       <svg
         style={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          width: '100%',
+          width: "100%",
           opacity: 0.06,
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
         viewBox="0 0 1200 200"
         preserveAspectRatio="none"
@@ -86,13 +85,13 @@ export default function Hero() {
         />
       </svg>
 
-      <div className="section-inner" style={{ width: '100%' }}>
+      <div className="section-inner z-100" style={{ width: "100%" }}>
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto',
-            gap: 'clamp(40px, 6vw, 100px)',
-            alignItems: 'center',
+            display: "grid",
+            gridTemplateColumns: "1fr auto",
+            gap: "clamp(40px, 6vw, 100px)",
+            alignItems: "center",
           }}
           className="hero-grid"
         >
@@ -102,58 +101,60 @@ export default function Hero() {
             <div
               style={{
                 marginBottom: 20,
-                display: 'flex',
-                alignItems: 'center',
+                display: "flex",
+                alignItems: "center",
                 gap: 8,
-                fontFamily: 'var(--font-head)',
-                fontSize: '0.85rem',
+                fontFamily: "var(--font-head)",
+                fontSize: "0.85rem",
                 fontWeight: 600,
-                color: 'var(--caramel)',
-                letterSpacing: '0.04em',
+                color: "var(--caramel)",
+                letterSpacing: "0.04em",
+                zIndex: 100,
               }}
             >
               <span
                 style={{
                   width: 24,
                   height: 2,
-                  background: 'var(--caramel)',
-                  display: 'inline-block',
+                  background: "var(--caramel)",
+                  display: "inline-block",
                   borderRadius: 10,
                   flexShrink: 0,
                 }}
               />
               <span>
-                {lang === 'bg'
-                  ? 'Барче с характер, вдъхновено от Пловдив'
-                  : 'A Bar with Character, Inspired by Plovdiv'}
+                {lang === "bg"
+                  ? "Барче с характер, вдъхновено от Пловдив"
+                  : "A Bar with Character, Inspired by Plovdiv"}
               </span>
               <span
                 style={{
                   flex: 1,
                   height: 2,
-                  background: 'var(--caramel)',
-                  display: 'inline-block',
+                  background: "var(--caramel)",
+                  display: "inline-block",
                   borderRadius: 10,
                 }}
               />
             </div>
 
             <h1 className="heading-xl" style={{ marginBottom: 24 }}>
-              {HERO_HEADLINE}
+              {lang === "bg" ? HERO_HEADLINE_BG : HERO_HEADLINE_EN}
             </h1>
 
             <p
               style={{
-                fontSize: 'clamp(1rem, 1.5vw, 1.15rem)',
+                fontSize: "clamp(1rem, 1.5vw, 1.15rem)",
                 maxWidth: 500,
                 marginBottom: 40,
+                zIndex: 100,
               }}
             >
-              {lang === 'bg' ? (
+              {lang === "bg" ? (
                 <>
-                  ТЕПЕ bite е барче със солен карамел, създадено в{' '}
+                  ТЕПЕ bite е барче със солен карамел, създадено в{" "}
                   <strong>Пловдив</strong> — с ниско съдържание на нетни
-                  въглехидрати, високо съдържание на фибри и{' '}
+                  въглехидрати, високо съдържание на фибри и{" "}
                   <strong>
                     <u>мисия зад всяка покупка</u>
                   </strong>
@@ -161,9 +162,9 @@ export default function Hero() {
                 </>
               ) : (
                 <>
-                  ТЕПЕ bite is a salted caramel bar made in{' '}
+                  ТЕПЕ bite is a salted caramel bar made in{" "}
                   <strong>Plovdiv</strong> — low in net carbs, high in fibre,
-                  with a{' '}
+                  with a{" "}
                   <strong>
                     <u>social mission behind every purchase</u>
                   </strong>
@@ -175,56 +176,57 @@ export default function Hero() {
             {/* CTA buttons */}
             <div
               style={{
-                display: 'flex',
+                display: "flex",
                 gap: 14,
-                flexWrap: 'wrap',
+                flexWrap: "wrap",
                 marginBottom: 48,
               }}
             >
               <a href="#order" className="btn btn-primary">
                 <IconShop />
-                {lang === 'bg' ? 'Поръчай' : 'Order Now'}
+                {lang === "bg" ? "Поръчай" : "Order Now"}
               </a>
               <a href="#initsiatiви" className="btn btn-secondary">
-                {lang === 'bg' ? 'Виж инициативите' : 'See Initiatives'}
+                {lang === "bg" ? "Виж инициативите" : "See Initiatives"}
                 <IconArrow />
               </a>
             </div>
 
             {/* Badges */}
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               {badgeList.map(({ val, label }, i) => (
                 <div
                   key={i}
                   style={{
-                    background: i === 4 ? 'var(--plum)' : 'var(--surface)',
-                    color: i === 4 ? 'white' : 'var(--text)',
+                    background: i === 4 ? "var(--plum)" : "var(--surface)",
+                    color: i === 4 ? "white" : "var(--text)",
                     borderRadius: i === 4 ? 100 : 14,
-                    padding: '10px 16px',
-                    boxShadow: 'var(--shadow)',
-                    border: '1px solid var(--border)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                    padding: "10px 16px",
+                    boxShadow: "var(--shadow)",
+                    border: "1px solid var(--border)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     gap: 2,
                   }}
                 >
                   <span
                     style={{
-                      fontFamily: 'var(--font-head)',
+                      fontFamily: "var(--font-head)",
                       fontWeight: 700,
-                      fontSize: '1.1rem',
-                      color: i === 4 ? 'white' : 'var(--plum)',
+                      fontSize: "1.1rem",
+                      color: i === 4 ? "white" : "var(--plum)",
                     }}
                   >
                     {val}
                   </span>
                   <span
                     style={{
-                      fontSize: '0.72rem',
+                      fontSize: "0.72rem",
                       fontWeight: 500,
-                      color: i === 4 ? 'rgba(255,255,255,0.8)' : 'var(--text-soft)',
-                      letterSpacing: '0.04em',
+                      color:
+                        i === 4 ? "rgba(255,255,255,0.8)" : "var(--text-soft)",
+                      letterSpacing: "0.04em",
                     }}
                   >
                     {label}
@@ -237,22 +239,22 @@ export default function Hero() {
           {/* Right: product visual */}
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'relative',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
             }}
           >
             {/* Radial glow */}
             <div
               style={{
                 background:
-                  'radial-gradient(circle, oklch(90% 0.06 315 / 0.35), transparent 70%)',
-                width: 'clamp(280px, 34vw, 480px)',
-                height: 'clamp(280px, 34vw, 480px)',
-                borderRadius: '50%',
-                position: 'absolute',
-                pointerEvents: 'none',
+                  "radial-gradient(circle, oklch(90% 0.06 315 / 0.35), transparent 70%)",
+                width: "clamp(280px, 34vw, 480px)",
+                height: "clamp(280px, 34vw, 480px)",
+                borderRadius: "50%",
+                position: "absolute",
+                pointerEvents: "none",
               }}
             />
             {/* Faded logo behind bar */}
@@ -263,14 +265,14 @@ export default function Hero() {
               width={380}
               height={380}
               style={{
-                position: 'absolute',
-                width: 'clamp(200px, 28vw, 380px)',
-                height: 'auto',
+                position: "absolute",
+                width: "clamp(200px, 28vw, 380px)",
+                height: "auto",
                 opacity: 0.13,
-                filter: 'saturate(0) brightness(0.3)',
-                pointerEvents: 'none',
+                filter: "saturate(0) brightness(0.3)",
+                pointerEvents: "none",
                 zIndex: 0,
-                transform: 'translateY(10%)',
+                transform: "translateY(-10%)",
               }}
             />
             {/* Product bar photo */}
@@ -280,13 +282,13 @@ export default function Hero() {
               width={500}
               height={500}
               priority
-              className="animate-float"
+              className="animate-float -mb-4"
               style={{
-                width: 'clamp(240px, 32vw, 460px)',
-                height: 'auto',
-                position: 'relative',
+                width: "clamp(240px, 32vw, 460px)",
+                height: "auto",
+                position: "relative",
                 zIndex: 1,
-                filter: 'drop-shadow(0 24px 56px oklch(32% 0.09 315 / 0.28))',
+                filter: "drop-shadow(0 24px 56px oklch(32% 0.09 315 / 0.28))",
               }}
             />
           </div>

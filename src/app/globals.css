@@ -1,36 +1,40 @@
 @import "tailwindcss";
 
 @layer base {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
 
   :root {
-    --bg:         oklch(97% 0.015 80);
-    --surface:    oklch(99% 0.008 75);
-    --surface2:   oklch(96% 0.018 78);
-    --plum:       oklch(32% 0.09 315);
-    --plum-mid:   oklch(48% 0.09 315);
-    --plum-lt:    oklch(88% 0.04 315);
-    --caramel:    oklch(66% 0.16 52);
+    --bg: oklch(97% 0.015 80);
+    --surface: oklch(99% 0.008 75);
+    --surface2: oklch(96% 0.018 78);
+    --plum: oklch(32% 0.09 315);
+    --plum-mid: oklch(48% 0.09 315);
+    --plum-lt: oklch(88% 0.04 315);
+    --caramel: oklch(66% 0.16 52);
     --caramel-lt: oklch(93% 0.06 70);
-    --text:       oklch(18% 0.04 315);
-    --text-mid:   oklch(42% 0.05 310);
-    --text-soft:  oklch(62% 0.04 295);
-    --border:     oklch(90% 0.02 80);
-    --shadow:     0 2px 16px oklch(20% 0.04 310 / 0.08);
-    --shadow-lg:  0 8px 40px oklch(20% 0.04 310 / 0.12);
+    --text: oklch(18% 0.04 315);
+    --text-mid: oklch(42% 0.05 310);
+    --text-soft: oklch(62% 0.04 295);
+    --border: oklch(90% 0.02 80);
+    --shadow: 0 2px 16px oklch(20% 0.04 310 / 0.08);
+    --shadow-lg: 0 8px 40px oklch(20% 0.04 310 / 0.12);
     --r-sm: 12px;
     --r-md: 20px;
     --r-lg: 32px;
     --r-xl: 48px;
-    --font-head: 'Playfair Display', Georgia, serif;
-    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-head: "Playfair Display", Georgia, serif;
+    --font-body: "DM Sans", system-ui, sans-serif;
   }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
 
   body {
     background: var(--bg);
@@ -42,11 +46,21 @@
     overflow-x: hidden;
   }
 
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--plum-lt); border-radius: 10px; }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--plum-lt);
+    border-radius: 10px;
+  }
 
-  p { color: var(--text-mid); line-height: 1.72; }
+  p {
+    color: var(--text-mid);
+    line-height: 1.72;
+  }
 }
 
 @layer utilities {
@@ -215,7 +229,9 @@
   }
 
   .card-hover {
-    transition: transform 0.22s, box-shadow 0.22s;
+    transition:
+      transform 0.22s,
+      box-shadow 0.22s;
   }
   .card-hover:hover {
     transform: translateY(-4px);
@@ -224,13 +240,25 @@
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
 }
 
 @keyframes float-bar {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-14px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
 }
 
 .animate-pulse-dot {
@@ -254,4 +282,8 @@
   .hamburger {
     display: flex !important;
   }
+}
+
+.card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
