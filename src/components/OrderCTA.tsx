@@ -53,7 +53,7 @@ export default function OrderCTA() {
             </h2>
             <p
               className="order-desc"
-              style={{ fontSize: "1.05rem", maxWidth: 480, marginBottom: 32 }}
+              style={{ fontSize: "1.05rem", maxWidth: 680, marginBottom: 32 }}
             >
               {lang === "bg"
                 ? "Поръчай барчето със солен карамел и подкрепи първите ни инициативи още сега."
