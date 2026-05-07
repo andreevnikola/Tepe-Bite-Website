@@ -156,7 +156,7 @@ export default function FirstInitiative() {
               ))}
             </div>
 
-            <a href="/initiatives.html" className="btn btn-primary">
+            <a href="/initiatives" className="btn btn-primary">
               {lang === 'bg' ? 'Виж напредъка' : 'View Progress'} <IconArrow />
             </a>
           </div>
