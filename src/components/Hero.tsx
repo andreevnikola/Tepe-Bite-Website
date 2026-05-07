@@ -142,12 +142,34 @@ export default function Hero() {
             </div>
 
             <h1 className="heading-xl font-bold leading-tight mb-8">
-              <span className="block whitespace-nowrap !text-[clamp(24px,9vw,54px)]">
+              {/* <span className="block whitespace-nowrap !text-[clamp(24px,9vw,54px)]">
                 {lang === "bg" ? HERO_HEADLINE_BG[0] : HERO_HEADLINE_EN[0]}
-              </span>
-              <span className="block whitespace-nowrap !text-[clamp(24px,7vw,48px)]">
+              </span> */}
+              {lang === "bg" ? (
+                <span className="block whitespace-nowrap text-[clamp(24px,9vw,54px)]!">
+                  {" "}
+                  {HERO_HEADLINE_BG[0]}{" "}
+                </span>
+              ) : (
+                <span className="block whitespace-nowrap text-[clamp(24px,9vw,54px)]!">
+                  {" "}
+                  {HERO_HEADLINE_EN[0]}{" "}
+                </span>
+              )}
+              {/* <span className="block whitespace-nowrap !text-[clamp(24px,7vw,48px)]">
                 {lang === "bg" ? HERO_HEADLINE_BG[1] : HERO_HEADLINE_EN[1]}
-              </span>
+              </span> */}
+              {lang === "bg" ? (
+                <span className="block whitespace-nowrap text-[clamp(24px,7vw,48px)]!">
+                  {" "}
+                  {HERO_HEADLINE_BG[1]}{" "}
+                </span>
+              ) : (
+                <span className="block whitespace-nowrap text-[clamp(24px,6vw,40px)]!">
+                  {" "}
+                  {HERO_HEADLINE_EN[1]}{" "}
+                </span>
+              )}
             </h1>
 
             <p
