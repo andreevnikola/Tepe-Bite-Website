@@ -18,12 +18,12 @@ function ProductHero({ lang }: { lang: Lang }) {
   return (
     <section
       style={{
-        minHeight: "100vh",
+        height: "fit-content",
         background: `radial-gradient(ellipse 80% 60% at 60% 30%, oklch(88% 0.05 315 / 0.22), transparent), var(--bg)`,
         display: "flex",
         alignItems: "center",
-        paddingTop: 100,
-        paddingBottom: 80,
+        paddingTop: "clamp(120px, 16vh, 200px)",
+        paddingBottom: "clamp(96px, 12vh, 160px)",
         paddingLeft: "clamp(20px, 5vw, 80px)",
         paddingRight: "clamp(20px, 5vw, 80px)",
         position: "relative",
@@ -44,10 +44,10 @@ function ProductHero({ lang }: { lang: Lang }) {
       <div
         className="hero-blob"
         style={{
-          width: 320,
-          height: 320,
+          width: 200,
+          height: 150,
           background: "oklch(88% 0.08 55)",
-          bottom: -80,
+          bottom: -50,
           left: "10%",
         }}
       />
@@ -66,6 +66,7 @@ function ProductHero({ lang }: { lang: Lang }) {
         viewBox="0 0 1200 200"
         preserveAspectRatio="none"
         aria-hidden="true"
+        className="min-lg:-mb-16"
       >
         <path
           d="M0 200 L0 140 Q150 60 300 100 Q450 140 600 80 Q750 20 900 70 Q1050 120 1200 60 L1200 200 Z"
@@ -84,7 +85,7 @@ function ProductHero({ lang }: { lang: Lang }) {
           }}
         >
           {/* Left */}
-          <div style={{ maxWidth: 580 }}>
+          <div style={{ maxWidth: 580 }} className="z-10">
             <div
               style={{
                 marginBottom: 20,
@@ -125,15 +126,31 @@ function ProductHero({ lang }: { lang: Lang }) {
             </div>
 
             <h1 className="heading-xl" style={{ marginBottom: 24 }}>
-              {lang === "bg"
-                ? "Барче с характер. Солен карамел с мисия."
-                : "A bar with character. Salted caramel with purpose."}
+              {lang === "bg" ? (
+                <>
+                  <span className="block whitespace-nowrap text-[clamp(24px,9vw,54px)]!">
+                    Барче с характер.
+                  </span>
+                  <span className="block whitespace-nowrap text-[clamp(24px,7.5vw,50px)]!">
+                    Солен карамел с мисия.
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="block whitespace-nowrap text-[clamp(24px,9vw,54px)]!">
+                    A bar with character.
+                  </span>
+                  <span className="block whitespace-nowrap text-[clamp(24px,7vw,44px)]!">
+                    Salted caramel with purpose.
+                  </span>
+                </>
+              )}
             </h1>
 
             <p
+              className="text-justify w-full"
               style={{
                 fontSize: "clamp(1rem, 1.5vw, 1.15rem)",
-                maxWidth: 500,
                 marginBottom: 40,
               }}
             >
@@ -154,7 +171,10 @@ function ProductHero({ lang }: { lang: Lang }) {
                 <IconShop />
                 {lang === "bg" ? "Поръчай сега" : "Order Now"}
               </a>
-              <a href="#nutrition" className="btn btn-secondary">
+              <a
+                href="#nutrition"
+                className="btn btn-secondary max-lg:grow justify-center"
+              >
                 {lang === "bg" ? "Виж състава" : "See Nutrition"}
                 <IconArrow />
               </a>
@@ -218,7 +238,7 @@ function ProductHero({ lang }: { lang: Lang }) {
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
           .pp-hero-grid {
             grid-template-columns: 1fr !important;
             display: flex !important;
@@ -312,7 +332,7 @@ function ValueStrip({ lang }: { lang: Lang }) {
           {items.map(({ icon, title, sub }, i) => (
             <div
               key={i}
-              className="card card-hover"
+              className="card"
               style={{
                 padding: "24px 20px",
                 display: "flex",
@@ -764,14 +784,7 @@ function NutritionSection({ lang }: { lang: Lang }) {
             <table className="nutr-table">
               <tbody>
                 {fullTable.map((row, i) => (
-                  <tr
-                    key={i}
-                    style={
-                      (row as { highlight?: boolean }).highlight
-                        ? { background: "var(--caramel-lt)" }
-                        : {}
-                    }
-                  >
+                  <tr key={i}>
                     <td
                       style={{
                         color: (row as { highlight?: boolean }).highlight
@@ -806,21 +819,6 @@ function NutritionSection({ lang }: { lang: Lang }) {
                 ))}
               </tbody>
             </table>
-
-            <p
-              style={{
-                marginTop: 20,
-                fontSize: "0.78rem",
-                color: "var(--text-soft)",
-                lineHeight: 1.55,
-                borderTop: "1px solid var(--border)",
-                paddingTop: 14,
-              }}
-            >
-              {lang === "bg"
-                ? "* Информацията е за 1 бар от 40 g. Проверете финалния етикет за най-точна информация."
-                : "* Information is per 1 bar (40 g). Check the final label for the most accurate information."}
-            </p>
           </div>
         </div>
       </div>
@@ -837,31 +835,6 @@ function NutritionSection({ lang }: { lang: Lang }) {
 /* ─── INGREDIENTS ────────────────────────────────────────────────────── */
 
 function IngredientsSection({ lang }: { lang: Lang }) {
-  const chips =
-    lang === "bg"
-      ? [
-          "Бадеми",
-          "Фибри от корен на цикория",
-          "Слънчогледови семки",
-          "Хрупкави протеинови хапки от слънчоглед",
-          "Тиквени семки",
-          "Еритритол",
-          "Лукума",
-          "Натурален карамелен аромат",
-          "Морска сол",
-        ]
-      : [
-          "Almonds",
-          "Chicory root fibre",
-          "Sunflower seeds",
-          "Crunchy sunflower protein bites",
-          "Pumpkin seeds",
-          "Erythritol",
-          "Lucuma",
-          "Natural caramel flavour",
-          "Sea salt",
-        ];
-
   const cards =
     lang === "bg"
       ? [
@@ -975,44 +948,6 @@ function IngredientsSection({ lang }: { lang: Lang }) {
           </p>
         </div>
 
-        {/* Chips */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 10,
-            marginBottom: 56,
-            justifyContent: "center",
-          }}
-        >
-          {chips.map((chip, i) => (
-            <span
-              key={i}
-              style={{
-                background:
-                  i % 3 === 0
-                    ? "var(--plum-lt)"
-                    : i % 3 === 1
-                      ? "var(--caramel-lt)"
-                      : "var(--surface)",
-                color:
-                  i % 3 === 0
-                    ? "var(--plum)"
-                    : i % 3 === 1
-                      ? "oklch(48% 0.12 52)"
-                      : "var(--text-mid)",
-                borderRadius: 100,
-                padding: "8px 18px",
-                fontSize: "0.86rem",
-                fontWeight: 500,
-                border: "1px solid var(--border)",
-              }}
-            >
-              {chip}
-            </span>
-          ))}
-        </div>
-
         {/* Ingredient cards */}
         <div
           className="pp-ingr-grid"
@@ -1024,11 +959,7 @@ function IngredientsSection({ lang }: { lang: Lang }) {
           }}
         >
           {cards.map(({ icon, title, desc }, i) => (
-            <div
-              key={i}
-              className="card card-hover"
-              style={{ padding: "24px 20px" }}
-            >
+            <div key={i} className="card" style={{ padding: "24px 20px" }}>
               <div style={{ fontSize: "1.8rem", marginBottom: 12 }}>{icon}</div>
               <div
                 style={{
@@ -1194,7 +1125,7 @@ function WhenSection({ lang }: { lang: Lang }) {
           {cards.map(({ icon, title, desc }, i) => (
             <div
               key={i}
-              className="card card-hover"
+              className="card"
               style={{
                 padding: "28px 20px",
                 display: "flex",
@@ -1403,11 +1334,7 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
           }}
         >
           {certs.map(({ initials, title, desc }, i) => (
-            <div
-              key={i}
-              className="card card-hover"
-              style={{ padding: "28px 22px" }}
-            >
+            <div key={i} className="card" style={{ padding: "28px 22px" }}>
               {/* Cert placeholder badge */}
               {/* TODO: Replace placeholder with <Image src={certImage} ...> when certificate images are added */}
               <div
@@ -1575,7 +1502,7 @@ function SustainabilitySection({ lang }: { lang: Lang }) {
           {cards.map(({ icon, title, desc }, i) => (
             <div
               key={i}
-              className="card card-hover"
+              className="card"
               style={{
                 padding: "24px 18px",
                 display: "flex",
@@ -1732,8 +1659,8 @@ function MissionSection({ lang }: { lang: Lang }) {
             }}
           >
             {lang === "bg"
-              ? "Всяко барче има посока."
-              : "Every bar has a direction."}
+              ? "Всяко барче има кауза."
+              : "Every bar has a mission."}
           </h2>
           <p
             style={{
