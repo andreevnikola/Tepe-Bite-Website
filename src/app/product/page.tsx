@@ -3,6 +3,8 @@ import Providers from '@/components/Providers';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ProductPageContent from '@/components/ProductPageContent';
+import { LANG_COOKIE, normalizeLang } from '@/store/lang';
+import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'ТЕПЕ bite — Солен карамел | Здравословно барче с кауза',
@@ -46,9 +48,12 @@ const jsonLd = {
   },
 };
 
-export default function ProductPage() {
+export default async function ProductPage() {
+  const cookieStore = await cookies();
+  const initialLang = normalizeLang(cookieStore.get(LANG_COOKIE)?.value);
+
   return (
-    <Providers>
+    <Providers initialLang={initialLang}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -3,6 +3,8 @@ import Providers from '@/components/Providers';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import InitiativesClient from '@/components/InitiativesClient';
+import { LANG_COOKIE, normalizeLang } from '@/store/lang';
+import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'Нашите инициативи | ТЕПЕ bite',
@@ -22,9 +24,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function InitiativesPage() {
+export default async function InitiativesPage() {
+  const cookieStore = await cookies();
+  const initialLang = normalizeLang(cookieStore.get(LANG_COOKIE)?.value);
+
   return (
-    <Providers>
+    <Providers initialLang={initialLang}>
       <Nav />
       <main>
         <InitiativesClient />

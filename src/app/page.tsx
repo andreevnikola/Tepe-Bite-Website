@@ -10,10 +10,15 @@ import ProductSection from "@/components/ProductSection";
 import Providers from "@/components/Providers";
 import TrustSection from "@/components/TrustSection";
 import WhySection from "@/components/WhySection";
+import { LANG_COOKIE, normalizeLang } from "@/store/lang";
+import { cookies } from "next/headers";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = await cookies();
+  const initialLang = normalizeLang(cookieStore.get(LANG_COOKIE)?.value);
+
   return (
-    <Providers>
+    <Providers initialLang={initialLang}>
       <Nav />
       <main>
         <Hero />

@@ -1,6 +1,6 @@
 "use client";
 import { IconArrow, IconClose, IconMenu, IconShop } from "@/components/icons";
-import { langAtom, type Lang } from "@/store/lang";
+import { LANG_COOKIE, langAtom, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +22,18 @@ export default function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const setLangCookie = (value: Lang) => {
+    if (typeof document === "undefined") return;
+    document.cookie = `${LANG_COOKIE}=${encodeURIComponent(
+      value,
+    )}; path=/; max-age=31536000; samesite=lax`;
+  };
+
+  const handleLangChange = (value: Lang) => {
+    setLang(value);
+    setLangCookie(value);
+  };
 
   const navLinks: [string, string][] =
     lang === "bg"
@@ -197,7 +209,7 @@ export default function Nav() {
             {(["bg", "en"] as Lang[]).map((l) => (
               <button
                 key={l}
-                onClick={() => setLang(l)}
+                onClick={() => handleLangChange(l)}
                 style={{
                   padding: "4px 10px",
                   borderRadius: 100,
@@ -221,7 +233,11 @@ export default function Nav() {
           <Link
             href={`${p}#order`}
             className="btn btn-primary desktop-nav"
-            style={{ fontSize: "0.88rem", padding: "11px 22px", cursor: "pointer" }}
+            style={{
+              fontSize: "0.88rem",
+              padding: "11px 22px",
+              cursor: "pointer",
+            }}
           >
             {lang === "bg" ? "Поръчай" : "Order"} <IconArrow />
           </Link>
@@ -246,12 +262,12 @@ export default function Nav() {
                 borderRadius: 100,
               }}
             >
-              {(["bg", "en"] as Lang[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  style={{
-                    padding: "3px 8px",
+            {(["bg", "en"] as Lang[]).map((l) => (
+              <button
+                key={l}
+                onClick={() => handleLangChange(l)}
+                style={{
+                  padding: "3px 8px",
                     borderRadius: 100,
                     border: "none",
                     cursor: "pointer",
@@ -307,13 +323,22 @@ export default function Nav() {
                   onClick={() => setMobileOpen(false)}
                   style={{
                     textDecoration: "none",
-                    color: active ? "var(--caramel)" : "var(--plum)",
+                    color: active ? "var(--plum)" : "var(--text-mid)",
                     fontSize: "1.1rem",
                     fontWeight: active ? 700 : 500,
                     padding: "8px 0",
-                    borderBottom: "1px solid var(--border)",
                     cursor: "pointer",
+                    position: "relative",
+                    transition: "color 0.2s",
                   }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--plum)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = active
+                      ? "var(--plum)"
+                      : "var(--text-mid)")
+                  }
                 >
                   {label}
                 </Link>
@@ -323,7 +348,11 @@ export default function Nav() {
               href={`${p}#order`}
               onClick={() => setMobileOpen(false)}
               className="btn btn-primary"
-              style={{ marginTop: 8, justifyContent: "center", cursor: "pointer" }}
+              style={{
+                marginTop: 8,
+                justifyContent: "center",
+                cursor: "pointer",
+              }}
             >
               <IconShop />
               {lang === "bg" ? "Поръчай" : "Order"}

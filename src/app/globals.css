@@ -269,7 +269,7 @@
   animation: float-bar 5s ease-in-out infinite;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 930px) {
   .section-spacing {
     padding: 60px 20px;
   }
@@ -282,8 +282,4 @@
   .hamburger {
     display: flex !important;
   }
-}
-
-.card:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
 }
