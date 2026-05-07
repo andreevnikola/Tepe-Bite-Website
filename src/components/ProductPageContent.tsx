@@ -1785,7 +1785,7 @@ function OrderSection({ lang }: { lang: Lang }) {
           {quantities.map(({ qty, label, desc }, i) => (
             <div
               key={i}
-              className="card card-hover"
+              className="card"
               style={{
                 padding: "28px 20px",
                 textAlign: "center",
