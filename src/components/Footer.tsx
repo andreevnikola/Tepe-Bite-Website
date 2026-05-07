@@ -1,0 +1,317 @@
+'use client';
+import Image from 'next/image';
+import { useAtomValue } from 'jotai';
+import { langAtom } from '@/store/lang';
+import { IconInsta, IconTiktok, IconFb, IconLink } from '@/components/icons';
+
+export default function Footer() {
+  const lang = useAtomValue(langAtom);
+
+  const navLinks = lang === 'bg'
+    ? [['#', 'Начало'], ['#produkt', 'Продуктът'], ['#initsiatiви', 'Нашите инициативи'], ['#za-nas', 'За нас']]
+    : [['#', 'Home'], ['#produkt', 'The Product'], ['#initsiatiви', 'Our Initiatives'], ['#za-nas', 'About']];
+
+  const legalLinks = lang === 'bg'
+    ? ['Условия за ползване', 'Политика за поверителност', 'Бисквитки', 'Отказ от отговорност']
+    : ['Terms of Use', 'Privacy Policy', 'Cookies', 'Disclaimer'];
+
+  const linkStyle = {
+    display: 'block',
+    color: 'oklch(82% 0.04 310)',
+    fontSize: '0.9rem',
+    textDecoration: 'none',
+    marginBottom: 10,
+    transition: 'color 0.2s',
+  } as React.CSSProperties;
+
+  return (
+    <footer
+      style={{
+        background: 'var(--plum)',
+        color: 'white',
+        padding: 'clamp(48px, 6vw, 80px) clamp(20px, 5vw, 80px) 32px',
+      }}
+    >
+      <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+        {/* Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(200px, 2fr) repeat(3, minmax(140px, 1fr))',
+            gap: 'clamp(32px, 4vw, 60px)',
+            marginBottom: 56,
+          }}
+          className="footer-grid"
+        >
+          {/* Brand column */}
+          <div>
+            <div style={{ marginBottom: 20 }}>
+              <Image
+                src="/logo-full.png"
+                alt="ТЕПЕ bite"
+                width={120}
+                height={120}
+                style={{
+                  height: 120,
+                  width: 'auto',
+                  display: 'block',
+                  filter: 'brightness(0) invert(1)',
+                  opacity: 0.9,
+                  margin: '-26px -16px -10px -16px',
+                }}
+              />
+            </div>
+            <p
+              style={{
+                color: 'oklch(78% 0.04 310)',
+                fontSize: '0.9rem',
+                maxWidth: 240,
+                lineHeight: 1.65,
+              }}
+            >
+              {lang === 'bg'
+                ? 'Барче с характер, вдъхновено от Пловдив и създадено с мисия.'
+                : 'A bar with character, inspired by Plovdiv and created with purpose.'}
+            </p>
+            <div
+              style={{
+                marginTop: 20,
+                fontSize: '0.82rem',
+                color: 'oklch(65% 0.04 310)',
+              }}
+            >
+              <div style={{ marginBottom: 4 }}>
+                {lang === 'bg' ? 'Създадено в Пловдив' : 'Made in Plovdiv'}
+              </div>
+              <div>
+                {lang === 'bg' ? 'Производител: ' : 'Manufacturer: '}
+                <a
+                  href="https://biostyle.bg/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: 'var(--caramel)', textDecoration: 'none' }}
+                  onMouseEnter={(e) =>
+                    ((e.target as HTMLElement).style.textDecoration = 'underline')
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.target as HTMLElement).style.textDecoration = 'none')
+                  }
+                >
+                  BioStyle Ltd. ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'oklch(65% 0.05 310)',
+                marginBottom: 18,
+              }}
+            >
+              {lang === 'bg' ? 'Навигация' : 'Navigation'}
+            </div>
+            {navLinks.map(([href, label]) => (
+              <a
+                key={href + label}
+                href={href}
+                style={linkStyle}
+                onMouseEnter={(e) =>
+                  ((e.target as HTMLElement).style.color = 'white')
+                }
+                onMouseLeave={(e) =>
+                  ((e.target as HTMLElement).style.color = 'oklch(82% 0.04 310)')
+                }
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+
+          {/* Legal */}
+          <div>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'oklch(65% 0.05 310)',
+                marginBottom: 18,
+              }}
+            >
+              {lang === 'bg' ? 'Правна информация' : 'Legal'}
+            </div>
+            {legalLinks.map((l, i) => (
+              <a
+                key={i}
+                href="#"
+                style={linkStyle}
+                onMouseEnter={(e) =>
+                  ((e.target as HTMLElement).style.color = 'white')
+                }
+                onMouseLeave={(e) =>
+                  ((e.target as HTMLElement).style.color = 'oklch(82% 0.04 310)')
+                }
+              >
+                {l}
+              </a>
+            ))}
+          </div>
+
+          {/* Contact */}
+          <div>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'oklch(65% 0.05 310)',
+                marginBottom: 18,
+              }}
+            >
+              {lang === 'bg' ? 'Контакт' : 'Contact'}
+            </div>
+            <a
+              href="mailto:tepe@mail.bg"
+              style={{
+                ...linkStyle,
+                marginBottom: 10,
+              }}
+              onMouseEnter={(e) =>
+                ((e.target as HTMLElement).style.color = 'white')
+              }
+              onMouseLeave={(e) =>
+                ((e.target as HTMLElement).style.color = 'oklch(82% 0.04 310)')
+              }
+            >
+              tepe@mail.bg
+            </a>
+
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+              {[<IconInsta key="ig" />, <IconTiktok key="tt" />, <IconFb key="fb" />].map(
+                (icon, i) => (
+                  <a
+                    key={i}
+                    href="#"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'oklch(40% 0.07 315)',
+                      color: 'white',
+                      transition: 'background 0.2s',
+                    }}
+                    onMouseEnter={(e) =>
+                      ((e.currentTarget as HTMLElement).style.background =
+                        'var(--caramel)')
+                    }
+                    onMouseLeave={(e) =>
+                      ((e.currentTarget as HTMLElement).style.background =
+                        'oklch(40% 0.07 315)')
+                    }
+                  >
+                    {icon}
+                  </a>
+                )
+              )}
+            </div>
+
+            {/* Link tree */}
+            <div
+              style={{
+                borderTop: '1px solid oklch(42% 0.06 315)',
+                paddingTop: 16,
+              }}
+            >
+              <a
+                href="https://tinyurl.com/tepebite"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  padding: '10px 0',
+                  color: 'var(--caramel)',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                  fontSize: 12,
+                  gap: 4,
+                }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color =
+                    'oklch(75% 0.14 52)')
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = 'var(--caramel)')
+                }
+              >
+                <IconLink />
+                {lang === 'bg' ? 'Разгледай още от нас' : 'See more from us'}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          style={{
+            borderTop: '1px solid oklch(42% 0.06 315)',
+            paddingTop: 24,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 12,
+          }}
+        >
+          <span
+            style={{
+              fontSize: '0.82rem',
+              color: 'oklch(60% 0.04 310)',
+              fontWeight: 600,
+            }}
+          >
+            © 2026 ТЕПЕ bite · Баир ЕООД
+          </span>
+          <span
+            style={{
+              fontSize: '0.82rem',
+              color: 'oklch(60% 0.04 310)',
+              fontWeight: 600,
+            }}
+          >
+            {lang === 'bg' ? 'Направено с любов в Пловдив' : 'Made with love in Plovdiv'}
+          </span>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+    </footer>
+  );
+}
