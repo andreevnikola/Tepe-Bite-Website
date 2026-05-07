@@ -285,8 +285,8 @@ function ValueStrip({ lang }: { lang: Lang }) {
           },
           {
             icon: "⌂",
-            title: "Производител: BioStyle Ltd.",
-            sub: "от 2012 г.",
+            title: "BioStyle LTD",
+            sub: "Сертифицирано производсто на висококачествени био храни от 2012 г.",
           },
         ]
       : [
@@ -332,7 +332,7 @@ function ValueStrip({ lang }: { lang: Lang }) {
           {items.map(({ icon, title, sub }, i) => (
             <div
               key={i}
-              className="card"
+              className="card items-center justify-center"
               style={{
                 padding: "24px 20px",
                 display: "flex",
@@ -1245,7 +1245,7 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
           <p
             style={{
               marginTop: 16,
-              maxWidth: 600,
+              maxWidth: 650,
               margin: "16px auto 0",
               fontSize: "1.02rem",
             }}
@@ -1622,7 +1622,7 @@ function MissionSection({ lang }: { lang: Lang }) {
         className="section-inner"
         style={{ position: "relative", zIndex: 1 }}
       >
-        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ maxWidth: 650, margin: "0 auto", textAlign: "center" }}>
           <div
             style={{
               width: 56,
@@ -1667,24 +1667,12 @@ function MissionSection({ lang }: { lang: Lang }) {
               fontSize: "1.05rem",
               color: "oklch(80% 0.04 310)",
               lineHeight: 1.72,
-              marginBottom: 16,
+              marginBottom: 26,
             }}
           >
             {lang === "bg"
               ? "Когато избираш ТЕПЕ bite, не избираш само междинна закуска. Подкрепяш младежки инициативи, които развиваме, проследяваме и показваме прозрачно."
               : "When you choose ТЕПЕ bite, you are not just choosing a snack. You support youth initiatives that we develop, track, and share transparently."}
-          </p>
-          <p
-            style={{
-              fontSize: "0.95rem",
-              color: "oklch(66% 0.04 310)",
-              lineHeight: 1.65,
-              marginBottom: 40,
-            }}
-          >
-            {lang === "bg"
-              ? "Конкретни проекти. Реални резултати. Пълна прозрачност. Защото смисълът не трябва да бъде маркетинг."
-              : "Concrete projects. Real results. Full transparency. Because purpose should not be just marketing."}
           </p>
           {/* TODO: Link to /initiatives when that page is built */}
           <a
@@ -1692,7 +1680,9 @@ function MissionSection({ lang }: { lang: Lang }) {
             className="btn btn-caramel"
             style={{ fontSize: "1rem", padding: "15px 36px" }}
           >
-            {lang === "bg" ? "Виж инициативите" : "See the initiatives"}
+            {lang === "bg"
+              ? "Виж приноса ни към града"
+              : "See our impact in the city"}
             <IconArrow />
           </a>
         </div>
@@ -1707,35 +1697,37 @@ function OrderSection({ lang }: { lang: Lang }) {
   const quantities =
     lang === "bg"
       ? [
-          { qty: "1 брой", label: "За проба", desc: "Опитай и реши сам." },
           {
-            qty: "3 броя",
-            label: "За теб и приятели",
-            desc: "Добра доза за началото.",
+            qty: "10 броя",
+            label: "За да опиташ ТЕПЕ bite",
+            desc: "Опитай и реши сам. Подкрепи каузата и се запази с вкусно похапване за следващите дни.",
           },
-          { qty: "6 броя", label: "Малка кутия", desc: "За седмицата напред." },
           {
-            qty: "12 броя",
-            label: "За клас, офис или събитие",
-            desc: "Споделено е по-добро.",
+            qty: "20 броя",
+            label: "За да се наслаждаваш за по-дълго",
+            desc: "Вземи 20 барчета и получи безплатна доставка. Вземи достатъчно, за да похапваш по-дълго ТЕПЕ bite.",
+          },
+          {
+            qty: "35 броя",
+            label: "За да споделиш с приятели магията на ТЕПЕ bite",
+            desc: "С покупката на 35 барчета получаваш по-ниска цена на бройка и безплатна доставка. Наслади се на ТЕПЕ bite и сподели с приятели. Спести и сподели.",
           },
         ]
       : [
           {
-            qty: "1 piece",
-            label: "To try",
-            desc: "Try it and decide for yourself.",
+            qty: "10 pcs",
+            label: "To try ТЕПЕ bite",
+            desc: "Try and decide for yourself. Support the cause and keep a tasty snack for the next days.",
           },
           {
-            qty: "3 pieces",
-            label: "For you and friends",
-            desc: "A good dose to start with.",
+            qty: "20 pcs",
+            label: "To enjoy longer",
+            desc: "Get 20 bars and receive free shipping. Get enough to snack on ТЕПЕ bite for longer.",
           },
-          { qty: "6 pieces", label: "Small box", desc: "For the week ahead." },
           {
-            qty: "12 pieces",
-            label: "For a class, office or event",
-            desc: "Shared is better.",
+            qty: "35 pcs",
+            label: "To share the magic of ТЕПЕ bite with friends",
+            desc: "With the purchase of 35 bars you get a lower price per piece and free shipping. Enjoy ТЕПЕ bite and share with friends. Save and share.",
           },
         ];
 
@@ -1777,7 +1769,7 @@ function OrderSection({ lang }: { lang: Lang }) {
           className="pp-order-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateColumns: "repeat(2, 1fr)",
             gap: 16,
             marginBottom: 52,
           }}
@@ -1785,18 +1777,19 @@ function OrderSection({ lang }: { lang: Lang }) {
           {quantities.map(({ qty, label, desc }, i) => (
             <div
               key={i}
-              className="card"
+              className="card items-center justify-center flex flex-col"
               style={{
                 padding: "28px 20px",
                 textAlign: "center",
                 borderTop:
-                  i === 2
+                  i === 1
                     ? "3px solid var(--caramel)"
                     : "3px solid var(--border)",
                 position: "relative",
+                gridColumn: i === 2 ? "1 / -1" : undefined,
               }}
             >
-              {i === 2 && (
+              {i === 1 && (
                 <div
                   style={{
                     position: "absolute",
@@ -1819,7 +1812,7 @@ function OrderSection({ lang }: { lang: Lang }) {
               <div
                 style={{
                   fontFamily: "var(--font-head)",
-                  fontWeight: 700,
+                  fontWeight: 900,
                   fontSize: "1.5rem",
                   color: "var(--plum)",
                   marginBottom: 8,
@@ -1843,6 +1836,7 @@ function OrderSection({ lang }: { lang: Lang }) {
                   color: "var(--text-soft)",
                   margin: 0,
                 }}
+                className="text-justify max-w-[350px] w-full mx-auto"
               >
                 {desc}
               </p>
