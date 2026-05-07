@@ -7,14 +7,14 @@ import { IconArrow, IconMenu, IconClose, IconShop } from '@/components/icons';
 
 const navLinks = {
   bg: [
-    ['#produkt', 'Продуктът'],
-    ['#initsiatiви', 'Нашите инициативи'],
-    ['#za-nas', 'За нас'],
+    ['/product', 'Продуктът'],
+    ['/#initsiatiви', 'Нашите инициативи'],
+    ['/#za-nas', 'За нас'],
   ] as [string, string][],
   en: [
-    ['#produkt', 'The Product'],
-    ['#initsiatiви', 'Our Initiatives'],
-    ['#za-nas', 'About'],
+    ['/product', 'The Product'],
+    ['/#initsiatiви', 'Our Initiatives'],
+    ['/#za-nas', 'About'],
   ] as [string, string][],
 };
 
@@ -63,7 +63,7 @@ export default function Nav() {
         >
           {/* Logo */}
           <a
-            href="#"
+            href="/"
             style={{
               textDecoration: 'none',
               display: 'flex',
