@@ -694,24 +694,22 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
     lang === 'bg'
       ? [
           {
-            /* TODO: Add /assets/images/certificates/ifs-food.png */
-            initials: 'IFS',
+            img: '/images/certificates/ifs-food.png',
             title: 'IFS Food',
             desc: 'Производствената база на BioStyle Ltd. е свързана с IFS Food сертификация — международен стандарт за безопасност и качество в хранителното производство.',
           },
           {
-            /* TODO: Add /assets/images/certificates/organic-certificate.png */
-            initials: 'ORG',
+            img: '/images/certificates/organic-certificate.jpeg',
             title: 'Organic Certificate',
             desc: 'BioStyle Ltd. работи с органично производство и има Organic Certificate. Това подкрепя фокуса върху по-съзнателен избор на суровини и производствени практики.',
           },
           {
-            /* TODO: Add /assets/images/certificates/balkan-biocert.png */
-            initials: 'BBC',
+            img: '/images/certificates/balkan-biocert.png',
             title: 'Balkan Biocert',
             desc: 'BioStyle Ltd. е посочена в органичен каталог със сертификация от Balkan Biocert — регионален орган за органична сертификация.',
           },
           {
+            img: null,
             initials: '2012',
             title: 'От 2012 г.',
             desc: 'Производител с опит в разработката на органични, веган, безглутенови и здравословно ориентирани продукти.',
@@ -719,21 +717,22 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
         ]
       : [
           {
-            initials: 'IFS',
+            img: '/images/certificates/ifs-food.png',
             title: 'IFS Food',
             desc: "BioStyle Ltd.'s production facility is associated with IFS Food certification — an international standard for food safety and quality.",
           },
           {
-            initials: 'ORG',
+            img: '/images/certificates/organic-certificate.jpeg',
             title: 'Organic Certificate',
             desc: 'BioStyle Ltd. operates organic production and holds an Organic Certificate, supporting a more conscious approach to raw materials and manufacturing practices.',
           },
           {
-            initials: 'BBC',
+            img: '/images/certificates/balkan-biocert.png',
             title: 'Balkan Biocert',
             desc: 'BioStyle Ltd. is listed in an organic catalogue with Balkan Biocert certification — a regional organic certification body.',
           },
           {
+            img: null,
             initials: '2012',
             title: 'Since 2012',
             desc: 'A manufacturer with experience developing organic, vegan, gluten-free and health-oriented food products.',
@@ -791,33 +790,58 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
 
         {/* Cert cards */}
         <div className="pp-trust-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-          {certs.map(({ initials, title, desc }, i) => (
+          {certs.map((cert, i) => (
             <div key={i} className="card card-hover" style={{ padding: '28px 22px' }}>
-              {/* Cert placeholder badge */}
-              {/* TODO: Replace placeholder with <Image src={certImage} ...> when certificate images are added */}
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 'var(--r-sm)',
-                  background: i === 3 ? 'var(--plum)' : 'var(--caramel-lt)',
-                  border: `2px solid ${i === 3 ? 'var(--plum)' : 'var(--caramel)'}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'var(--font-head)',
-                  fontWeight: 700,
-                  fontSize: '0.75rem',
-                  color: i === 3 ? 'white' : 'var(--caramel)',
-                  letterSpacing: '0.04em',
-                  marginBottom: 16,
-                  flexShrink: 0,
-                }}
-              >
-                {initials}
-              </div>
-              <div style={{ fontFamily: 'var(--font-head)', fontWeight: 600, fontSize: '1rem', color: 'var(--plum)', marginBottom: 10 }}>{title}</div>
-              <p style={{ fontSize: '0.84rem', color: 'var(--text-soft)', lineHeight: 1.6, margin: 0 }}>{desc}</p>
+              {cert.img ? (
+                <div
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 'var(--r-sm)',
+                    background: 'white',
+                    border: '1px solid var(--border)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 16,
+                    flexShrink: 0,
+                    overflow: 'hidden',
+                    padding: 8,
+                  }}
+                >
+                  <Image
+                    src={cert.img}
+                    alt={cert.title}
+                    width={64}
+                    height={64}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                </div>
+              ) : (
+                <div
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 'var(--r-sm)',
+                    background: 'var(--plum)',
+                    border: '2px solid var(--plum)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontFamily: 'var(--font-head)',
+                    fontWeight: 700,
+                    fontSize: '1.1rem',
+                    color: 'white',
+                    letterSpacing: '0.04em',
+                    marginBottom: 16,
+                    flexShrink: 0,
+                  }}
+                >
+                  {(cert as { initials?: string }).initials}
+                </div>
+              )}
+              <div style={{ fontFamily: 'var(--font-head)', fontWeight: 600, fontSize: '1rem', color: 'var(--plum)', marginBottom: 10 }}>{cert.title}</div>
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-soft)', lineHeight: 1.6, margin: 0 }}>{cert.desc}</p>
             </div>
           ))}
         </div>
