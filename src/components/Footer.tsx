@@ -10,16 +10,16 @@ export default function Footer() {
   const navLinks =
     lang === "bg"
       ? [
-          ["#", "Начало"],
-          ["#produkt", "Продуктът"],
-          ["#initsiatiви", "Нашите инициативи"],
-          ["#za-nas", "За нас"],
+          ["/", "Начало"],
+          ["/#produkt", "Продуктът"],
+          ["/initiatives", "Нашите инициативи"],
+          ["/#za-nas", "За нас"],
         ]
       : [
-          ["#", "Home"],
-          ["#produkt", "The Product"],
-          ["#initsiatiви", "Our Initiatives"],
-          ["#za-nas", "About"],
+          ["/", "Home"],
+          ["/#produkt", "The Product"],
+          ["/initiatives", "Our Initiatives"],
+          ["/#za-nas", "About"],
         ];
 
   const legalLinks =

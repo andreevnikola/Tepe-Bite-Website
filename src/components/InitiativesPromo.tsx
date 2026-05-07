@@ -136,7 +136,7 @@ export default function InitiativesPromo() {
             <>
               Прозрачни сме за резултатите ни.{" "}
               <a
-                href="/initiatives.html"
+                href="/initiatives"
                 style={{
                   color: "var(--caramel)",
                   textDecoration: "underline",
@@ -151,7 +151,7 @@ export default function InitiativesPromo() {
             <>
               We are transparent about our results.{" "}
               <a
-                href="/initiatives.html"
+                href="/initiatives"
                 style={{
                   color: "var(--caramel)",
                   textDecoration: "underline",

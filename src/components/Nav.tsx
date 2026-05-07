@@ -1,27 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { langAtom, type Lang } from '@/store/lang';
 import { IconArrow, IconMenu, IconClose, IconShop } from '@/components/icons';
-
-const navLinks = {
-  bg: [
-    ['#produkt', 'Продуктът'],
-    ['#initsiatiви', 'Нашите инициативи'],
-    ['#za-nas', 'За нас'],
-  ] as [string, string][],
-  en: [
-    ['#produkt', 'The Product'],
-    ['#initsiatiви', 'Our Initiatives'],
-    ['#za-nas', 'About'],
-  ] as [string, string][],
-};
 
 export default function Nav() {
   const [lang, setLang] = useAtom(langAtom);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+
+  // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
+  const p = isHome ? '' : '/';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -29,7 +22,26 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const links = navLinks[lang];
+  const navLinks: [string, string][] =
+    lang === 'bg'
+      ? [
+          ['/', 'Начало'],
+          [`${p}#produkt`, 'Продуктът'],
+          ['/initiatives', 'Нашите инициативи'],
+          [`${p}#za-nas`, 'За нас'],
+        ]
+      : [
+          ['/', 'Home'],
+          [`${p}#produkt`, 'The Product'],
+          ['/initiatives', 'Our Initiatives'],
+          [`${p}#za-nas`, 'About'],
+        ];
+
+  const isActive = (href: string) => {
+    if (href === '/') return isHome;
+    if (href === '/initiatives') return pathname === '/initiatives';
+    return false;
+  };
 
   return (
     <header
@@ -47,10 +59,7 @@ export default function Nav() {
         transition: 'all 0.3s ease',
       }}
     >
-      <nav
-        style={{ padding: '0 clamp(20px, 4vw, 60px)' }}
-        aria-label="Главна навигация"
-      >
+      <nav style={{ padding: '0 clamp(20px, 4vw, 60px)' }} aria-label="Главна навигация">
         <div
           style={{
             maxWidth: 1180,
@@ -63,7 +72,7 @@ export default function Nav() {
         >
           {/* Logo */}
           <a
-            href="#"
+            href="/"
             style={{
               textDecoration: 'none',
               display: 'flex',
@@ -109,37 +118,52 @@ export default function Nav() {
           {/* Desktop links */}
           <div
             className="desktop-nav"
-            style={{
-              display: 'flex',
-              gap: 32,
-              marginLeft: 'auto',
-              alignItems: 'center',
-            }}
+            style={{ display: 'flex', gap: 28, marginLeft: 'auto', alignItems: 'center' }}
           >
-            {links.map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--text-mid)',
-                  fontSize: '0.9rem',
-                  fontWeight: 500,
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={(e) =>
-                  ((e.target as HTMLElement).style.color = 'var(--plum)')
-                }
-                onMouseLeave={(e) =>
-                  ((e.target as HTMLElement).style.color = 'var(--text-mid)')
-                }
-              >
-                {label}
-              </a>
-            ))}
+            {navLinks.map(([href, label]) => {
+              const active = isActive(href);
+              return (
+                <a
+                  key={href + label}
+                  href={href}
+                  style={{
+                    textDecoration: 'none',
+                    color: active ? 'var(--plum)' : 'var(--text-mid)',
+                    fontSize: '0.9rem',
+                    fontWeight: active ? 700 : 500,
+                    transition: 'color 0.2s',
+                    position: 'relative',
+                    paddingBottom: 2,
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.target as HTMLElement).style.color = 'var(--plum)')
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.target as HTMLElement).style.color = active
+                      ? 'var(--plum)'
+                      : 'var(--text-mid)')
+                  }
+                >
+                  {label}
+                  {active && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        bottom: -2,
+                        left: 0,
+                        right: 0,
+                        height: 2,
+                        background: 'var(--caramel)',
+                        borderRadius: 10,
+                      }}
+                    />
+                  )}
+                </a>
+              );
+            })}
           </div>
 
-          {/* Lang switcher */}
+          {/* Lang switcher — desktop */}
           <div
             style={{
               display: 'flex',
@@ -149,7 +173,6 @@ export default function Nav() {
               borderRadius: 100,
               fontSize: '0.8rem',
               fontWeight: 600,
-              marginLeft: 'auto',
             }}
             className="desktop-nav"
           >
@@ -176,9 +199,9 @@ export default function Nav() {
             ))}
           </div>
 
-          {/* CTA - desktop */}
+          {/* CTA — desktop */}
           <a
-            href="#order"
+            href={`${p}#order`}
             className="btn btn-primary desktop-nav"
             style={{ fontSize: '0.88rem', padding: '11px 22px' }}
           >
@@ -257,25 +280,28 @@ export default function Nav() {
               gap: 16,
             }}
           >
-            {links.map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--plum)',
-                  fontSize: '1.1rem',
-                  fontWeight: 500,
-                  padding: '8px 0',
-                  borderBottom: '1px solid var(--border)',
-                }}
-              >
-                {label}
-              </a>
-            ))}
+            {navLinks.map(([href, label]) => {
+              const active = isActive(href);
+              return (
+                <a
+                  key={href + label}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    textDecoration: 'none',
+                    color: active ? 'var(--caramel)' : 'var(--plum)',
+                    fontSize: '1.1rem',
+                    fontWeight: active ? 700 : 500,
+                    padding: '8px 0',
+                    borderBottom: '1px solid var(--border)',
+                  }}
+                >
+                  {label}
+                </a>
+              );
+            })}
             <a
-              href="#order"
+              href={`${p}#order`}
               onClick={() => setMobileOpen(false)}
               className="btn btn-primary"
               style={{ marginTop: 8, justifyContent: 'center' }}
