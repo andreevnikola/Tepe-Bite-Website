@@ -1,79 +1,134 @@
 "use client";
-import { IconArrow } from "@/components/icons";
+import { IconArrow, IconCheck } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
 
-const PCT = 42;
+const IconClock = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
 
-const timelineSteps = {
+const IconPin = () => (
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <circle cx="12" cy="10" r="3" />
+  </svg>
+);
+
+const IconBrush = () => (
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
+    <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1 1 2.26 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+  </svg>
+);
+
+/* Condensed milestones for the landing section — real data from the initiative */
+const milestones = {
   bg: [
-    { done: true, label: "Инициативата е обявена" },
-    { done: true, label: "Набиране на средства стартирало" },
-    { done: false, label: "Достигане на 50% от целта", active: true },
-    { done: false, label: "Реализация на проектите" },
-    { done: false, label: "Финален отчет" },
+    { done: true, label: "Идентифицирахме каузата", detail: "Облагородяване на зона в парк Бунарджика" },
+    { done: true, label: "Осигурихме партньорство с Оргахим", detail: "Материали и инструменти за реализация" },
+    { done: true, label: "Намерихме артистичен екип", detail: "Разработени концептуални визуализации" },
+    { done: false, label: 'Предстои координация с Район „Централен"', detail: "Последна стъпка преди реализация", active: true },
   ],
   en: [
-    { done: true, label: "Initiative announced" },
-    { done: true, label: "Fundraising started" },
-    { done: false, label: "Reaching 50% of goal", active: true },
-    { done: false, label: "Projects implementation" },
-    { done: false, label: "Final report" },
+    { done: true, label: "We identified the cause", detail: "Improving an area in Bunardzhika Park" },
+    { done: true, label: "Secured partnership with Orgachim", detail: "Materials and tools for execution" },
+    { done: true, label: "Found the artist team", detail: "Concept visuals developed" },
+    { done: false, label: "Coordination with Central District next", detail: "The final step before execution", active: true },
   ],
 };
 
-const keyStats = {
-  bg: [
-    ["Целева сума", "5 000 лв."],
-    ["Събрани до момента", "2 100 лв."],
-    ["Подкрепени млади хора", "12"],
-    ["Следваща цел", "3 000 лв."],
-  ],
-  en: [
-    ["Target amount", "5 000 BGN"],
-    ["Raised so far", "2 100 BGN"],
-    ["Young people supported", "12"],
-    ["Next milestone", "3 000 BGN"],
-  ],
-};
+const DONE_COUNT = 5;
+const TOTAL_COUNT = 7;
+const PCT = Math.round((DONE_COUNT / TOTAL_COUNT) * 100);
 
 export default function FirstInitiative() {
   const lang = useAtomValue(langAtom);
-  const steps = timelineSteps[lang];
-  const stats = keyStats[lang];
+  const steps = milestones[lang];
 
   return (
     <section
       className="section-spacing"
-      style={{ background: "var(--surface)" }}
+      style={{ background: "var(--surface)", position: "relative", overflow: "hidden" }}
     >
-      <div className="section-inner">
+      {/* Decorative hill silhouette */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 200"
+        preserveAspectRatio="none"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          height: 160,
+          opacity: 0.04,
+          pointerEvents: "none",
+        }}
+      >
+        <path
+          d="M0 200 L0 140 Q200 60 400 100 Q600 140 800 80 Q1000 20 1200 70 L1200 200 Z"
+          fill="var(--plum)"
+        />
+      </svg>
+
+      <div className="section-inner" style={{ position: "relative", zIndex: 1 }}>
+        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div className="section-divider" />
           <div className="label-tag" style={{ marginBottom: 14 }}>
             {lang === "bg" ? "В процес" : "In Progress"}
           </div>
           <h2 className="heading-lg">
-            {lang === "bg" ? "Първата ни инициатива" : "Our First Initiative"}
+            {lang === "bg" ? "RE-CONNECT БУНАРДЖИКА" : "RE-CONNECT BUNARDZHIKA"}
           </h2>
-          <p style={{ maxWidth: 520, margin: "16px auto 0", fontSize: "1rem" }}>
+          <p style={{ maxWidth: 560, margin: "16px auto 0", fontSize: "1rem" }}>
             {lang === "bg"
-              ? "Започваме с конкретна кауза и я проследяваме открито — от първата идея до реалния резултат."
-              : "We start with a concrete cause and track it openly — from the first idea to the real result."}
+              ? "Първата ни конкретна стъпка за Пловдив — реална намеса в едно от най-разпознаваемите му места."
+              : "Our first concrete step for Plovdiv — a real intervention in one of its most recognizable places."}
           </p>
         </div>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "minmax(280px, 1.2fr) minmax(280px, 1fr)",
+            gridTemplateColumns: "minmax(280px, 1.15fr) minmax(280px, 1fr)",
             gap: "clamp(32px, 5vw, 64px)",
             alignItems: "start",
           }}
-          className="initiative-grid"
+          className="fi-grid"
         >
-          {/* Left: info */}
+          {/* ── Left: story + facts ── */}
           <div>
             {/* Active badge */}
             <div
@@ -84,7 +139,7 @@ export default function FirstInitiative() {
                 background: "oklch(92% 0.05 150)",
                 borderRadius: 100,
                 padding: "6px 14px",
-                marginBottom: 20,
+                marginBottom: 24,
               }}
             >
               <span
@@ -94,6 +149,7 @@ export default function FirstInitiative() {
                   height: 8,
                   borderRadius: "50%",
                   background: "oklch(52% 0.15 150)",
+                  flexShrink: 0,
                 }}
               />
               <span
@@ -108,69 +164,151 @@ export default function FirstInitiative() {
               </span>
             </div>
 
-            <h3
-              className="heading-md"
+            {/* What we're doing */}
+            <p
               style={{
-                fontSize: "1.5rem",
-                marginBottom: 16,
-                color: "var(--plum)",
+                fontSize: "1rem",
+                lineHeight: 1.75,
+                marginBottom: 20,
+                borderLeft: "3px solid var(--caramel)",
+                paddingLeft: 18,
+                color: "var(--text-mid)",
               }}
             >
               {lang === "bg"
-                ? "Млади и активни — Пловдив 2025"
-                : "Young and Active — Plovdiv 2025"}
-            </h3>
-            <p style={{ marginBottom: 24 }}>
-              {lang === "bg"
-                ? "Подкрепяме млади хора от Пловдив, които развиват социални и творчески проекти в общността. Целта е да покажем, че малки стъпки водят до реална промяна."
-                : "We support young people from Plovdiv who develop social and creative projects in the community. The goal is to show that small steps lead to real change."}
+                ? 'Съвременна графична намеса около чешмичката на „Кръгчето" в парк Бунарджика — превръщаме транзитна точка в място, което хората забелязват и преживяват.'
+                : "Contemporary graphic art intervention around the fountain at 'Krugcheto' in Bunardzhika Park — turning a transit point into a place people notice and experience."}
             </p>
 
+            {/* Location + format pills */}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "var(--caramel-lt)",
+                  color: "oklch(42% 0.12 52)",
+                  borderRadius: 100,
+                  padding: "6px 14px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                }}
+              >
+                <IconPin />
+                {lang === "bg" ? "Бунарджика, Пловдив" : "Bunardzhika, Plovdiv"}
+              </span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "var(--plum-lt)",
+                  color: "var(--plum)",
+                  borderRadius: 100,
+                  padding: "6px 14px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                }}
+              >
+                <IconBrush />
+                {lang === "bg" ? "Съвременно графично изкуство" : "Contemporary graphic art"}
+              </span>
+            </div>
+
+            {/* Mission connection */}
+            <div
+              style={{
+                background: "var(--plum-lt)",
+                borderRadius: "var(--r-md)",
+                padding: "22px 24px",
+                marginBottom: 28,
+              }}
+            >
+              <div className="label-tag" style={{ marginBottom: 10 }}>
+                {lang === "bg" ? "Защо тепетата?" : "Why the hills?"}
+              </div>
+              <p style={{ fontSize: "0.92rem", lineHeight: 1.72, margin: 0, color: "var(--plum)" }}>
+                {lang === "bg"
+                  ? "Тепетата са един от най-силните символи на Пловдив — природни и социални пространства, заслужаващи постоянна грижа. ТЕПЕ bite е създаден с идеята тази грижа да е вградена в самия бизнес модел: всяко барче е стъпка напред."
+                  : "The hills are one of Plovdiv's strongest symbols — natural and social spaces that deserve continuous care. ТЕПЕ bite was built with this idea embedded in the business model itself: every bar is a step forward."}
+              </p>
+            </div>
+
+            {/* Partner badge */}
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                gap: 16,
+                alignItems: "center",
+                gap: 12,
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--r-sm)",
+                padding: "14px 18px",
                 marginBottom: 32,
               }}
             >
-              {stats.map(([k, v], i) => (
+              <div
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: "50%",
+                  background: "var(--caramel)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  color: "white",
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                  fontFamily: "var(--font-head)",
+                }}
+              >
+                O
+              </div>
+              <div>
                 <div
-                  key={i}
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "14px 0",
-                    borderBottom: "1px solid var(--border)",
+                    fontSize: "0.72rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "var(--text-soft)",
+                    marginBottom: 2,
                   }}
                 >
-                  <span
-                    style={{ color: "var(--text-soft)", fontSize: "0.9rem" }}
-                  >
-                    {k}
-                  </span>
-                  <span
-                    style={{
-                      fontWeight: 700,
-                      color: "var(--plum)",
-                      fontFamily: "var(--font-head)",
-                    }}
-                  >
-                    {v}
-                  </span>
+                  {lang === "bg" ? "Техническо партньорство" : "Technical partner"}
                 </div>
-              ))}
+                <div
+                  style={{ fontWeight: 700, color: "var(--plum)", fontSize: "0.92rem" }}
+                >
+                  Оргахим
+                </div>
+              </div>
+              <div
+                style={{
+                  marginLeft: "auto",
+                  fontSize: "0.72rem",
+                  color: "var(--text-soft)",
+                  textAlign: "right",
+                  lineHeight: 1.5,
+                  maxWidth: 140,
+                }}
+              >
+                {lang === "bg"
+                  ? "Материали и инструменти за реализация"
+                  : "Materials & tools for execution"}
+              </div>
             </div>
 
-            <Link href="initiatives#transition" className="btn btn-primary">
-              {lang === "bg" ? "Виж напредъка" : "View Progress"} <IconArrow />
+            <Link href="/initiatives#first-initiative" className="btn btn-primary">
+              {lang === "bg" ? "Виж инициативата" : "View the initiative"} <IconArrow />
             </Link>
           </div>
 
-          {/* Right: progress card */}
-          <div className="card" style={{ padding: 36 }}>
-            {/* Progress bar */}
+          {/* ── Right: progress card ── */}
+          <div className="card" style={{ padding: "32px 28px" }}>
+            {/* Progress summary */}
             <div style={{ marginBottom: 28 }}>
               <div
                 style={{
@@ -180,20 +318,31 @@ export default function FirstInitiative() {
                   marginBottom: 10,
                 }}
               >
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: "var(--text)",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  {lang === "bg" ? "Напредък" : "Progress"}
-                </span>
+                <div>
+                  <span
+                    style={{
+                      fontWeight: 600,
+                      color: "var(--text)",
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    {lang === "bg" ? "Напредък" : "Progress"}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.78rem",
+                      color: "var(--text-soft)",
+                      marginLeft: 8,
+                    }}
+                  >
+                    {DONE_COUNT}/{TOTAL_COUNT} {lang === "bg" ? "стъпки" : "steps"}
+                  </span>
+                </div>
                 <span
                   style={{
                     fontFamily: "var(--font-head)",
                     fontWeight: 700,
-                    fontSize: "1.4rem",
+                    fontSize: "1.5rem",
                     color: "var(--plum)",
                   }}
                 >
@@ -203,31 +352,25 @@ export default function FirstInitiative() {
               <div className="progress-track">
                 <div className="progress-fill" style={{ width: `${PCT}%` }} />
               </div>
-              <div
+              <p
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
                   marginTop: 8,
+                  fontSize: "0.75rem",
+                  color: "var(--text-soft)",
+                  fontStyle: "italic",
                 }}
               >
-                <span
-                  style={{ fontSize: "0.78rem", color: "var(--text-soft)" }}
-                >
-                  0
-                </span>
-                <span
-                  style={{ fontSize: "0.78rem", color: "var(--text-soft)" }}
-                >
-                  5 000 лв.
-                </span>
-              </div>
+                {lang === "bg"
+                  ? "Напредък по подготовката — не финално одобрение."
+                  : "Preparation progress — not final approval."}
+              </p>
             </div>
 
-            {/* Timeline */}
+            {/* Milestone list */}
+            <div className="label-tag" style={{ marginBottom: 14 }}>
+              {lang === "bg" ? "Ключови стъпки" : "Key steps"}
+            </div>
             <div style={{ marginBottom: 28 }}>
-              <div className="label-tag" style={{ marginBottom: 14 }}>
-                {lang === "bg" ? "Времева линия" : "Timeline"}
-              </div>
               {steps.map((step, i) => (
                 <div
                   key={i}
@@ -235,81 +378,133 @@ export default function FirstInitiative() {
                     display: "flex",
                     gap: 14,
                     alignItems: "flex-start",
-                    marginBottom: 14,
+                    position: "relative",
                   }}
                 >
+                  {/* Dot + connector */}
                   <div
                     style={{
-                      width: 22,
-                      height: 22,
-                      borderRadius: "50%",
-                      flexShrink: 0,
-                      marginTop: 2,
-                      background: step.done
-                        ? "var(--caramel)"
-                        : step.active
-                          ? "var(--plum-lt)"
-                          : "var(--border)",
-                      border: step.active ? "2px solid var(--plum)" : "none",
                       display: "flex",
+                      flexDirection: "column",
                       alignItems: "center",
-                      justifyContent: "center",
+                      flexShrink: 0,
+                      width: 26,
                     }}
                   >
-                    {step.done && (
-                      <svg
-                        width="10"
-                        height="10"
-                        viewBox="0 0 14 14"
-                        fill="none"
-                      >
-                        <polyline
-                          points="2,7 5,10 12,3"
-                          stroke="white"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                    <div
+                      style={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: "50%",
+                        flexShrink: 0,
+                        background: step.done
+                          ? "var(--caramel)"
+                          : "var(--plum-lt)",
+                        border: step.active ? "2px solid var(--plum)" : "none",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: step.done ? "white" : "var(--plum-mid)",
+                        zIndex: 1,
+                      }}
+                    >
+                      {step.done ? (
+                        <IconCheck />
+                      ) : (
+                        <IconClock />
+                      )}
+                    </div>
+                    {i < steps.length - 1 && (
+                      <div
+                        style={{
+                          width: 2,
+                          flex: 1,
+                          minHeight: 16,
+                          background: step.done
+                            ? "oklch(76% 0.10 52)"
+                            : "var(--border)",
+                          margin: "3px 0",
+                        }}
+                      />
                     )}
                   </div>
-                  <span
+
+                  {/* Text */}
+                  <div
                     style={{
-                      fontSize: "0.9rem",
-                      color: step.done
-                        ? "var(--text)"
-                        : step.active
-                          ? "var(--plum)"
-                          : "var(--text-soft)",
-                      fontWeight: step.active ? 600 : 400,
+                      paddingBottom: i < steps.length - 1 ? 18 : 0,
+                      flex: 1,
                     }}
                   >
-                    {step.label}
-                  </span>
+                    <div
+                      style={{
+                        fontWeight: step.active ? 700 : 600,
+                        fontSize: "0.88rem",
+                        color: step.done
+                          ? "var(--text)"
+                          : step.active
+                            ? "var(--plum)"
+                            : "var(--text-soft)",
+                        marginBottom: 2,
+                        paddingTop: 4,
+                      }}
+                    >
+                      {step.label}
+                    </div>
+                    <p
+                      style={{
+                        fontSize: "0.78rem",
+                        color: step.done ? "var(--text-soft)" : "var(--text-soft)",
+                        margin: 0,
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {step.detail}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Quote */}
+            {/* Quote / CTA */}
             <div
               style={{
-                background: "var(--plum-lt)",
-                borderRadius: 14,
-                padding: "16px 20px",
+                background: "var(--plum)",
+                borderRadius: "var(--r-sm)",
+                padding: "18px 20px",
               }}
             >
               <p
                 style={{
                   fontSize: "0.85rem",
-                  color: "var(--plum)",
+                  color: "oklch(94% 0.03 315)",
                   fontStyle: "italic",
-                  margin: 0,
+                  margin: "0 0 10px",
+                  lineHeight: 1.65,
                 }}
               >
                 {lang === "bg"
                   ? '"Всяко закупено барче ТЕПЕ bite е пряк принос към тази инициатива."'
                   : '"Every ТЕПЕ bite bar purchased is a direct contribution to this initiative."'}
               </p>
+              <Link
+                href="/product"
+                className="btn"
+                style={{
+                  background: "var(--caramel)",
+                  color: "white",
+                  padding: "10px 20px",
+                  fontSize: "0.82rem",
+                  borderRadius: 100,
+                  display: "inline-flex",
+                  gap: 6,
+                  alignItems: "center",
+                  fontWeight: 700,
+                  textDecoration: "none",
+                }}
+              >
+                {lang === "bg" ? "Поръчай и подкрепи" : "Order & support"} <IconArrow />
+              </Link>
             </div>
           </div>
         </div>
@@ -317,7 +512,7 @@ export default function FirstInitiative() {
 
       <style>{`
         @media (max-width: 900px) {
-          .initiative-grid {
+          .fi-grid {
             grid-template-columns: 1fr !important;
           }
         }
