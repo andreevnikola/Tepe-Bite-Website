@@ -9,6 +9,7 @@ import {
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 
 type Lang = "bg" | "en";
 
@@ -1361,7 +1362,11 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
                     alt={title}
                     width={44}
                     height={44}
-                    style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
                   />
                 </div>
               ) : (
@@ -1704,8 +1709,8 @@ function MissionSection({ lang }: { lang: Lang }) {
               : "When you choose ТЕПЕ bite, you are not just choosing a snack. You support youth initiatives that we develop, track, and share transparently."}
           </p>
           {/* TODO: Link to /initiatives when that page is built */}
-          <a
-            href="/#initsiatiви"
+          <Link
+            href="/initiatives"
             className="btn btn-caramel"
             style={{ fontSize: "1rem", padding: "15px 36px" }}
           >
@@ -1713,7 +1718,7 @@ function MissionSection({ lang }: { lang: Lang }) {
               ? "Виж приноса ни към града"
               : "See our impact in the city"}
             <IconArrow />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
