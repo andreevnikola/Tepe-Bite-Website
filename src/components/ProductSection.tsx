@@ -1,5 +1,5 @@
 "use client";
-import { IconCheck, IconShop } from "@/components/icons";
+import { IconCheck, IconLink, IconShop } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -224,14 +224,24 @@ export default function ProductSection() {
               </p>
             </div>
 
-            <Link
-              href="/order"
-              className="btn btn-caramel"
-              style={{ fontSize: "1rem", padding: "15px 32px" }}
-            >
-              <IconShop />
-              {lang === "bg" ? "Поръчай продукта" : "Order the Product"}
-            </Link>
+            <div className="w-full flex justify-start gap-3 max-sm:justify-stretch max-sm:flex-col">
+              <Link
+                href="/order"
+                className="btn btn-caramel justify-center"
+                style={{ fontSize: "1rem", padding: "15px 32px" }}
+              >
+                <IconShop />
+                {lang === "bg" ? "Поръчай продукта" : "Order the Product"}
+              </Link>
+              <Link
+                href="/product"
+                className="btn btn-secondary justify-center"
+                style={{ fontSize: "1rem", padding: "15px 32px" }}
+              >
+                <IconLink />
+                {lang === "bg" ? "Разбери повече" : "Learn More"}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
