@@ -3,6 +3,7 @@ import { IconFb, IconInsta, IconLink, IconTiktok } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const lang = useAtomValue(langAtom);
@@ -193,13 +194,25 @@ export default function Footer() {
               style={{ display: "flex", gap: 19, marginBottom: 24 }}
             >
               {[
-                <IconInsta key="ig" />,
-                <IconTiktok key="tt" />,
-                <IconFb key="fb" />,
-              ].map((icon, i) => (
-                <a
+                {
+                  icon: <IconInsta />,
+                  link: "https://www.instagram.com/tepe.bite/",
+                  available: true,
+                },
+                {
+                  icon: <IconTiktok />,
+                  link: "https://www.tiktok.com/@tepe.bite",
+                  available: true,
+                },
+                {
+                  icon: <IconFb />,
+                  link: "",
+                  available: false,
+                },
+              ].map(({ icon, link, available }, i) => (
+                <Link
                   key={i}
-                  href="#"
+                  href={link}
                   style={{
                     width: 40,
                     height: 40,
@@ -211,17 +224,14 @@ export default function Footer() {
                     color: "white",
                     transition: "background 0.2s",
                   }}
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.background =
-                      "var(--caramel)")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.background =
-                      "oklch(40% 0.07 315)")
+                  className={
+                    available
+                      ? "hover:bg-(--caramel)!"
+                      : "cursor-not-allowed opacity-50"
                   }
                 >
                   {icon}
-                </a>
+                </Link>
               ))}
             </div>
 

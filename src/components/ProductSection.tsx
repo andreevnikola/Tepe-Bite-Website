@@ -3,6 +3,7 @@ import { IconCheck, IconShop } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 
 const nutr = [
   { bg: "Енергийна стойност", en: "Energy", val: "197 kcal" },
@@ -223,14 +224,14 @@ export default function ProductSection() {
               </p>
             </div>
 
-            <a
-              href="/order.html"
+            <Link
+              href="/order"
               className="btn btn-caramel"
               style={{ fontSize: "1rem", padding: "15px 32px" }}
             >
               <IconShop />
               {lang === "bg" ? "Поръчай продукта" : "Order the Product"}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

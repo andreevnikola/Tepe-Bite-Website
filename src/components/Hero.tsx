@@ -3,6 +3,7 @@ import { IconArrow, IconShop } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 
 const HERO_HEADLINE_BG = ["Вкусно за теб.", "Смислено за общността."];
 const HERO_HEADLINE_EN = [
@@ -216,13 +217,13 @@ export default function Hero() {
                 <IconShop />
                 {lang === "bg" ? "Поръчай" : "Order Now"}
               </a>
-              <a
-                href="#initsiatiви"
+              <Link
+                href="/initiatives"
                 className="btn btn-secondary max-lg:grow justify-center"
               >
                 {lang === "bg" ? "Виж инициативите" : "See Initiatives"}
                 <IconArrow />
-              </a>
+              </Link>
             </div>
 
             {/* Badges */}

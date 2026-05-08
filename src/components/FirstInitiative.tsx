@@ -1,39 +1,40 @@
-'use client';
-import { useAtomValue } from 'jotai';
-import { langAtom } from '@/store/lang';
-import { IconArrow } from '@/components/icons';
+"use client";
+import { IconArrow } from "@/components/icons";
+import { langAtom } from "@/store/lang";
+import { useAtomValue } from "jotai";
+import Link from "next/link";
 
 const PCT = 42;
 
 const timelineSteps = {
   bg: [
-    { done: true, label: 'Инициативата е обявена' },
-    { done: true, label: 'Набиране на средства стартирало' },
-    { done: false, label: 'Достигане на 50% от целта', active: true },
-    { done: false, label: 'Реализация на проектите' },
-    { done: false, label: 'Финален отчет' },
+    { done: true, label: "Инициативата е обявена" },
+    { done: true, label: "Набиране на средства стартирало" },
+    { done: false, label: "Достигане на 50% от целта", active: true },
+    { done: false, label: "Реализация на проектите" },
+    { done: false, label: "Финален отчет" },
   ],
   en: [
-    { done: true, label: 'Initiative announced' },
-    { done: true, label: 'Fundraising started' },
-    { done: false, label: 'Reaching 50% of goal', active: true },
-    { done: false, label: 'Projects implementation' },
-    { done: false, label: 'Final report' },
+    { done: true, label: "Initiative announced" },
+    { done: true, label: "Fundraising started" },
+    { done: false, label: "Reaching 50% of goal", active: true },
+    { done: false, label: "Projects implementation" },
+    { done: false, label: "Final report" },
   ],
 };
 
 const keyStats = {
   bg: [
-    ['Целева сума', '5 000 лв.'],
-    ['Събрани до момента', '2 100 лв.'],
-    ['Подкрепени млади хора', '12'],
-    ['Следваща цел', '3 000 лв.'],
+    ["Целева сума", "5 000 лв."],
+    ["Събрани до момента", "2 100 лв."],
+    ["Подкрепени млади хора", "12"],
+    ["Следваща цел", "3 000 лв."],
   ],
   en: [
-    ['Target amount', '5 000 BGN'],
-    ['Raised so far', '2 100 BGN'],
-    ['Young people supported', '12'],
-    ['Next milestone', '3 000 BGN'],
+    ["Target amount", "5 000 BGN"],
+    ["Raised so far", "2 100 BGN"],
+    ["Young people supported", "12"],
+    ["Next milestone", "3 000 BGN"],
   ],
 };
 
@@ -45,30 +46,30 @@ export default function FirstInitiative() {
   return (
     <section
       className="section-spacing"
-      style={{ background: 'var(--surface)' }}
+      style={{ background: "var(--surface)" }}
     >
       <div className="section-inner">
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div className="section-divider" />
           <div className="label-tag" style={{ marginBottom: 14 }}>
-            {lang === 'bg' ? 'В процес' : 'In Progress'}
+            {lang === "bg" ? "В процес" : "In Progress"}
           </div>
           <h2 className="heading-lg">
-            {lang === 'bg' ? 'Първата ни инициатива' : 'Our First Initiative'}
+            {lang === "bg" ? "Първата ни инициатива" : "Our First Initiative"}
           </h2>
-          <p style={{ maxWidth: 520, margin: '16px auto 0', fontSize: '1rem' }}>
-            {lang === 'bg'
-              ? 'Започваме с конкретна кауза и я проследяваме открито — от първата идея до реалния резултат.'
-              : 'We start with a concrete cause and track it openly — from the first idea to the real result.'}
+          <p style={{ maxWidth: 520, margin: "16px auto 0", fontSize: "1rem" }}>
+            {lang === "bg"
+              ? "Започваме с конкретна кауза и я проследяваме открито — от първата идея до реалния резултат."
+              : "We start with a concrete cause and track it openly — from the first idea to the real result."}
           </p>
         </div>
 
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(280px, 1.2fr) minmax(280px, 1fr)',
-            gap: 'clamp(32px, 5vw, 64px)',
-            alignItems: 'start',
+            display: "grid",
+            gridTemplateColumns: "minmax(280px, 1.2fr) minmax(280px, 1fr)",
+            gap: "clamp(32px, 5vw, 64px)",
+            alignItems: "start",
           }}
           className="initiative-grid"
         >
@@ -77,12 +78,12 @@ export default function FirstInitiative() {
             {/* Active badge */}
             <div
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
+                display: "inline-flex",
+                alignItems: "center",
                 gap: 8,
-                background: 'oklch(92% 0.05 150)',
+                background: "oklch(92% 0.05 150)",
                 borderRadius: 100,
-                padding: '6px 14px',
+                padding: "6px 14px",
                 marginBottom: 20,
               }}
             >
@@ -91,40 +92,44 @@ export default function FirstInitiative() {
                 style={{
                   width: 8,
                   height: 8,
-                  borderRadius: '50%',
-                  background: 'oklch(52% 0.15 150)',
+                  borderRadius: "50%",
+                  background: "oklch(52% 0.15 150)",
                 }}
               />
               <span
                 style={{
-                  fontSize: '0.78rem',
+                  fontSize: "0.78rem",
                   fontWeight: 600,
-                  color: 'oklch(34% 0.1 150)',
-                  letterSpacing: '0.08em',
+                  color: "oklch(34% 0.1 150)",
+                  letterSpacing: "0.08em",
                 }}
               >
-                {lang === 'bg' ? 'АКТИВНА' : 'ACTIVE'}
+                {lang === "bg" ? "АКТИВНА" : "ACTIVE"}
               </span>
             </div>
 
             <h3
               className="heading-md"
-              style={{ fontSize: '1.5rem', marginBottom: 16, color: 'var(--plum)' }}
+              style={{
+                fontSize: "1.5rem",
+                marginBottom: 16,
+                color: "var(--plum)",
+              }}
             >
-              {lang === 'bg'
-                ? 'Млади и активни — Пловдив 2025'
-                : 'Young and Active — Plovdiv 2025'}
+              {lang === "bg"
+                ? "Млади и активни — Пловдив 2025"
+                : "Young and Active — Plovdiv 2025"}
             </h3>
             <p style={{ marginBottom: 24 }}>
-              {lang === 'bg'
-                ? 'Подкрепяме млади хора от Пловдив, които развиват социални и творчески проекти в общността. Целта е да покажем, че малки стъпки водят до реална промяна.'
-                : 'We support young people from Plovdiv who develop social and creative projects in the community. The goal is to show that small steps lead to real change.'}
+              {lang === "bg"
+                ? "Подкрепяме млади хора от Пловдив, които развиват социални и творчески проекти в общността. Целта е да покажем, че малки стъпки водят до реална промяна."
+                : "We support young people from Plovdiv who develop social and creative projects in the community. The goal is to show that small steps lead to real change."}
             </p>
 
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 16,
                 marginBottom: 32,
               }}
@@ -133,21 +138,23 @@ export default function FirstInitiative() {
                 <div
                   key={i}
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '14px 0',
-                    borderBottom: '1px solid var(--border)',
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "14px 0",
+                    borderBottom: "1px solid var(--border)",
                   }}
                 >
-                  <span style={{ color: 'var(--text-soft)', fontSize: '0.9rem' }}>
+                  <span
+                    style={{ color: "var(--text-soft)", fontSize: "0.9rem" }}
+                  >
                     {k}
                   </span>
                   <span
                     style={{
                       fontWeight: 700,
-                      color: 'var(--plum)',
-                      fontFamily: 'var(--font-head)',
+                      color: "var(--plum)",
+                      fontFamily: "var(--font-head)",
                     }}
                   >
                     {v}
@@ -156,9 +163,9 @@ export default function FirstInitiative() {
               ))}
             </div>
 
-            <a href="/initiatives" className="btn btn-primary">
-              {lang === 'bg' ? 'Виж напредъка' : 'View Progress'} <IconArrow />
-            </a>
+            <Link href="initiatives#transition" className="btn btn-primary">
+              {lang === "bg" ? "Виж напредъка" : "View Progress"} <IconArrow />
+            </Link>
           </div>
 
           {/* Right: progress card */}
@@ -167,21 +174,27 @@ export default function FirstInitiative() {
             <div style={{ marginBottom: 28 }}>
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'baseline',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
                   marginBottom: 10,
                 }}
               >
-                <span style={{ fontWeight: 600, color: 'var(--text)', fontSize: '0.95rem' }}>
-                  {lang === 'bg' ? 'Напредък' : 'Progress'}
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: "var(--text)",
+                    fontSize: "0.95rem",
+                  }}
+                >
+                  {lang === "bg" ? "Напредък" : "Progress"}
                 </span>
                 <span
                   style={{
-                    fontFamily: 'var(--font-head)',
+                    fontFamily: "var(--font-head)",
                     fontWeight: 700,
-                    fontSize: '1.4rem',
-                    color: 'var(--plum)',
+                    fontSize: "1.4rem",
+                    color: "var(--plum)",
                   }}
                 >
                   {PCT}%
@@ -192,13 +205,19 @@ export default function FirstInitiative() {
               </div>
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
+                  display: "flex",
+                  justifyContent: "space-between",
                   marginTop: 8,
                 }}
               >
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-soft)' }}>0</span>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-soft)' }}>
+                <span
+                  style={{ fontSize: "0.78rem", color: "var(--text-soft)" }}
+                >
+                  0
+                </span>
+                <span
+                  style={{ fontSize: "0.78rem", color: "var(--text-soft)" }}
+                >
                   5 000 лв.
                 </span>
               </div>
@@ -207,15 +226,15 @@ export default function FirstInitiative() {
             {/* Timeline */}
             <div style={{ marginBottom: 28 }}>
               <div className="label-tag" style={{ marginBottom: 14 }}>
-                {lang === 'bg' ? 'Времева линия' : 'Timeline'}
+                {lang === "bg" ? "Времева линия" : "Timeline"}
               </div>
               {steps.map((step, i) => (
                 <div
                   key={i}
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     gap: 14,
-                    alignItems: 'flex-start',
+                    alignItems: "flex-start",
                     marginBottom: 14,
                   }}
                 >
@@ -223,18 +242,18 @@ export default function FirstInitiative() {
                     style={{
                       width: 22,
                       height: 22,
-                      borderRadius: '50%',
+                      borderRadius: "50%",
                       flexShrink: 0,
                       marginTop: 2,
                       background: step.done
-                        ? 'var(--caramel)'
+                        ? "var(--caramel)"
                         : step.active
-                        ? 'var(--plum-lt)'
-                        : 'var(--border)',
-                      border: step.active ? '2px solid var(--plum)' : 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                          ? "var(--plum-lt)"
+                          : "var(--border)",
+                      border: step.active ? "2px solid var(--plum)" : "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     {step.done && (
@@ -256,12 +275,12 @@ export default function FirstInitiative() {
                   </div>
                   <span
                     style={{
-                      fontSize: '0.9rem',
+                      fontSize: "0.9rem",
                       color: step.done
-                        ? 'var(--text)'
+                        ? "var(--text)"
                         : step.active
-                        ? 'var(--plum)'
-                        : 'var(--text-soft)',
+                          ? "var(--plum)"
+                          : "var(--text-soft)",
                       fontWeight: step.active ? 600 : 400,
                     }}
                   >
@@ -274,20 +293,20 @@ export default function FirstInitiative() {
             {/* Quote */}
             <div
               style={{
-                background: 'var(--plum-lt)',
+                background: "var(--plum-lt)",
                 borderRadius: 14,
-                padding: '16px 20px',
+                padding: "16px 20px",
               }}
             >
               <p
                 style={{
-                  fontSize: '0.85rem',
-                  color: 'var(--plum)',
-                  fontStyle: 'italic',
+                  fontSize: "0.85rem",
+                  color: "var(--plum)",
+                  fontStyle: "italic",
                   margin: 0,
                 }}
               >
-                {lang === 'bg'
+                {lang === "bg"
                   ? '"Всяко закупено барче ТЕПЕ bite е пряк принос към тази инициатива."'
                   : '"Every ТЕПЕ bite bar purchased is a direct contribution to this initiative."'}
               </p>

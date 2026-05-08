@@ -1032,6 +1032,7 @@ function TransitionSection({ lang }: { lang: Lang }) {
         position: "relative",
         overflow: "hidden",
       }}
+      id="transition"
     >
       <div
         style={{
@@ -2212,7 +2213,12 @@ function WhatNextSection({ lang }: { lang: Lang }) {
             {steps.map((step, i) => (
               <div
                 key={i}
-                style={{ display: "flex", alignItems: "stretch", flex: 1, minWidth: 0 }}
+                style={{
+                  display: "flex",
+                  alignItems: "stretch",
+                  flex: 1,
+                  minWidth: 0,
+                }}
                 className="grow"
               >
                 <div
@@ -2226,7 +2232,9 @@ function WhatNextSection({ lang }: { lang: Lang }) {
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    minHeight: equalCardHeight ? `${equalCardHeight}px` : undefined,
+                    minHeight: equalCardHeight
+                      ? `${equalCardHeight}px`
+                      : undefined,
                     textAlign: "center",
                   }}
                   className="grow"
