@@ -1,5 +1,5 @@
 "use client";
-import { IconArrow, IconCheck } from "@/components/icons";
+import { IconArrow, IconCheck, IconLink } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -55,16 +55,50 @@ const IconBrush = () => (
 /* Condensed milestones for the landing section — real data from the initiative */
 const milestones = {
   bg: [
-    { done: true, label: "Идентифицирахме каузата", detail: "Облагородяване на зона в парк Бунарджика" },
-    { done: true, label: "Осигурихме партньорство с Оргахим", detail: "Материали и инструменти за реализация" },
-    { done: true, label: "Намерихме артистичен екип", detail: "Разработени концептуални визуализации" },
-    { done: false, label: 'Предстои координация с Район „Централен"', detail: "Последна стъпка преди реализация", active: true },
+    {
+      done: true,
+      label: "Идентифицирахме каузата",
+      detail: "Облагородяване на зона в парк Бунарджика",
+    },
+    {
+      done: true,
+      label: "Осигурихме партньорство с Оргахим",
+      detail: "Материали и инструменти за реализация",
+    },
+    {
+      done: true,
+      label: "Намерихме артистичен екип",
+      detail: "Разработени концептуални визуализации",
+    },
+    {
+      done: false,
+      label: 'Предстои координация с Район „Централен"',
+      detail: "Последна стъпка преди реализация",
+      active: true,
+    },
   ],
   en: [
-    { done: true, label: "We identified the cause", detail: "Improving an area in Bunardzhika Park" },
-    { done: true, label: "Secured partnership with Orgachim", detail: "Materials and tools for execution" },
-    { done: true, label: "Found the artist team", detail: "Concept visuals developed" },
-    { done: false, label: "Coordination with Central District next", detail: "The final step before execution", active: true },
+    {
+      done: true,
+      label: "We identified the cause",
+      detail: "Improving an area in Bunardzhika Park",
+    },
+    {
+      done: true,
+      label: "Secured partnership with Orgachim",
+      detail: "Materials and tools for execution",
+    },
+    {
+      done: true,
+      label: "Found the artist team",
+      detail: "Concept visuals developed",
+    },
+    {
+      done: false,
+      label: "Coordination with Central District next",
+      detail: "The final step before execution",
+      active: true,
+    },
   ],
 };
 
@@ -79,7 +113,11 @@ export default function FirstInitiative() {
   return (
     <section
       className="section-spacing"
-      style={{ background: "var(--surface)", position: "relative", overflow: "hidden" }}
+      style={{
+        background: "var(--surface)",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
       {/* Decorative hill silhouette */}
       <svg
@@ -102,7 +140,10 @@ export default function FirstInitiative() {
         />
       </svg>
 
-      <div className="section-inner" style={{ position: "relative", zIndex: 1 }}>
+      <div
+        className="section-inner"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div className="section-divider" />
@@ -181,7 +222,16 @@ export default function FirstInitiative() {
             </p>
 
             {/* Location + format pills */}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                marginBottom: 28,
+                position: "relative",
+              }}
+              className="max-sm:-bottom-3!"
+            >
               <span
                 style={{
                   display: "inline-flex",
@@ -191,9 +241,9 @@ export default function FirstInitiative() {
                   color: "oklch(42% 0.12 52)",
                   borderRadius: 100,
                   padding: "6px 14px",
-                  fontSize: "0.78rem",
                   fontWeight: 600,
                 }}
+                className="text-[0.72rem] max-sm:text-[0.52rem] max-sm:grow grow-0 justify-center"
               >
                 <IconPin />
                 {lang === "bg" ? "Бунарджика, Пловдив" : "Bunardzhika, Plovdiv"}
@@ -207,12 +257,14 @@ export default function FirstInitiative() {
                   color: "var(--plum)",
                   borderRadius: 100,
                   padding: "6px 14px",
-                  fontSize: "0.78rem",
                   fontWeight: 600,
                 }}
+                className="text-[0.72rem] max-sm:text-[0.52rem] max-sm:grow grow-0 justify-center"
               >
                 <IconBrush />
-                {lang === "bg" ? "Съвременно графично изкуство" : "Contemporary graphic art"}
+                {lang === "bg"
+                  ? "Съвременно графично изкуство"
+                  : "Contemporary graphic art"}
               </span>
             </div>
 
@@ -228,7 +280,14 @@ export default function FirstInitiative() {
               <div className="label-tag" style={{ marginBottom: 10 }}>
                 {lang === "bg" ? "Защо тепетата?" : "Why the hills?"}
               </div>
-              <p style={{ fontSize: "0.92rem", lineHeight: 1.72, margin: 0, color: "var(--plum)" }}>
+              <p
+                style={{
+                  fontSize: "0.92rem",
+                  lineHeight: 1.72,
+                  margin: 0,
+                  color: "var(--plum)",
+                }}
+              >
                 {lang === "bg"
                   ? "Тепетата са един от най-силните символи на Пловдив — природни и социални пространства, заслужаващи постоянна грижа. ТЕПЕ bite е създаден с идеята тази грижа да е вградена в самия бизнес модел: всяко барче е стъпка напред."
                   : "The hills are one of Plovdiv's strongest symbols — natural and social spaces that deserve continuous care. ТЕПЕ bite was built with this idea embedded in the business model itself: every bar is a step forward."}
@@ -277,10 +336,16 @@ export default function FirstInitiative() {
                     marginBottom: 2,
                   }}
                 >
-                  {lang === "bg" ? "Техническо партньорство" : "Technical partner"}
+                  {lang === "bg"
+                    ? "Техническо партньорство"
+                    : "Technical partner"}
                 </div>
                 <div
-                  style={{ fontWeight: 700, color: "var(--plum)", fontSize: "0.92rem" }}
+                  style={{
+                    fontWeight: 700,
+                    color: "var(--plum)",
+                    fontSize: "0.92rem",
+                  }}
                 >
                   Оргахим
                 </div>
@@ -301,9 +366,24 @@ export default function FirstInitiative() {
               </div>
             </div>
 
-            <Link href="/initiatives#first-initiative" className="btn btn-primary">
-              {lang === "bg" ? "Виж инициативата" : "View the initiative"} <IconArrow />
-            </Link>
+            <div className="flex gap-2 max-[700px]:flex-col">
+              <Link
+                href="/initiatives#first-initiative"
+                className="btn btn-primary justify-center"
+              >
+                {lang === "bg" ? "Виж инициативата" : "View the initiative"}{" "}
+                <IconArrow />
+              </Link>
+              <Link
+                href="/initiatives"
+                className="btn btn-secondary max-[1200px]:w-full w-fit justify-center"
+              >
+                {lang === "bg"
+                  ? "Разбери повече за приноса ни"
+                  : "Learn more about our contribution"}{" "}
+                <IconLink />
+              </Link>
+            </div>
           </div>
 
           {/* ── Right: progress card ── */}
@@ -335,7 +415,8 @@ export default function FirstInitiative() {
                       marginLeft: 8,
                     }}
                   >
-                    {DONE_COUNT}/{TOTAL_COUNT} {lang === "bg" ? "стъпки" : "steps"}
+                    {DONE_COUNT}/{TOTAL_COUNT}{" "}
+                    {lang === "bg" ? "стъпки" : "steps"}
                   </span>
                 </div>
                 <span
@@ -408,11 +489,7 @@ export default function FirstInitiative() {
                         zIndex: 1,
                       }}
                     >
-                      {step.done ? (
-                        <IconCheck />
-                      ) : (
-                        <IconClock />
-                      )}
+                      {step.done ? <IconCheck /> : <IconClock />}
                     </div>
                     {i < steps.length - 1 && (
                       <div
@@ -454,7 +531,9 @@ export default function FirstInitiative() {
                     <p
                       style={{
                         fontSize: "0.78rem",
-                        color: step.done ? "var(--text-soft)" : "var(--text-soft)",
+                        color: step.done
+                          ? "var(--text-soft)"
+                          : "var(--text-soft)",
                         margin: 0,
                         lineHeight: 1.5,
                       }}
@@ -488,7 +567,7 @@ export default function FirstInitiative() {
                   : '"Every ТЕПЕ bite bar purchased is a direct contribution to this initiative."'}
               </p>
               <Link
-                href="/product"
+                href="/order"
                 className="btn"
                 style={{
                   background: "var(--caramel)",
@@ -503,7 +582,8 @@ export default function FirstInitiative() {
                   textDecoration: "none",
                 }}
               >
-                {lang === "bg" ? "Поръчай и подкрепи" : "Order & support"} <IconArrow />
+                {lang === "bg" ? "Поръчай и подкрепи" : "Order & support"}{" "}
+                <IconArrow />
               </Link>
             </div>
           </div>
@@ -511,7 +591,7 @@ export default function FirstInitiative() {
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 1200px) {
           .fi-grid {
             grid-template-columns: 1fr !important;
           }
