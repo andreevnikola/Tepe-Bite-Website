@@ -1,51 +1,69 @@
-import type { Metadata } from 'next';
-import { Playfair_Display, DM_Sans } from 'next/font/google';
-import './globals.css';
+import Nav from "@/components/Nav";
+import Providers from "@/components/Providers";
+import { LANG_COOKIE, normalizeLang } from "@/store/lang";
+import type { Metadata } from "next";
+import { DM_Sans, Playfair_Display } from "next/font/google";
+import { cookies } from "next/headers";
+import "./globals.css";
 
 const playfair = Playfair_Display({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['400', '600', '700', '900'],
-  style: ['normal', 'italic'],
-  variable: '--font-playfair',
-  display: 'swap',
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "600", "700", "900"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
 });
 
 const dmSans = DM_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  variable: '--font-dm-sans',
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-dm-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: 'ТЕПЕ bite — Барче с характер от Пловдив',
+  title: "ТЕПЕ bite — Барче с характер от Пловдив",
   description:
-    'ТЕПЕ bite е барче със солен карамел, създадено в Пловдив — с ниско съдържание на нетни въглехидрати, високо съдържание на фибри и мисия зад всяка покупка.',
-  keywords: ['ТЕПЕ bite', 'протеинова закуска', 'солен карамел', 'Пловдив', 'low carb'],
+    "ТЕПЕ bite е барче със солен карамел, създадено в Пловдив — с ниско съдържание на нетни въглехидрати, високо съдържание на фибри и мисия зад всяка покупка.",
+  keywords: [
+    "ТЕПЕ bite",
+    "протеинова закуска",
+    "солен карамел",
+    "Пловдив",
+    "low carb",
+  ],
   openGraph: {
-    title: 'ТЕПЕ bite — Барче с характер от Пловдив',
-    description: 'Вкусно за теб. Смислено за общността.',
-    type: 'website',
+    title: "ТЕПЕ bite — Барче с характер от Пловдив",
+    description: "Вкусно за теб. Смислено за общността.",
+    type: "website",
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialLang = normalizeLang(cookieStore.get(LANG_COOKIE)?.value);
+
   return (
     <html
       lang="bg"
       className={`${playfair.variable} ${dmSans.variable}`}
       style={
         {
-          '--font-head': 'var(--font-playfair), Georgia, serif',
-          '--font-body': 'var(--font-dm-sans), system-ui, sans-serif',
+          "--font-head": "var(--font-playfair), Georgia, serif",
+          "--font-body": "var(--font-dm-sans), system-ui, sans-serif",
         } as React.CSSProperties
       }
     >
-      <body>{children}</body>
+      <body>
+        <Providers initialLang={initialLang}>
+          <Nav />
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

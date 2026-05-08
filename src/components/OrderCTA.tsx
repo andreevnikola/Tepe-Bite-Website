@@ -3,6 +3,7 @@ import { IconShop } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function OrderCTA() {
   const lang = useAtomValue(langAtom);
@@ -59,14 +60,14 @@ export default function OrderCTA() {
                 ? "Поръчай барчето със солен карамел и подкрепи първите ни инициативи още сега."
                 : "Order the salted caramel bar and support our first initiatives right now."}
             </p>
-            <a
-              href="/order.html"
+            <Link
+              href="/order"
               className="btn btn-caramel order-button"
               style={{ fontSize: "1.05rem", padding: "16px 36px" }}
             >
               <IconShop />
               {lang === "bg" ? "Поръчай сега" : "Order Now"}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -66,6 +66,7 @@ export default function Nav() {
         left: 0,
         right: 0,
         zIndex: 1000,
+        viewTransitionName: "site-header",
         background: scrolled ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
         backdropFilter: scrolled ? "blur(16px)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
@@ -262,12 +263,12 @@ export default function Nav() {
                 borderRadius: 100,
               }}
             >
-            {(["bg", "en"] as Lang[]).map((l) => (
-              <button
-                key={l}
-                onClick={() => handleLangChange(l)}
-                style={{
-                  padding: "3px 8px",
+              {(["bg", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => handleLangChange(l)}
+                  style={{
+                    padding: "3px 8px",
                     borderRadius: 100,
                     border: "none",
                     cursor: "pointer",

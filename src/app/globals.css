@@ -30,6 +30,7 @@
     --r-xl: 48px;
     --font-head: "Playfair Display", Georgia, serif;
     --font-body: "DM Sans", system-ui, sans-serif;
+    --page-transition-duration: 0.2s;
   }
 
   html {
@@ -239,6 +240,28 @@
   }
 }
 
+::view-transition-group(site-header),
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-group(.page-switch) {
+  animation-duration: var(--page-transition-duration);
+}
+
+::view-transition-old(.page-switch) {
+  animation: page-fade-out var(--page-transition-duration) ease both;
+}
+
+::view-transition-new(.page-switch) {
+  animation: page-fade-in var(--page-transition-duration) ease both;
+}
+
 @keyframes pulse-dot {
   0%,
   100% {
@@ -258,6 +281,28 @@
   }
   50% {
     transform: translateY(-14px);
+  }
+}
+
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -281,5 +326,14 @@
   }
   .hamburger {
     display: flex !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }
