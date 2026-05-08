@@ -4,6 +4,7 @@ import { IconArrow, IconCheck, IconHeart, IconShop } from "@/components/icons";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 /* ─── Extra icons ────────────────────────────────────────────────────────── */
 
@@ -1757,7 +1758,7 @@ function ReconnectFAQSection({ lang }: { lang: Lang }) {
     <section
       style={{
         background: "var(--bg)",
-        paddingTop: 0,
+        paddingTop: "clamp(52px, 6vw, 80px)",
         paddingBottom: "clamp(52px, 6vw, 80px)",
         paddingLeft: "clamp(20px, 5vw, 80px)",
         paddingRight: "clamp(20px, 5vw, 80px)",
@@ -1877,7 +1878,7 @@ function PartnersSection({ lang }: { lang: Lang }) {
           className="partners-grid"
         >
           {/* Orgachim */}
-          <div className="card card-hover" style={{ padding: "30px 26px" }}>
+          <div className="card" style={{ padding: "30px 26px" }}>
             {/* TODO: Replace icon with Orgachim logo: /assets/images/partners/orgachim-logo.svg */}
             <div
               style={{
@@ -2141,12 +2142,40 @@ function WhatNextSection({ lang }: { lang: Lang }) {
   const steps =
     lang === "bg"
       ? [
-          "Съгласуване",
-          "Финализиране на дизайна",
+          "Съгласуване с общината",
+          "Одобрение на дизайна",
           "Подготовка на мястото",
           "Реализация",
+          "Публикуване на резултати",
         ]
       : ["Coordination", "Final design", "Site preparation", "Execution"];
+  const stepCardRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [equalCardHeight, setEqualCardHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    const updateEqualCardHeight = () => {
+      stepCardRefs.current = stepCardRefs.current.slice(0, steps.length);
+      const tallest = Math.max(
+        ...stepCardRefs.current.map((el) => (el ? el.scrollHeight : 0)),
+        0,
+      );
+      setEqualCardHeight(tallest > 0 ? tallest : null);
+    };
+
+    updateEqualCardHeight();
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updateEqualCardHeight)
+        : null;
+    stepCardRefs.current.forEach((el) => {
+      if (el) resizeObserver?.observe(el);
+    });
+    window.addEventListener("resize", updateEqualCardHeight);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateEqualCardHeight);
+    };
+  }, [lang, steps.length]);
 
   return (
     <section
@@ -2177,47 +2206,64 @@ function WhatNextSection({ lang }: { lang: Lang }) {
             </h2>
           </div>
           <div
-            style={{ display: "flex", alignItems: "center", gap: 0 }}
-            className="next-steps-flow"
+            style={{ display: "flex", alignItems: "stretch" }}
+            className="next-steps-flow gap-y-3 gap-x-0"
           >
             {steps.map((step, i) => (
               <div
                 key={i}
-                style={{ display: "flex", alignItems: "center", flex: 1 }}
+                style={{ display: "flex", alignItems: "stretch", flex: 1, minWidth: 0 }}
+                className="grow"
               >
                 <div
+                  ref={(el) => {
+                    stepCardRefs.current[i] = el;
+                  }}
                   style={{
                     background: i === 0 ? "var(--plum)" : "var(--surface)",
                     border: `2px solid ${i === 0 ? "var(--plum)" : "var(--border)"}`,
                     borderRadius: "var(--r-sm)",
-                    padding: "14px 18px",
                     flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: equalCardHeight ? `${equalCardHeight}px` : undefined,
                     textAlign: "center",
                   }}
+                  className="grow"
                 >
                   <div
                     style={{
+                      padding: "14px 18px 8px",
                       fontSize: "0.65rem",
                       fontWeight: 700,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
                       color: i === 0 ? "var(--caramel)" : "var(--text-soft)",
-                      marginBottom: 5,
                     }}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <p
+                  <div
                     style={{
-                      margin: 0,
-                      fontSize: "0.85rem",
-                      fontWeight: 600,
-                      color: i === 0 ? "white" : "var(--plum)",
-                      lineHeight: 1.3,
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0 18px 14px",
                     }}
                   >
-                    {step}
-                  </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "0.85rem",
+                        fontWeight: 600,
+                        color: i === 0 ? "white" : "var(--plum)",
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {step}
+                    </p>
+                  </div>
                 </div>
                 {i < steps.length - 1 && (
                   <div
@@ -2229,6 +2275,7 @@ function WhatNextSection({ lang }: { lang: Lang }) {
                       justifyContent: "center",
                     }}
                     aria-hidden="true"
+                    className="max-[800px]:hidden!"
                   >
                     <svg width="20" height="12" viewBox="0 0 20 12">
                       <path
@@ -2249,8 +2296,8 @@ function WhatNextSection({ lang }: { lang: Lang }) {
       </div>
 
       <style>{`
-        @media (max-width: 760px) { .whats-next-grid { grid-template-columns: 1fr !important; } }
-        @media (max-width: 540px) { .next-steps-flow { flex-direction: column !important; align-items: stretch !important; gap: 8px; } .next-steps-flow > div > div[aria-hidden="true"] { display: none; } }
+        @media (max-width: 1100px) { .whats-next-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 800px) { .next-steps-flow { flex-direction: column !important; align-items: stretch !important; } .next-steps-flow > div > div[aria-hidden="true"] { display: none; } }
       `}</style>
     </section>
   );
