@@ -867,6 +867,27 @@ function ModelSection({ lang }: { lang: Lang }) {
             </div>
           ))}
         </div>
+
+        {/* Transparency link */}
+        <div style={{ textAlign: "center", marginTop: 32 }}>
+          <a
+            href="/legal/initiative-transparency"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              color: "var(--plum)",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+              textDecoration: "none",
+            }}
+          >
+            🤝{" "}
+            {lang === "bg"
+              ? "Вижте как подхождаме към прозрачността на инициативите →"
+              : "See how we approach initiative transparency →"}
+          </a>
+        </div>
       </div>
 
       <style>{`

@@ -23,15 +23,26 @@ export default function Footer() {
           ["/#za-nas", "About"],
         ];
 
-  const legalLinks =
+  const legalLinks: [string, string][] =
     lang === "bg"
       ? [
-          "Условия за ползване",
-          "Политика за поверителност",
-          "Бисквитки",
-          "Отказ от отговорност",
+          ["/legal", "Правна информация"],
+          ["/legal/terms", "Общи условия"],
+          ["/legal/privacy", "Поверителност"],
+          ["/legal/cookies", "Бисквитки"],
+          ["/legal/delivery-payment", "Доставка и плащане"],
+          ["/legal/returns-complaints", "Връщане и рекламации"],
+          ["/legal/trader-info", "Данни за търговеца"],
         ]
-      : ["Terms of Use", "Privacy Policy", "Cookies", "Disclaimer"];
+      : [
+          ["/legal", "Legal Center"],
+          ["/legal/terms", "Terms"],
+          ["/legal/privacy", "Privacy"],
+          ["/legal/cookies", "Cookies"],
+          ["/legal/delivery-payment", "Delivery & Payment"],
+          ["/legal/returns-complaints", "Returns & Complaints"],
+          ["/legal/trader-info", "Trader Info"],
+        ];
 
   const linkStyle = {
     display: "block",
@@ -277,6 +288,48 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Legal links row */}
+        <div
+          style={{
+            borderTop: "1px solid oklch(38% 0.06 315)",
+            paddingTop: 20,
+            paddingBottom: 20,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px 20px",
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "0.72rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "oklch(50% 0.04 315)",
+              fontWeight: 600,
+              flexShrink: 0,
+            }}
+          >
+            {lang === "bg" ? "Правна информация" : "Legal"}
+          </span>
+          {legalLinks.map(([href, label]) => (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                color: "oklch(68% 0.04 310)",
+                fontSize: "0.78rem",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                transition: "color 0.2s",
+              }}
+              className="footer-legal-link"
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+
         {/* Bottom bar */}
         <div
           style={{
@@ -322,6 +375,9 @@ export default function Footer() {
           .footer-grid {
             grid-template-columns: 1fr !important;
           }
+        }
+        .footer-legal-link:hover {
+          color: white !important;
         }
       `}</style>
     </footer>

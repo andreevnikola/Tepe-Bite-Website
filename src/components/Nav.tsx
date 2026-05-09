@@ -13,6 +13,7 @@ export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isLegal = pathname.startsWith("/legal");
 
   // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
   const p = isHome ? "" : "/";
@@ -67,10 +68,10 @@ export default function Nav() {
         right: 0,
         zIndex: 1000,
         viewTransitionName: "site-header",
-        background: scrolled ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
-        boxShadow: scrolled ? "0 1px 0 oklch(90% 0.02 80)" : "none",
+        background: (scrolled || isLegal) ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
+        backdropFilter: (scrolled || isLegal) ? "blur(16px)" : "none",
+        WebkitBackdropFilter: (scrolled || isLegal) ? "blur(16px)" : "none",
+        boxShadow: (scrolled || isLegal) ? "0 1px 0 oklch(90% 0.02 80)" : "none",
         transition: "all 0.3s ease",
       }}
     >
@@ -345,6 +346,22 @@ export default function Nav() {
                 </Link>
               );
             })}
+            <Link
+              href="/legal"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                textDecoration: "none",
+                color: "var(--text-soft)",
+                fontSize: "0.95rem",
+                fontWeight: 500,
+                padding: "8px 0",
+                borderTop: "1px solid var(--border)",
+                marginTop: 4,
+                paddingTop: 16,
+              }}
+            >
+              {lang === "bg" ? "Правна информация" : "Legal"}
+            </Link>
             <Link
               href={`${p}#order`}
               onClick={() => setMobileOpen(false)}
