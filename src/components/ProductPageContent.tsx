@@ -1022,6 +1022,27 @@ function IngredientsSection({ lang }: { lang: Lang }) {
               : "Contains almonds. Check the label for complete allergen information and possible traces of other ingredients."}
           </p>
         </div>
+
+        {/* Link to full legal product-info page */}
+        <div style={{ marginTop: 16, textAlign: "center" }}>
+          <a
+            href="/legal/product-info"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              color: "var(--plum)",
+              fontWeight: 600,
+              fontSize: "0.88rem",
+              textDecoration: "none",
+            }}
+          >
+            🌿{" "}
+            {lang === "bg"
+              ? "Вижте пълната информация за продукта и безопасността →"
+              : "See full product information and food safety notice →"}
+          </a>
+        </div>
       </div>
 
       <style>{`
