@@ -14,7 +14,7 @@ SMTP_SECURE=false
 SMTP_USER=
 SMTP_PASSWORD=
 SMTP_FROM_EMAIL=hello@tepebite.com
-SMTP_FROM_NAME=ТЕПЕ bite
+SMTP_FROM_NAME=ТЕПЕ bite - барчето на Пловдив
 
 # ─── Delivery pricing (EUR cents) ──────────────────────────────────────────────
 # BASE_LOCKER_CENTS: base Speedy locker delivery price. Must be > 0 for checkout.
