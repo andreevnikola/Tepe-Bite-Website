@@ -52,7 +52,7 @@ const DeliverySchema = z.discriminatedUnion('method', [
 ])
 
 const OrderCreateSchema = z.object({
-  website: z.string().max(0).optional(), // honeypot
+  website: z.string().optional(), // honeypot — any value allowed; checked explicitly below
   clientCheckoutId: z.string().min(1).max(128),
   clientCheckoutCreatedAt: z.string().datetime().optional(),
   language: z.enum(['bg', 'en']),

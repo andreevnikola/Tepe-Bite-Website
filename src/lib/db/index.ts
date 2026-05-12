@@ -21,34 +21,31 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 dotenv.config({ path: ".env" });
 
+const ENTITIES = [
+  AdminUser,
+  AdminInviteToken,
+  ProductPlan,
+  Order,
+  OrderItem,
+  OrderStatusHistory,
+  OrderAdminNote,
+  OrderInventoryAllocation,
+  InventoryBatch,
+  InventoryMovement,
+  NewsletterSubscriber,
+  AdminAuditLog,
+  EmailLog,
+  TelegramNotificationLog,
+  SystemLog,
+] as const;
+
 const globalForDb = globalThis as unknown as { _dataSource?: DataSource };
 
-export async function getDataSource(): Promise<DataSource> {
-  if (globalForDb._dataSource?.isInitialized) {
-    return globalForDb._dataSource;
-  }
-
-  const ds = new DataSource({
+function buildDataSource(): DataSource {
+  return new DataSource({
     type: "postgres",
     url: process.env.POSTGRESQL_URL,
-    entities: [
-      AdminUser,
-      AdminInviteToken,
-      ProductPlan,
-      Order,
-      OrderItem,
-      OrderStatusHistory,
-      OrderAdminNote,
-      OrderInventoryAllocation,
-      InventoryBatch,
-      InventoryMovement,
-      NewsletterSubscriber,
-      AdminAuditLog,
-      EmailLog,
-      TelegramNotificationLog,
-      SystemLog,
-    ],
-    migrations: ["src/lib/db/migrations/*.ts"],
+    entities: [...ENTITIES],
     synchronize: false,
     ssl:
       process.env.POSTGRES_SSL === "true"
@@ -59,7 +56,30 @@ export async function getDataSource(): Promise<DataSource> {
         : false,
     poolSize: parseInt(process.env.DB_POOL_SIZE ?? "5", 10),
   });
+}
 
+export async function getDataSource(): Promise<DataSource> {
+  if (globalForDb._dataSource?.isInitialized) {
+    // In dev, Turbopack HMR can cause entity class identity mismatch.
+    // Detect by probing metadata on a known entity.
+    if (process.env.NODE_ENV !== "production") {
+      try {
+        globalForDb._dataSource.getMetadata(ProductPlan);
+      } catch {
+        // Stale singleton — destroy and reinitialize with fresh entity refs.
+        await globalForDb._dataSource.destroy().catch(() => {});
+        globalForDb._dataSource = undefined;
+      }
+    } else {
+      return globalForDb._dataSource;
+    }
+  }
+
+  if (globalForDb._dataSource?.isInitialized) {
+    return globalForDb._dataSource;
+  }
+
+  const ds = buildDataSource();
   await ds.initialize();
   globalForDb._dataSource = ds;
   return ds;
