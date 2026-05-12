@@ -1,7 +1,7 @@
 'use client'
 import type { SafeProductPlan } from '@/lib/db/product-plans'
 import { formatDualMoney } from '@/lib/money'
-import { useAddToCart, useShowCartToast } from '@/store/cart'
+import { useAddToCart } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
@@ -16,26 +16,11 @@ const available = (p: SafeProductPlan) => p.isActive && p.priceCents > 0
 export default function PackCard({ plan }: Props) {
   const lang = useAtomValue(langAtom)
   const addToCart = useAddToCart()
-  const showToast = useShowCartToast()
   const router = useRouter()
 
   const isAvailable = available(plan)
   const title = lang === 'bg' ? plan.titleBg : plan.titleEn
   const description = lang === 'bg' ? plan.descriptionBg : plan.descriptionEn
-
-  const handleAddToCart = () => {
-    if (!isAvailable) return
-    addToCart({
-      slug: plan.slug,
-      packSize: plan.packSize,
-      titleBg: plan.titleBg,
-      titleEn: plan.titleEn,
-      quantity: 1,
-      unitPriceCents: plan.priceCents,
-      currency: plan.currency,
-    })
-    showToast(plan.titleBg, plan.titleEn)
-  }
 
   const handleOrderNow = () => {
     if (!isAvailable) return
