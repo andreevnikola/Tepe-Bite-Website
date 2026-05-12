@@ -26,9 +26,11 @@ export default function StickyOrderSummary({ items, mode = 'cart', onOrderNow, o
 
   const subtotalCents = items.reduce((s, i) => s + i.unitPriceCents * i.quantity, 0)
   const threshold = PRICING.FREE_DELIVERY_THRESHOLD_CENTS
-  const progress = Math.min((subtotalCents / threshold) * 100, 100)
-  const remaining = Math.max(threshold - subtotalCents, 0)
-  const freeDelivery = subtotalCents >= threshold
+  // threshold may be 0 on the client (non-NEXT_PUBLIC_ env var not available in browser bundle)
+  const showDeliveryProgress = threshold > 0
+  const progress = showDeliveryProgress ? Math.min((subtotalCents / threshold) * 100, 100) : 0
+  const remaining = showDeliveryProgress ? Math.max(threshold - subtotalCents, 0) : 0
+  const freeDelivery = showDeliveryProgress && subtotalCents >= threshold
 
   if (items.length === 0) return null
 
@@ -70,8 +72,8 @@ export default function StickyOrderSummary({ items, mode = 'cart', onOrderNow, o
         </div>
       </div>
 
-      {/* Free delivery progress */}
-      {subtotalCents > 0 && (
+      {/* Free delivery progress — hidden if threshold not available in client bundle */}
+      {subtotalCents > 0 && showDeliveryProgress && (
         <div style={{ marginBottom: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-soft)', marginBottom: 6 }}>
             <span>{freeDelivery

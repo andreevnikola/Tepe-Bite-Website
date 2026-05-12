@@ -24,9 +24,11 @@ export default function CartPage() {
   const clearCart = useClearCart()
 
   const threshold = PRICING.FREE_DELIVERY_THRESHOLD_CENTS
-  const progress = Math.min((subtotalCents / threshold) * 100, 100)
-  const remaining = Math.max(threshold - subtotalCents, 0)
-  const freeDelivery = subtotalCents >= threshold
+  // threshold may be 0 on client (non-NEXT_PUBLIC_ env var unavailable in browser bundle)
+  const showDeliveryProgress = threshold > 0
+  const progress = showDeliveryProgress ? Math.min((subtotalCents / threshold) * 100, 100) : 0
+  const remaining = showDeliveryProgress ? Math.max(threshold - subtotalCents, 0) : 0
+  const freeDelivery = showDeliveryProgress && subtotalCents >= threshold
 
   // Empty state
   if (items.length === 0) {
@@ -170,7 +172,8 @@ export default function CartPage() {
               )
             })}
 
-            {/* Free delivery progress bar (inline, mobile-visible) */}
+            {/* Free delivery progress bar — shown only when threshold is available */}
+            {showDeliveryProgress && (
             <div
               style={{
                 background: 'var(--surface)',
@@ -188,7 +191,7 @@ export default function CartPage() {
                         : `${formatMoneyEUR(remaining)} away from free delivery`)}
                 </span>
                 <span style={{ fontWeight: 600, color: 'var(--caramel)' }}>
-                  {formatMoneyEUR(PRICING.FREE_DELIVERY_THRESHOLD_CENTS)}
+                  {formatMoneyEUR(threshold)}
                 </span>
               </div>
               <div style={{ height: 8, background: 'var(--surface2)', borderRadius: 99, overflow: 'hidden' }}>
@@ -204,12 +207,13 @@ export default function CartPage() {
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-soft)', marginTop: 8 }}>
                 {lang === 'bg' ? (
-                  <>Доставката е безплатна за поръчки над {formatMoneyEUR(PRICING.FREE_DELIVERY_THRESHOLD_CENTS)}. <a href="/legal/delivery-payment" style={{ color: 'var(--text-soft)', textDecoration: 'underline' }}>Научи повече</a>.</>
+                  <>Доставката е безплатна за поръчки над {formatMoneyEUR(threshold)}. <a href="/legal/delivery-payment" style={{ color: 'var(--text-soft)', textDecoration: 'underline' }}>Научи повече</a>.</>
                 ) : (
-                  <>Free delivery on orders over {formatMoneyEUR(PRICING.FREE_DELIVERY_THRESHOLD_CENTS)}. <a href="/legal/delivery-payment" style={{ color: 'var(--text-soft)', textDecoration: 'underline' }}>Learn more</a>.</>
+                  <>Free delivery on orders over {formatMoneyEUR(threshold)}. <a href="/legal/delivery-payment" style={{ color: 'var(--text-soft)', textDecoration: 'underline' }}>Learn more</a>.</>
                 )}
               </div>
             </div>
+            )}
 
             {/* Subtotal row (mobile) */}
             <div
