@@ -2706,7 +2706,7 @@ function CTASection({ lang }: { lang: Lang }) {
           }}
         >
           <a
-            href="/#order"
+            href="/order"
             className="btn"
             style={{ background: "var(--plum)", color: "white" }}
           >

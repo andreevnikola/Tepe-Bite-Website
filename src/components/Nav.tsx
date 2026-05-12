@@ -1,4 +1,5 @@
 "use client";
+import CartNavIcon from "@/components/cart/CartNavIcon";
 import { IconArrow, IconClose, IconMenu, IconShop } from "@/components/icons";
 import { LANG_COOKIE, langAtom, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
@@ -231,9 +232,14 @@ export default function Nav() {
             ))}
           </div>
 
+          {/* Cart icon — desktop */}
+          <div className="desktop-nav">
+            <CartNavIcon />
+          </div>
+
           {/* CTA — desktop */}
           <Link
-            href={`${p}#order`}
+            href="/order"
             className="btn btn-primary desktop-nav"
             style={{
               fontSize: "0.88rem",
@@ -286,6 +292,7 @@ export default function Nav() {
                 </button>
               ))}
             </div>
+            <CartNavIcon />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? "Затвори меню" : "Отвори меню"}
@@ -363,7 +370,7 @@ export default function Nav() {
               {lang === "bg" ? "Правна информация" : "Legal"}
             </Link>
             <Link
-              href={`${p}#order`}
+              href="/order"
               onClick={() => setMobileOpen(false)}
               className="btn btn-primary"
               style={{

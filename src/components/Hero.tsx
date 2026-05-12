@@ -213,7 +213,7 @@ export default function Hero() {
                 marginBottom: 48,
               }}
             >
-              <a href="#order" className="btn btn-primary">
+              <a href="/order" className="btn btn-primary">
                 <IconShop />
                 {lang === "bg" ? "Поръчай" : "Order Now"}
               </a>

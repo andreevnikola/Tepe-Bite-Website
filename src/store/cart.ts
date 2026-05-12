@@ -114,3 +114,28 @@ export function useClearCart() {
 export function useCartAtom() {
   return useAtom(cartStorageAtom)
 }
+
+// ─── Cart toast state ─────────────────────────────────────────────────────────
+
+export type CartToastState = {
+  visible: boolean
+  titleBg: string
+  titleEn: string
+}
+
+export const cartToastAtom = atom<CartToastState>({
+  visible: false,
+  titleBg: '',
+  titleEn: '',
+})
+
+export function useCartToast() {
+  return useAtom(cartToastAtom)
+}
+
+export function useShowCartToast() {
+  const setToast = useSetAtom(cartToastAtom)
+  return (titleBg: string, titleEn: string) => {
+    setToast({ visible: true, titleBg, titleEn })
+  }
+}
