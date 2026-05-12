@@ -233,20 +233,14 @@ export default function CartPage() {
               </span>
             </div>
 
-            {/* Checkout note */}
-            <div
-              style={{
-                background: 'var(--caramel-lt)',
-                borderRadius: 'var(--r-sm)',
-                padding: '12px 16px',
-                fontSize: '0.82rem',
-                color: 'var(--text-mid)',
-              }}
+            {/* Checkout button */}
+            <Link
+              href="/checkout"
+              className="btn btn-primary"
+              style={{ justifyContent: 'center', fontSize: '1rem' }}
             >
-              {lang === 'bg'
-                ? 'Плащането с наложен платеж ще бъде достъпно скоро. Системата за поръчки се подготвя.'
-                : 'Cash on delivery checkout is coming soon. The order system is being prepared.'}
-            </div>
+              {lang === 'bg' ? 'Продължи към поръчка' : 'Proceed to checkout'}
+            </Link>
           </div>
 
           {/* Right: sticky summary */}

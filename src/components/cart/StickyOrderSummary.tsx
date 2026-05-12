@@ -112,21 +112,9 @@ export default function StickyOrderSummary({ items, mode = 'cart', onOrderNow, o
 
       {mode === 'cart' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div
-            className="btn"
-            style={{
-              justifyContent: 'center',
-              background: 'var(--surface2)',
-              color: 'var(--text-soft)',
-              cursor: 'not-allowed',
-              opacity: 0.7,
-              fontSize: '0.9rem',
-            }}
-            aria-disabled="true"
-            title={lang === 'bg' ? 'Ще бъде достъпно скоро' : 'Coming soon'}
-          >
-            {lang === 'bg' ? 'Плащане — скоро' : 'Checkout — coming soon'}
-          </div>
+          <Link href="/checkout" className="btn btn-primary" style={{ justifyContent: 'center', fontSize: '0.9rem' }}>
+            {lang === 'bg' ? 'Поръчай' : 'Checkout'}
+          </Link>
           <Link href="/order" className="btn btn-ghost" style={{ justifyContent: 'center', fontSize: '0.88rem' }}>
             {lang === 'bg' ? 'Продължи с пазаруването' : 'Continue shopping'}
           </Link>
