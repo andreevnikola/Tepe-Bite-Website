@@ -1,9 +1,11 @@
 'use client'
+import { PRICING } from '@/lib/config/pricing'
 import type { SafeProductPlan } from '@/lib/db/product-plans'
 import { formatDualMoney } from '@/lib/money'
 import { useAddToCart } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -22,6 +24,9 @@ export default function PackCard({ plan }: Props) {
   const title = lang === 'bg' ? plan.titleBg : plan.titleEn
   const description = lang === 'bg' ? plan.descriptionBg : plan.descriptionEn
 
+  const threshold = PRICING.FREE_DELIVERY_THRESHOLD_CENTS
+  const qualifiesFreeDelivery = isAvailable && threshold > 0 && plan.priceCents >= threshold
+
   const handleOrderNow = () => {
     if (!isAvailable) return
     addToCart({
@@ -39,89 +44,53 @@ export default function PackCard({ plan }: Props) {
   return (
     <div
       className="card card-hover"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 0,
-        overflow: 'hidden',
-        position: 'relative',
-      }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 0, overflow: 'hidden', position: 'relative' }}
     >
-      {/* Pack size badge */}
-      <div
-        style={{
-          background: isAvailable ? 'var(--plum)' : 'var(--surface2)',
-          padding: '28px 28px 20px',
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: 12,
-        }}
-      >
-        <div>
-          <div
-            style={{
-              fontFamily: 'var(--font-head)',
-              fontSize: '3rem',
-              fontWeight: 900,
-              lineHeight: 1,
-              color: isAvailable ? 'white' : 'var(--text-soft)',
-            }}
-          >
-            {plan.packSize}
-          </div>
-          <div
-            style={{
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: isAvailable ? 'oklch(88% 0.04 315)' : 'var(--text-soft)',
-              marginTop: 2,
-            }}
-          >
-            {lang === 'bg' ? 'барчета' : 'bars'}
+      {/* Product image strip */}
+      <div style={{ position: 'relative', height: 160, background: isAvailable ? 'var(--plum)' : 'var(--surface2)', overflow: 'hidden' }}>
+        <Image
+          src="/bar-product.png"
+          alt={`ТЕПЕ bite — ${title}`}
+          fill
+          sizes="(max-width: 900px) 100vw, 380px"
+          style={{ objectFit: 'cover', objectPosition: 'center', opacity: isAvailable ? 0.85 : 0.4, mixBlendMode: 'luminosity' }}
+        />
+        {/* Pack size overlay */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '16px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-head)', fontSize: '3.2rem', fontWeight: 900, lineHeight: 1, color: 'white', textShadow: '0 2px 12px oklch(10% 0.05 310 / 0.6)' }}>
+                {plan.packSize}
+              </div>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)' }}>
+                {lang === 'bg' ? 'барчета' : 'bars'}
+              </div>
+            </div>
+            {isAvailable && (
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.3rem', fontWeight: 700, color: 'oklch(85% 0.2 55)', lineHeight: 1.1, textShadow: '0 1px 8px oklch(10% 0.05 310 / 0.4)' }}>
+                  {formatDualMoney(plan.priceCents)}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        {isAvailable && (
-          <div
-            style={{
-              marginLeft: 'auto',
-              textAlign: 'right',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: 'var(--font-head)',
-                fontSize: '1.35rem',
-                fontWeight: 700,
-                color: 'var(--caramel)',
-                lineHeight: 1.2,
-              }}
-            >
-              {formatDualMoney(plan.priceCents)}
-            </div>
-            <div style={{ fontSize: '0.7rem', color: 'oklch(88% 0.04 315)', marginTop: 2 }}>
-              {lang === 'bg' ? 'за пакет' : 'per pack'}
-            </div>
+
+        {/* Free delivery badge */}
+        {qualifiesFreeDelivery && (
+          <div style={{ position: 'absolute', top: 12, right: 12, background: 'oklch(92% 0.1 145)', color: 'oklch(33% 0.14 145)', borderRadius: 99, padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, border: '1px solid oklch(80% 0.12 145)', whiteSpace: 'nowrap' }}>
+            🚚 {lang === 'bg' ? 'Безплатна доставка' : 'Free delivery'}
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div style={{ padding: '20px 28px', flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <h3 className="heading-md" style={{ fontSize: '1.15rem' }}>{title}</h3>
-        <p style={{ fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>{description}</p>
+      <div style={{ padding: '20px 24px', flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <h3 className="heading-md" style={{ fontSize: '1.1rem' }}>{title}</h3>
+        <p style={{ fontSize: '0.88rem', lineHeight: 1.65, flex: 1, color: 'var(--text-mid)' }}>{description}</p>
 
         {!isAvailable && (
-          <div
-            style={{
-              background: 'var(--caramel-lt)',
-              borderRadius: 'var(--r-sm)',
-              padding: '10px 14px',
-              fontSize: '0.82rem',
-              color: 'var(--text-mid)',
-            }}
-          >
+          <div style={{ background: 'var(--caramel-lt)', borderRadius: 'var(--r-sm)', padding: '10px 14px', fontSize: '0.82rem', color: 'var(--text-mid)' }}>
             {lang === 'bg'
               ? 'Онлайн поръчките за този пакет ще бъдат достъпни скоро.'
               : 'Online ordering for this pack will be available soon.'}
@@ -130,18 +99,11 @@ export default function PackCard({ plan }: Props) {
       </div>
 
       {/* Actions */}
-      <div
-        style={{
-          padding: '0 28px 28px',
-          display: 'flex',
-          gap: 10,
-          flexWrap: 'wrap',
-        }}
-      >
+      <div style={{ padding: '0 24px 24px', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <Link
           href={`/order/${plan.slug}`}
           className="btn btn-secondary"
-          style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 120 }}
+          style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 110 }}
         >
           {lang === 'bg' ? 'Виж пакета' : 'View pack'}
         </Link>
@@ -150,23 +112,15 @@ export default function PackCard({ plan }: Props) {
           <button
             onClick={handleOrderNow}
             className="btn btn-caramel"
-            style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 120 }}
+            style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 110 }}
           >
-            {lang === 'bg' ? 'Поръчай сега' : 'Order now'}
+            {lang === 'bg' ? 'Поръчай' : 'Order'}
           </button>
         ) : (
           <button
             disabled
             className="btn"
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              fontSize: '0.88rem',
-              minWidth: 120,
-              background: 'var(--surface2)',
-              color: 'var(--text-soft)',
-              cursor: 'not-allowed',
-            }}
+            style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 110, background: 'var(--surface2)', color: 'var(--text-soft)', cursor: 'not-allowed' }}
           >
             {lang === 'bg' ? 'Скоро' : 'Coming soon'}
           </button>

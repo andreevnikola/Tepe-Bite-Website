@@ -5,6 +5,7 @@ import { useState } from 'react'
 type Props = {
   lang: 'bg' | 'en'
   publicOrderNumber: string
+  customerEmail: string
   emailRetryToken: string
 }
 
@@ -31,7 +32,7 @@ const T = {
   },
 }
 
-export default function EmailRetryPanel({ lang, publicOrderNumber, emailRetryToken: initialToken }: Props) {
+export default function EmailRetryPanel({ lang, publicOrderNumber, customerEmail, emailRetryToken: initialToken }: Props) {
   const t = T[lang]
   const [state, setState] = useState<'idle' | 'sending' | 'success' | 'failed' | 'expired'>('idle')
   const isSending = state === 'sending'
@@ -79,6 +80,11 @@ export default function EmailRetryPanel({ lang, publicOrderNumber, emailRetryTok
       <div style={{ fontSize: '0.85rem', color: 'var(--text-soft)', marginBottom: 4 }}>
         {t.order}: <strong style={{ color: 'var(--text)' }}>{publicOrderNumber}</strong>
       </div>
+      {customerEmail && (
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-soft)', marginBottom: 4 }}>
+          {lang === 'bg' ? 'Имейл:' : 'Email:'} <strong style={{ color: 'var(--text)' }}>{customerEmail}</strong>
+        </div>
+      )}
       <p style={{ color: 'var(--text-mid)', fontSize: '0.9rem', marginBottom: 20 }}>{t.desc}</p>
 
       {state === 'success' && (

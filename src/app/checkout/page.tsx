@@ -15,8 +15,8 @@ import { useEffect, useRef, useState } from 'react'
 type CheckoutStatus =
   | { kind: 'idle' }
   | { kind: 'submitting' }
-  | { kind: 'check_email'; publicOrderNumber: string }
-  | { kind: 'email_failed'; publicOrderNumber: string; emailRetryToken: string }
+  | { kind: 'check_email'; publicOrderNumber: string; customerEmail: string }
+  | { kind: 'email_failed'; publicOrderNumber: string; customerEmail: string; emailRetryToken: string }
   | { kind: 'insufficient_stock'; message: string }
   | { kind: 'error'; message: string }
 
@@ -24,20 +24,28 @@ const T = {
   bg: {
     title: 'Поръчка',
     emptyCart: 'Количката е празна',
-    goShopping: 'Разгледай продуктите',
+    emptyCartDesc: 'Разгледай нашите пакети и добави любимия си.',
+    goShopping: 'Виж пакетите',
     checkEmailTitle: 'Провери имейла си',
-    checkEmailDesc: 'Изпратихме потвърдителен имейл.',
-    checkEmailOrder: 'Поръчка',
-    checkEmailNote: 'Натисни линка в имейла, за да потвърдиш поръчката и да я пуснем в обработка.',
+    checkEmailSentTo: 'Изпратихме потвърдителен имейл до',
+    checkEmailOrder: 'Поръчка №',
+    checkEmailNote: 'Натисни линка в имейла, за да потвърдиш поръчката.',
+    checkEmailNote2: 'Линкът е валиден 24 часа. Ако имейлът не е пристигнал, провери папката Спам.',
+    checkEmailContact: 'Въпроси? Пиши ни на',
+    backToHome: 'Обратно към начало',
   },
   en: {
     title: 'Checkout',
     emptyCart: 'Your cart is empty',
-    goShopping: 'Browse products',
+    emptyCartDesc: 'Browse our packs and add your favourite.',
+    goShopping: 'View packs',
     checkEmailTitle: 'Check your email',
-    checkEmailDesc: 'We sent you a confirmation email.',
-    checkEmailOrder: 'Order',
-    checkEmailNote: 'Click the link in the email to confirm your order and start processing.',
+    checkEmailSentTo: 'We sent a confirmation email to',
+    checkEmailOrder: 'Order #',
+    checkEmailNote: 'Click the link in the email to confirm your order.',
+    checkEmailNote2: 'The link is valid for 24 hours. If the email hasn\'t arrived, check your Spam folder.',
+    checkEmailContact: 'Questions? Write to us at',
+    backToHome: 'Back to home',
   },
 }
 
@@ -203,11 +211,12 @@ export default function CheckoutPage() {
       }
 
       if (data.status === 'check_email') {
-        setStatus({ kind: 'check_email', publicOrderNumber: data.publicOrderNumber })
+        setStatus({ kind: 'check_email', publicOrderNumber: data.publicOrderNumber, customerEmail: data.customerEmail ?? '' })
       } else if (data.status === 'email_failed') {
         setStatus({
           kind: 'email_failed',
           publicOrderNumber: data.publicOrderNumber,
+          customerEmail: data.customerEmail ?? '',
           emailRetryToken: data.emailRetryToken,
         })
       } else if (data.status === 'pending') {
@@ -215,6 +224,7 @@ export default function CheckoutPage() {
         setStatus({
           kind: 'check_email',
           publicOrderNumber: 'TEPE-' + Math.floor(Math.random() * 9000 + 1000),
+          customerEmail: customerInfo.email,
         })
       } else {
         setStatus({ kind: 'error', message: lang === 'bg' ? 'Неизвестна грешка.' : 'Unknown error.' })
@@ -230,20 +240,20 @@ export default function CheckoutPage() {
   const containerStyle: React.CSSProperties = {
     minHeight: '100vh',
     background: 'var(--bg)',
-    paddingTop: 80,
+    paddingTop: 88,
     paddingBottom: 64,
   }
 
   const innerStyle: React.CSSProperties = {
     maxWidth: 680,
     margin: '0 auto',
-    padding: '0 16px',
+    padding: '0 clamp(16px, 5vw, 32px)',
   }
 
   const cardStyle: React.CSSProperties = {
     background: 'var(--surface)',
     borderRadius: 'var(--r-lg)',
-    padding: '32px',
+    padding: 'clamp(24px, 5vw, 36px)',
     boxShadow: 'var(--shadow)',
     border: '1px solid var(--border)',
   }
@@ -253,14 +263,18 @@ export default function CheckoutPage() {
     return (
       <main style={containerStyle}>
         <div style={innerStyle}>
-          <div style={{ ...cardStyle, textAlign: 'center', padding: '48px 32px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 16 }}>🛒</div>
-            <div
-              style={{ fontFamily: 'var(--font-head)', fontSize: '1.4rem', color: 'var(--plum)', marginBottom: 16 }}
-            >
+          <div style={{ ...cardStyle, textAlign: 'center', padding: '56px 32px' }}>
+            <div style={{
+              width: 72, height: 72, borderRadius: '50%',
+              background: 'var(--surface2)', display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+              fontSize: '2rem', margin: '0 auto 24px',
+            }}>🛒</div>
+            <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.6rem', color: 'var(--plum)', marginBottom: 12 }}>
               {t.emptyCart}
             </div>
-            <Link href="/order" className="btn btn-primary">
+            <p style={{ color: 'var(--text-soft)', marginBottom: 28, fontSize: '0.95rem' }}>{t.emptyCartDesc}</p>
+            <Link href="/order" className="btn btn-caramel" style={{ fontSize: '0.95rem' }}>
               {t.goShopping}
             </Link>
           </div>
@@ -272,21 +286,65 @@ export default function CheckoutPage() {
   // Success — check email
   if (status.kind === 'check_email') {
     return (
-      <main style={containerStyle}>
+      <main style={{ ...containerStyle, background: `radial-gradient(ellipse 70% 50% at 50% 0%, oklch(88% 0.05 315 / 0.18), transparent), var(--bg)` }}>
         <div style={innerStyle}>
-          <div style={{ ...cardStyle, textAlign: 'center', padding: '48px 32px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 16 }}>📬</div>
-            <div
-              style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', color: 'var(--plum)', marginBottom: 8 }}
-            >
-              {t.checkEmailTitle}
+          <div style={{ ...cardStyle, padding: '0', overflow: 'hidden' }}>
+            {/* Plum header strip */}
+            <div style={{
+              background: 'var(--plum)',
+              padding: '36px 40px 32px',
+              textAlign: 'center',
+            }}>
+              <div style={{
+                width: 64, height: 64, borderRadius: '50%',
+                background: 'oklch(42% 0.09 315)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1.8rem', margin: '0 auto 20px',
+              }}>📬</div>
+              <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.75rem', fontWeight: 700, color: '#fff', marginBottom: 8, letterSpacing: '-0.01em' }}>
+                {t.checkEmailTitle}
+              </div>
+              <div style={{ fontSize: '0.9rem', color: 'oklch(80% 0.04 315)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+                {t.checkEmailOrder}{status.publicOrderNumber}
+              </div>
             </div>
-            <div style={{ fontSize: '0.9rem', color: 'var(--text-soft)', marginBottom: 8 }}>
-              {t.checkEmailOrder}: <strong style={{ color: 'var(--text)' }}>{status.publicOrderNumber}</strong>
+
+            {/* Body */}
+            <div style={{ padding: '32px 40px 36px', textAlign: 'center' }}>
+              <p style={{ fontSize: '1rem', color: 'var(--text-mid)', marginBottom: 6, lineHeight: 1.6 }}>
+                {t.checkEmailSentTo}
+              </p>
+              {status.customerEmail && (
+                <div style={{
+                  display: 'inline-block',
+                  background: 'var(--surface2)',
+                  borderRadius: 'var(--r-sm)',
+                  padding: '8px 20px',
+                  fontWeight: 700,
+                  color: 'var(--plum)',
+                  fontSize: '1rem',
+                  marginBottom: 24,
+                  wordBreak: 'break-all',
+                }}>
+                  {status.customerEmail}
+                </div>
+              )}
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-mid)', lineHeight: 1.7, marginBottom: 8 }}>
+                {t.checkEmailNote}
+              </p>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-soft)', lineHeight: 1.6, marginBottom: 28 }}>
+                {t.checkEmailNote2}
+              </p>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: 20, display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+                <Link href="/" className="btn btn-secondary" style={{ fontSize: '0.9rem' }}>
+                  {t.backToHome}
+                </Link>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-soft)', margin: 0 }}>
+                  {t.checkEmailContact}{' '}
+                  <a href="mailto:tepe@mail.bg" style={{ color: 'var(--caramel)', fontWeight: 600 }}>tepe@mail.bg</a>
+                </p>
+              </div>
             </div>
-            <p style={{ color: 'var(--text-mid)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: 0 }}>
-              {t.checkEmailNote}
-            </p>
           </div>
         </div>
       </main>
@@ -301,6 +359,7 @@ export default function CheckoutPage() {
           <EmailRetryPanel
             lang={lang}
             publicOrderNumber={status.publicOrderNumber}
+            customerEmail={status.customerEmail}
             emailRetryToken={status.emailRetryToken}
           />
         </div>
@@ -322,18 +381,15 @@ export default function CheckoutPage() {
   return (
     <main style={containerStyle}>
       <div style={innerStyle}>
-        <h1
-          style={{
-            fontFamily: 'var(--font-head)',
-            fontSize: '2rem',
-            fontWeight: 700,
-            color: 'var(--plum)',
-            marginBottom: 24,
-            textAlign: 'center',
-          }}
-        >
-          {t.title}
-        </h1>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <Link href="/cart" style={{ fontSize: '0.82rem', color: 'var(--text-soft)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, marginBottom: 16 }}>
+            ← {lang === 'bg' ? 'Обратно към количката' : 'Back to cart'}
+          </Link>
+          <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--plum)', marginBottom: 0 }}>
+            {t.title}
+          </h1>
+        </div>
 
         <CheckoutStepper currentStep={step} lang={lang} />
 

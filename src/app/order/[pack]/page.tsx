@@ -35,7 +35,7 @@ export default async function PackDetailPage({ params }: Props) {
         paddingBottom: 80,
       }}
     >
-      <div className="section-inner">
+      <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 clamp(20px, 5vw, 48px)' }}>
         {/* Breadcrumb */}
         <nav
           aria-label="Навигация"

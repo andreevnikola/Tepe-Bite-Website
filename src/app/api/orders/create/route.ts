@@ -205,7 +205,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const existingOrder = await ds.getRepository('orders').findOne({
     where: { clientCheckoutId: data.clientCheckoutId },
-  }) as { checkoutPayloadHash: string; status: string; publicOrderNumber: string; emailRetryTokenHash: string | null; emailRetryTokenExpiresAt: Date | null } | null
+  }) as { checkoutPayloadHash: string; status: string; publicOrderNumber: string; customerEmail: string; emailRetryTokenHash: string | null; emailRetryTokenExpiresAt: Date | null } | null
 
   if (existingOrder) {
     if (existingOrder.checkoutPayloadHash === payloadHash) {
@@ -216,6 +216,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         status: existingOrder.emailRetryTokenHash ? 'email_failed' : 'check_email',
         publicOrderNumber: existingOrder.publicOrderNumber,
+        customerEmail: existingOrder.customerEmail,
         ...(hasRetryToken ? { emailRetryToken: null } : {}),
       })
     } else {
@@ -389,6 +390,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({
       status: 'check_email',
       publicOrderNumber: order.publicOrderNumber,
+      customerEmail: order.customerEmail,
     })
   } else {
     // Email failed — generate retry token and persist
@@ -421,6 +423,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({
       status: 'email_failed',
       publicOrderNumber: order.publicOrderNumber,
+      customerEmail: order.customerEmail,
       emailRetryToken: retryRaw,
     })
   }

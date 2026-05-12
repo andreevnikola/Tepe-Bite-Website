@@ -92,7 +92,8 @@ export function getPricingConfig(): PricingConfig {
 
 function readCentsOrZero(name: string): number {
   if (typeof process === 'undefined') return 0
-  const raw = process.env[name]
+  // NEXT_PUBLIC_ version is available in the browser bundle; server-side var as fallback
+  const raw = process.env[`NEXT_PUBLIC_${name}`] ?? process.env[name]
   if (!raw) return 0
   const v = parseInt(raw.trim(), 10)
   return Number.isInteger(v) && v >= 0 ? v : 0
