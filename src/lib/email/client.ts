@@ -1,31 +1,5 @@
 import nodemailer from 'nodemailer'
-import type { Transporter } from 'nodemailer'
 import { validateEmailConfig } from '@/lib/config/validators/email.config'
-
-let _transporter: Transporter | null = null
-
-function getTransporter(): Transporter {
-  if (_transporter) return _transporter
-
-  const cfg = validateEmailConfig()
-  if (!cfg.valid) {
-    throw new Error(
-      `Email configuration invalid:\n${cfg.issues.map((i) => `  • ${i}`).join('\n')}`,
-    )
-  }
-
-  _transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST!,
-    port: parseInt(process.env.SMTP_PORT ?? '587', 10),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER!,
-      pass: process.env.SMTP_PASSWORD!,
-    },
-  })
-
-  return _transporter
-}
 
 export type SendEmailOptions = {
   to: string
@@ -38,11 +12,31 @@ export type SendEmailResult =
   | { ok: false; error: string }
 
 export async function sendEmail(opts: SendEmailOptions): Promise<SendEmailResult> {
+  const cfg = validateEmailConfig()
+  if (!cfg.valid) {
+    return {
+      ok: false,
+      error: `Email configuration invalid: ${cfg.issues.join(', ')}`,
+    }
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // STARTTLS
+    auth: {
+      user: process.env.SMTP_USER!,
+      pass: process.env.SMTP_PASSWORD!, // Gmail App Password, not account password
+    },
+    connectionTimeout: 15_000,
+    greetingTimeout: 15_000,
+    socketTimeout: 30_000,
+  })
+
   try {
-    const transporter = getTransporter()
-    const from = process.env.SMTP_FROM_NAME
-      ? `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}>`
-      : process.env.SMTP_FROM_EMAIL!
+    const fromName  = process.env.SMTP_FROM_NAME
+    const fromEmail = process.env.SMTP_FROM_EMAIL!
+    const from = fromName ? `"${fromName}" <${fromEmail}>` : fromEmail
 
     const info = await transporter.sendMail({
       from,
@@ -55,5 +49,7 @@ export async function sendEmail(opts: SendEmailOptions): Promise<SendEmailResult
   } catch (err) {
     const error = err instanceof Error ? err.message : String(err)
     return { ok: false, error }
+  } finally {
+    transporter.close()
   }
 }

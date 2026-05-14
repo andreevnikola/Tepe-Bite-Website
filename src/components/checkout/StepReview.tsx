@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import { PRICING } from '@/lib/config/pricing'
 import { formatDualMoney, formatMoneyEUR } from '@/lib/money'
 import type { CartItem } from '@/store/cart'
@@ -170,14 +171,17 @@ export default function StepReview({
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', fontSize: '0.88rem' }}>
           <span style={{ color: 'var(--text-mid)' }}>{t.delivery}</span>
-          <span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             {totalDeliveryCents === 0 ? (
               <span style={{ color: 'oklch(40% 0.14 145)', fontWeight: 600, background: 'oklch(92% 0.08 145)', padding: '2px 10px', borderRadius: 99, fontSize: '0.82rem' }}>{t.free}</span>
+            ) : freeBase && deliverySurcharge > 0 ? (
+              <Fragment>
+                <span style={{ color: 'oklch(40% 0.14 145)', fontWeight: 600, background: 'oklch(92% 0.08 145)', padding: '2px 10px', borderRadius: 99, fontSize: '0.82rem' }}>{t.free}</span>
+                <span style={{ color: 'var(--text-mid)', fontWeight: 600, fontSize: '0.88rem' }}>+{formatMoneyEUR(deliverySurcharge)}</span>
+                <span style={{ color: 'var(--text-soft)', fontSize: '0.79rem' }}>({lang === 'bg' ? 'надбавка' : 'surcharge'})</span>
+              </Fragment>
             ) : (
               formatMoneyEUR(totalDeliveryCents)
-            )}
-            {freeBase && deliverySurcharge > 0 && (
-              <span style={{ color: 'var(--text-soft)', fontSize: '0.79rem', marginLeft: 4 }}>(+{formatMoneyEUR(deliverySurcharge)} {lang === 'bg' ? 'надбавка' : 'surcharge'})</span>
             )}
           </span>
         </div>

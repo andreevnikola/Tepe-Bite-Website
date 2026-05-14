@@ -89,8 +89,6 @@ const T = {
   },
 }
 
-const NUM_BARS_VISUAL = 10
-
 export default function PackDetailClient({ plan }: Props) {
   const lang = useAtomValue(langAtom)
   const [qty, setQty] = useState(1)
@@ -134,48 +132,37 @@ export default function PackDetailClient({ plan }: Props) {
       >
         {/* Left: bars visual + description */}
         <div>
-          {/* 10 bars stacked visual */}
+          {/* Product photo hero */}
           <div
             style={{
               position: 'relative',
-              height: 200,
+              height: 260,
+              borderRadius: 'var(--r-lg)',
+              overflow: 'hidden',
               marginBottom: 36,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              background: 'var(--plum)',
+              boxShadow: 'var(--shadow-lg)',
             }}
-            aria-label={t.productVisual}
           >
-            {Array.from({ length: NUM_BARS_VISUAL }).map((_, i) => {
-              const angle = (i - (NUM_BARS_VISUAL - 1) / 2) * 3.5
-              const x = (i - (NUM_BARS_VISUAL - 1) / 2) * 30
-              const y = Math.abs(i - (NUM_BARS_VISUAL - 1) / 2) * 1.5
-              return (
-                <div
-                  key={i}
-                  style={{
-                    position: 'absolute',
-                    width: 70,
-                    height: 170,
-                    transform: `translateX(${x}px) translateY(${y}px) rotate(${angle}deg)`,
-                    zIndex: i < NUM_BARS_VISUAL / 2 ? i : NUM_BARS_VISUAL - i,
-                    borderRadius: 10,
-                    overflow: 'hidden',
-                    boxShadow: '0 4px 12px oklch(20% 0.04 310 / 0.18)',
-                    transition: 'transform 0.3s ease',
-                  }}
-                  className="bar-item"
-                >
-                  <Image
-                    src="/bar-product.png"
-                    alt="ТЕПЕ bite барче"
-                    fill
-                    sizes="70px"
-                    style={{ objectFit: 'cover', objectPosition: 'center' }}
-                  />
-                </div>
-              )
-            })}
+            <Image
+              src="/bar-product.png"
+              alt={`ТЕПЕ bite — ${title}`}
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 560px"
+              style={{ objectFit: 'cover', objectPosition: 'center 30%', opacity: 0.78 }}
+            />
+            {/* Gradient: dark at bottom-left, transparent at top-right */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, oklch(32% 0.09 315 / 0.82) 0%, oklch(32% 0.09 315 / 0.3) 55%, transparent 100%)' }} />
+            {/* Pack count in bottom-left */}
+            <div style={{ position: 'absolute', bottom: 24, left: 28 }}>
+              <div style={{ fontFamily: 'var(--font-head)', fontSize: '4.5rem', fontWeight: 900, lineHeight: 1, color: 'white', textShadow: '0 2px 16px oklch(10% 0.05 310 / 0.7)' }}>
+                {plan.packSize}
+              </div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>
+                {t.bars}
+              </div>
+            </div>
           </div>
 
           <div className="label-tag" style={{ marginBottom: 10 }}>{t.packLabel}</div>
@@ -393,7 +380,6 @@ export default function PackDetailClient({ plan }: Props) {
           .pack-detail-grid > div:last-child { position: static !important; }
           .cross-sell-grid { grid-template-columns: 1fr !important; }
         }
-        .bar-item:hover { transform: translateX(var(--tx, 0px)) translateY(var(--ty, 0px)) rotate(var(--rot, 0deg)) scale(1.05) !important; }
       `}</style>
     </>
   )

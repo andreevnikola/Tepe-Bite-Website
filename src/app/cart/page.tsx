@@ -1,5 +1,7 @@
 'use client'
 
+import Footer from '@/components/Footer'
+import { Fragment } from 'react'
 import QuantitySelector from '@/components/order/QuantitySelector'
 import { PRICING } from '@/lib/config/pricing'
 import { formatDualMoney, formatMoneyEUR } from '@/lib/money'
@@ -80,18 +82,22 @@ export default function CartPage() {
   // Empty state
   if (items.length === 0) {
     return (
-      <main style={{ minHeight: '100vh', background: 'var(--bg)', paddingTop: 100, paddingBottom: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', maxWidth: 420, padding: '0 24px' }}>
-          <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.2rem', margin: '0 auto 24px' }}>🛒</div>
-          <h1 className="heading-lg" style={{ marginBottom: 12 }}>{t.emptyTitle}</h1>
-          <p style={{ marginBottom: 28 }}>{t.emptyDesc}</p>
-          <Link href="/order" className="btn btn-caramel" style={{ fontSize: '1rem' }}>{t.browsePacks}</Link>
-        </div>
-      </main>
+      <Fragment>
+        <main style={{ minHeight: '100vh', background: 'var(--bg)', paddingTop: 100, paddingBottom: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center', maxWidth: 420, padding: '0 24px' }}>
+            <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.2rem', margin: '0 auto 24px' }}>🛒</div>
+            <h1 className="heading-lg" style={{ marginBottom: 12 }}>{t.emptyTitle}</h1>
+            <p style={{ marginBottom: 28 }}>{t.emptyDesc}</p>
+            <Link href="/order" className="btn btn-caramel" style={{ fontSize: '1rem' }}>{t.browsePacks}</Link>
+          </div>
+        </main>
+        <Footer />
+      </Fragment>
     )
   }
 
   return (
+    <Fragment>
     <main style={{ minHeight: '100vh', background: 'var(--bg)', paddingTop: 100, paddingBottom: 80 }}>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 clamp(20px, 5vw, 48px)' }}>
 
@@ -132,7 +138,7 @@ export default function CartPage() {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-soft)', marginBottom: 10 }}>
                       {item.packSize} {t.barsPerPack}
                       {item.unitPriceCents > 0 && (
-                        <> · {t.unitPrice}: {formatMoneyEUR(item.unitPriceCents)}</>
+                        <Fragment> · {t.unitPrice}: {formatMoneyEUR(item.unitPriceCents)}</Fragment>
                       )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -291,5 +297,7 @@ export default function CartPage() {
         }
       `}</style>
     </main>
+    <Footer />
+    </Fragment>
   )
 }

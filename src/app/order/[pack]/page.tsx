@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic'
 
+import Footer from '@/components/Footer'
 import PackDetailClient from '@/components/order/PackDetailClient'
 import { getProductPlanBySlug } from '@/lib/db/product-plans'
 import type { Metadata } from 'next'
@@ -27,6 +28,7 @@ export default async function PackDetailPage({ params }: Props) {
   if (!plan) notFound()
 
   return (
+    <>
     <main
       style={{
         minHeight: '100vh',
@@ -58,5 +60,7 @@ export default async function PackDetailPage({ params }: Props) {
         <PackDetailClient plan={plan} />
       </div>
     </main>
+    <Footer />
+    </>
   )
 }

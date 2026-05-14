@@ -90,22 +90,33 @@ export function getPricingConfig(): PricingConfig {
 // against 0 before using in calculations (e.g. skip progress bar if 0).
 // All checkout/order business logic MUST use getPricingConfig() instead.
 
-function readCentsOrZero(name: string): number {
-  if (typeof process === 'undefined') return 0
-  // NEXT_PUBLIC_ version is available in the browser bundle; server-side var as fallback
-  const raw = process.env[`NEXT_PUBLIC_${name}`] ?? process.env[name]
+function parseCentsOrZero(raw: string | undefined): number {
   if (!raw) return 0
   const v = parseInt(raw.trim(), 10)
   return Number.isInteger(v) && v >= 0 ? v : 0
 }
 
+// NEXT_PUBLIC_ vars must be referenced with static string keys so Turbopack
+// can inline the values into the client bundle at compile time.
 export const PRICING = {
   CURRENCY,
   EUR_TO_BGN,
   DELIVERY: {
-    BASE_LOCKER_CENTS:       readCentsOrZero('TEPE_DELIVERY_BASE_LOCKER_CENTS'),
-    OFFICE_SURCHARGE_CENTS:  readCentsOrZero('TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS'),
-    ADDRESS_SURCHARGE_CENTS: readCentsOrZero('TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS'),
+    BASE_LOCKER_CENTS: parseCentsOrZero(
+      process.env.NEXT_PUBLIC_TEPE_DELIVERY_BASE_LOCKER_CENTS ??
+      process.env.TEPE_DELIVERY_BASE_LOCKER_CENTS
+    ),
+    OFFICE_SURCHARGE_CENTS: parseCentsOrZero(
+      process.env.NEXT_PUBLIC_TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS ??
+      process.env.TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS
+    ),
+    ADDRESS_SURCHARGE_CENTS: parseCentsOrZero(
+      process.env.NEXT_PUBLIC_TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS ??
+      process.env.TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS
+    ),
   },
-  FREE_DELIVERY_THRESHOLD_CENTS: readCentsOrZero('TEPE_FREE_DELIVERY_THRESHOLD_CENTS'),
+  FREE_DELIVERY_THRESHOLD_CENTS: parseCentsOrZero(
+    process.env.NEXT_PUBLIC_TEPE_FREE_DELIVERY_THRESHOLD_CENTS ??
+    process.env.TEPE_FREE_DELIVERY_THRESHOLD_CENTS
+  ),
 }

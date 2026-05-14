@@ -1,11 +1,13 @@
 export const dynamic = 'force-dynamic'
 
 import CartToast from '@/components/cart/CartToast'
+import Footer from '@/components/Footer'
 import PackCard from '@/components/order/PackCard'
 import { getAllProductPlans } from '@/lib/db/product-plans'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Fragment } from 'react'
 
 export const metadata: Metadata = {
   title: 'Поръчай — ТЕПЕ bite',
@@ -17,6 +19,7 @@ export default async function OrderPage() {
   const dbUnavailable = plans.length === 0
 
   return (
+    <Fragment>
     <main
       style={{
         minHeight: '100vh',
@@ -28,34 +31,43 @@ export default async function OrderPage() {
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 clamp(20px, 5vw, 48px)' }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+        <div style={{ textAlign: 'center', marginBottom: 36 }}>
           <div className="label-tag" style={{ marginBottom: 14 }}>
             Поръчай / Order
           </div>
           <h1 className="heading-xl" style={{ marginBottom: 16 }}>
             Избери своя пакет
           </h1>
-          <p style={{ fontSize: '1.05rem', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.75 }}>
+          <p style={{ fontSize: '1.05rem', maxWidth: 520, margin: '0 auto 0', lineHeight: 1.75 }}>
             Всяко барче е направено в Пловдив и носи смисъл отвъд вкуса.
             Избери пакета, който ти подхожда.
           </p>
+        </div>
 
-          {/* Product photo strip */}
-          <div style={{ position: 'relative', height: 180, borderRadius: 'var(--r-md)', overflow: 'hidden', maxWidth: 640, margin: '0 auto', boxShadow: 'var(--shadow-lg)' }}>
-            <Image
-              src="/bar-product.png"
-              alt="ТЕПЕ bite барчета"
-              fill
-              priority
-              sizes="640px"
-              style={{ objectFit: 'cover', objectPosition: 'center' }}
-            />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, oklch(32% 0.09 315 / 0.55), transparent 60%)' }} />
-            <div style={{ position: 'absolute', left: 28, top: '50%', transform: 'translateY(-50%)' }}>
-              <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.4rem', fontWeight: 700, color: 'white', lineHeight: 1.2 }}>
+        {/* Manufacturing photo strip — full container width */}
+        <div style={{ position: 'relative', height: 'clamp(160px, 20vw, 240px)', borderRadius: 'var(--r-lg)', overflow: 'hidden', marginBottom: 48, boxShadow: 'var(--shadow-lg)' }}>
+          <Image
+            src="/manufacturing.jpg"
+            alt="Производство на ТЕПЕ bite в Пловдив"
+            fill
+            priority
+            sizes="(max-width: 1180px) 100vw, 1180px"
+            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+          />
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to right, oklch(32% 0.09 315 / 0.82) 10%, oklch(32% 0.09 315 / 0.3) 55%, transparent 100%)',
+            display: 'flex', alignItems: 'center',
+            paddingLeft: 'clamp(24px, 4vw, 48px)',
+          }}>
+            <div>
+              <div className="label-tag" style={{ color: 'oklch(85% 0.08 55)', marginBottom: 8 }}>
+                Местно производство
+              </div>
+              <div style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', fontWeight: 700, color: 'white', lineHeight: 1.2 }}>
                 ТЕПЕ bite
               </div>
-              <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.8)', marginTop: 4, letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)', marginTop: 5, letterSpacing: '0.04em' }}>
                 Солен карамел от Пловдив
               </div>
             </div>
@@ -150,5 +162,7 @@ export default async function OrderPage() {
         }
       `}</style>
     </main>
+    <Footer />
+    </Fragment>
   )
 }

@@ -27,6 +27,7 @@
     "react-dom": "19.2.4",
     "react-leaflet": "^5.0.0",
     "reflect-metadata": "^0.2.2",
+    "resend": "^6.12.3",
     "ts-node": "^10.9.2",
     "typeorm": "^0.3.29",
     "typeorm-ts-node-commonjs": "^0.3.20",

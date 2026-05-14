@@ -53,8 +53,10 @@ export default function PackCard({ plan }: Props) {
           alt={`ТЕПЕ bite — ${title}`}
           fill
           sizes="(max-width: 900px) 100vw, 380px"
-          style={{ objectFit: 'cover', objectPosition: 'center', opacity: isAvailable ? 0.85 : 0.4, mixBlendMode: 'luminosity' }}
+          style={{ objectFit: 'cover', objectPosition: 'center 25%', opacity: isAvailable ? 0.75 : 0.35 }}
         />
+        {/* Gradient overlay so text overlays stay readable */}
+        <div style={{ position: 'absolute', inset: 0, background: isAvailable ? 'linear-gradient(to top, oklch(32% 0.09 315 / 0.92) 0%, oklch(32% 0.09 315 / 0.45) 50%, transparent 100%)' : 'linear-gradient(to top, oklch(15% 0.02 310 / 0.85) 0%, transparent 70%)' }} />
         {/* Pack size overlay */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '16px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>

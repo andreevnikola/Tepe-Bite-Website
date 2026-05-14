@@ -6,11 +6,12 @@ import InsufficientStockError from '@/components/checkout/InsufficientStockError
 import StepCustomerInfo, { type CustomerInfoFields } from '@/components/checkout/StepCustomerInfo'
 import StepDelivery, { type DeliveryFields } from '@/components/checkout/StepDelivery'
 import StepReview from '@/components/checkout/StepReview'
-import { useCart, useCartSubtotalCents } from '@/store/cart'
+import Footer from '@/components/Footer'
+import { useCart, useCartSubtotalCents, useClearCart } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 
 type CheckoutStatus =
   | { kind: 'idle' }
@@ -26,11 +27,16 @@ const T = {
     emptyCart: 'Количката е празна',
     emptyCartDesc: 'Разгледай нашите пакети и добави любимия си.',
     goShopping: 'Виж пакетите',
-    checkEmailTitle: 'Провери имейла си',
-    checkEmailSentTo: 'Изпратихме потвърдителен имейл до',
+    // check_email screen
+    checkEmailBadge: 'Поръчката е запазена',
+    checkEmailTitle: 'Потвърди имейла си',
     checkEmailOrder: 'Поръчка №',
-    checkEmailNote: 'Натисни линка в имейла, за да потвърдиш поръчката.',
-    checkEmailNote2: 'Линкът е валиден 24 часа. Ако имейлът не е пристигнал, провери папката Спам.',
+    checkEmailActionHeader: 'Следваща стъпка — провери пощата',
+    checkEmailSentTo: 'Изпратихме линк за потвърждение до:',
+    checkEmailCta: 'Кликни линка в имейла, за да активираш поръчката за обработка.',
+    checkEmailPending: 'Поръчката НЕ е изпратена за обработка, докато не бъде потвърдена.',
+    checkEmailSpam: 'Не виждаш имейла? Провери папката Спам или Нежелана поща.',
+    checkEmailExpiry: 'Линкът е валиден 24 часа.',
     checkEmailContact: 'Въпроси? Пиши ни на',
     backToHome: 'Обратно към начало',
   },
@@ -39,11 +45,16 @@ const T = {
     emptyCart: 'Your cart is empty',
     emptyCartDesc: 'Browse our packs and add your favourite.',
     goShopping: 'View packs',
-    checkEmailTitle: 'Check your email',
-    checkEmailSentTo: 'We sent a confirmation email to',
+    // check_email screen
+    checkEmailBadge: 'Order saved',
+    checkEmailTitle: 'Confirm your email',
     checkEmailOrder: 'Order #',
-    checkEmailNote: 'Click the link in the email to confirm your order.',
-    checkEmailNote2: 'The link is valid for 24 hours. If the email hasn\'t arrived, check your Spam folder.',
+    checkEmailActionHeader: 'Next step — check your inbox',
+    checkEmailSentTo: 'We sent a confirmation link to:',
+    checkEmailCta: 'Click the link in the email to activate your order for processing.',
+    checkEmailPending: 'Your order will NOT be processed until you confirm it.',
+    checkEmailSpam: 'Can\'t find the email? Check your Spam or Junk folder.',
+    checkEmailExpiry: 'The link is valid for 24 hours.',
     checkEmailContact: 'Questions? Write to us at',
     backToHome: 'Back to home',
   },
@@ -60,6 +71,7 @@ export default function CheckoutPage() {
   const t = T[lang]
   const items = useCart()
   const subtotalCents = useCartSubtotalCents()
+  const clearCart = useClearCart()
 
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [status, setStatus] = useState<CheckoutStatus>({ kind: 'idle' })
@@ -211,8 +223,10 @@ export default function CheckoutPage() {
       }
 
       if (data.status === 'check_email') {
+        clearCart()
         setStatus({ kind: 'check_email', publicOrderNumber: data.publicOrderNumber, customerEmail: data.customerEmail ?? '' })
       } else if (data.status === 'email_failed') {
+        clearCart()
         setStatus({
           kind: 'email_failed',
           publicOrderNumber: data.publicOrderNumber,
@@ -221,6 +235,7 @@ export default function CheckoutPage() {
         })
       } else if (data.status === 'pending') {
         // Honeypot triggered — show check_email silently
+        clearCart()
         setStatus({
           kind: 'check_email',
           publicOrderNumber: 'TEPE-' + Math.floor(Math.random() * 9000 + 1000),
@@ -261,85 +276,119 @@ export default function CheckoutPage() {
   // Empty cart
   if (items.length === 0 && status.kind === 'idle') {
     return (
-      <main style={containerStyle}>
-        <div style={innerStyle}>
-          <div style={{ ...cardStyle, textAlign: 'center', padding: '56px 32px' }}>
-            <div style={{
-              width: 72, height: 72, borderRadius: '50%',
-              background: 'var(--surface2)', display: 'flex',
-              alignItems: 'center', justifyContent: 'center',
-              fontSize: '2rem', margin: '0 auto 24px',
-            }}>🛒</div>
-            <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.6rem', color: 'var(--plum)', marginBottom: 12 }}>
-              {t.emptyCart}
+      <Fragment>
+        <main style={containerStyle}>
+          <div style={innerStyle}>
+            <div style={{ ...cardStyle, textAlign: 'center', padding: '56px 32px' }}>
+              <div style={{
+                width: 72, height: 72, borderRadius: '50%',
+                background: 'var(--surface2)', display: 'flex',
+                alignItems: 'center', justifyContent: 'center',
+                fontSize: '2rem', margin: '0 auto 24px',
+              }}>🛒</div>
+              <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.6rem', color: 'var(--plum)', marginBottom: 12 }}>
+                {t.emptyCart}
+              </div>
+              <p style={{ color: 'var(--text-soft)', marginBottom: 28, fontSize: '0.95rem' }}>{t.emptyCartDesc}</p>
+              <Link href="/order" className="btn btn-caramel" style={{ fontSize: '0.95rem' }}>
+                {t.goShopping}
+              </Link>
             </div>
-            <p style={{ color: 'var(--text-soft)', marginBottom: 28, fontSize: '0.95rem' }}>{t.emptyCartDesc}</p>
-            <Link href="/order" className="btn btn-caramel" style={{ fontSize: '0.95rem' }}>
-              {t.goShopping}
-            </Link>
           </div>
-        </div>
-      </main>
+        </main>
+        <Footer />
+      </Fragment>
     )
   }
 
   // Success — check email
   if (status.kind === 'check_email') {
     return (
+      <Fragment>
       <main style={{ ...containerStyle, background: `radial-gradient(ellipse 70% 50% at 50% 0%, oklch(88% 0.05 315 / 0.18), transparent), var(--bg)` }}>
         <div style={innerStyle}>
           <div style={{ ...cardStyle, padding: '0', overflow: 'hidden' }}>
-            {/* Plum header strip */}
-            <div style={{
-              background: 'var(--plum)',
-              padding: '36px 40px 32px',
-              textAlign: 'center',
-            }}>
+            {/* Header */}
+            <div style={{ background: 'var(--plum)', padding: '32px 36px 28px', textAlign: 'center' }}>
               <div style={{
-                width: 64, height: 64, borderRadius: '50%',
-                background: 'oklch(42% 0.09 315)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.8rem', margin: '0 auto 20px',
-              }}>📬</div>
-              <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.75rem', fontWeight: 700, color: '#fff', marginBottom: 8, letterSpacing: '-0.01em' }}>
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: 'oklch(55% 0.15 145)', borderRadius: 99,
+                padding: '5px 14px', fontSize: '0.75rem', fontWeight: 700,
+                letterSpacing: '0.06em', textTransform: 'uppercase', color: 'white',
+                marginBottom: 18,
+              }}>
+                ✓ {t.checkEmailBadge}
+              </div>
+              <div style={{ fontFamily: 'var(--font-head)', fontSize: '1.65rem', fontWeight: 700, color: '#fff', marginBottom: 10, letterSpacing: '-0.01em' }}>
                 {t.checkEmailTitle}
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'oklch(80% 0.04 315)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+              <div style={{
+                display: 'inline-block',
+                background: 'oklch(42% 0.09 315)', borderRadius: 'var(--r-sm)',
+                padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700,
+                letterSpacing: '0.08em', color: 'oklch(85% 0.04 315)',
+              }}>
                 {t.checkEmailOrder}{status.publicOrderNumber}
               </div>
             </div>
 
             {/* Body */}
-            <div style={{ padding: '32px 40px 36px', textAlign: 'center' }}>
-              <p style={{ fontSize: '1rem', color: 'var(--text-mid)', marginBottom: 6, lineHeight: 1.6 }}>
-                {t.checkEmailSentTo}
-              </p>
-              {status.customerEmail && (
-                <div style={{
-                  display: 'inline-block',
-                  background: 'var(--surface2)',
-                  borderRadius: 'var(--r-sm)',
-                  padding: '8px 20px',
-                  fontWeight: 700,
-                  color: 'var(--plum)',
-                  fontSize: '1rem',
-                  marginBottom: 24,
-                  wordBreak: 'break-all',
-                }}>
-                  {status.customerEmail}
+            <div style={{ padding: '28px 36px 32px' }}>
+              {/* Action box */}
+              <div style={{
+                background: 'oklch(96% 0.02 250)',
+                border: '1.5px solid oklch(82% 0.06 250)',
+                borderRadius: 'var(--r-sm)',
+                padding: '18px 20px',
+                marginBottom: 20,
+              }}>
+                <div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'oklch(35% 0.1 260)', marginBottom: 10 }}>
+                  📧 {t.checkEmailActionHeader}
                 </div>
-              )}
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-mid)', lineHeight: 1.7, marginBottom: 8 }}>
-                {t.checkEmailNote}
-              </p>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-soft)', lineHeight: 1.6, marginBottom: 28 }}>
-                {t.checkEmailNote2}
-              </p>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-mid)', marginBottom: 8 }}>
+                  {t.checkEmailSentTo}
+                </div>
+                {status.customerEmail && (
+                  <div style={{
+                    background: 'white', borderRadius: 'var(--r-sm)',
+                    padding: '7px 14px', fontWeight: 700,
+                    color: 'var(--plum)', fontSize: '0.95rem',
+                    wordBreak: 'break-all', marginBottom: 12,
+                    border: '1px solid var(--border)',
+                  }}>
+                    {status.customerEmail}
+                  </div>
+                )}
+                <div style={{ fontSize: '0.88rem', color: 'var(--text-mid)', lineHeight: 1.6 }}>
+                  {t.checkEmailCta}
+                </div>
+              </div>
+
+              {/* Warning: not processed until confirmed */}
+              <div style={{
+                background: 'oklch(97% 0.025 55)',
+                border: '1px solid oklch(85% 0.07 55)',
+                borderRadius: 'var(--r-sm)',
+                padding: '12px 16px',
+                marginBottom: 20,
+                fontSize: '0.84rem',
+                color: 'oklch(42% 0.1 50)',
+                fontWeight: 600,
+              }}>
+                ⚠️ {t.checkEmailPending}
+              </div>
+
+              {/* Hints */}
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-soft)', lineHeight: 1.6, marginBottom: 24, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span>• {t.checkEmailSpam}</span>
+                <span>• {t.checkEmailExpiry}</span>
+              </div>
+
               <div style={{ borderTop: '1px solid var(--border)', paddingTop: 20, display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
                 <Link href="/" className="btn btn-secondary" style={{ fontSize: '0.9rem' }}>
                   {t.backToHome}
                 </Link>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-soft)', margin: 0 }}>
+                <p style={{ fontSize: '0.79rem', color: 'var(--text-soft)', margin: 0, textAlign: 'center' }}>
                   {t.checkEmailContact}{' '}
                   <a href="mailto:tepe@mail.bg" style={{ color: 'var(--caramel)', fontWeight: 600 }}>tepe@mail.bg</a>
                 </p>
@@ -348,37 +397,46 @@ export default function CheckoutPage() {
           </div>
         </div>
       </main>
+      <Footer />
+      </Fragment>
     )
   }
 
   // Email failed — retry panel
   if (status.kind === 'email_failed') {
     return (
-      <main style={containerStyle}>
-        <div style={innerStyle}>
-          <EmailRetryPanel
-            lang={lang}
-            publicOrderNumber={status.publicOrderNumber}
-            customerEmail={status.customerEmail}
-            emailRetryToken={status.emailRetryToken}
-          />
-        </div>
-      </main>
+      <Fragment>
+        <main style={containerStyle}>
+          <div style={innerStyle}>
+            <EmailRetryPanel
+              lang={lang}
+              publicOrderNumber={status.publicOrderNumber}
+              customerEmail={status.customerEmail}
+              emailRetryToken={status.emailRetryToken}
+            />
+          </div>
+        </main>
+        <Footer />
+      </Fragment>
     )
   }
 
   // Insufficient stock
   if (status.kind === 'insufficient_stock') {
     return (
-      <main style={containerStyle}>
-        <div style={innerStyle}>
-          <InsufficientStockError lang={lang} message={status.message} />
-        </div>
-      </main>
+      <Fragment>
+        <main style={containerStyle}>
+          <div style={innerStyle}>
+            <InsufficientStockError lang={lang} message={status.message} />
+          </div>
+        </main>
+        <Footer />
+      </Fragment>
     )
   }
 
   return (
+    <Fragment>
     <main style={containerStyle}>
       <div style={innerStyle}>
         {/* Header */}
@@ -449,5 +507,7 @@ export default function CheckoutPage() {
         </div>
       </div>
     </main>
+    <Footer />
+    </Fragment>
   )
 }
