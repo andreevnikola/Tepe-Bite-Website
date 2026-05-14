@@ -55,8 +55,10 @@ function StoreRow({ loc, lang }: { loc: Location; lang: "bg" | "en" }) {
         className="items-baseline relative grow justify-center"
       >
         <div
+          className="flex-col items-start!"
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             gap: 8,
             flexWrap: "wrap",
@@ -67,7 +69,7 @@ function StoreRow({ loc, lang }: { loc: Location; lang: "bg" | "en" }) {
               style={{
                 background: "var(--plum)",
                 color: "white",
-                fontSize: "0.65rem",
+                fontSize: "0.5rem",
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
@@ -119,7 +121,7 @@ function StoreRow({ loc, lang }: { loc: Location; lang: "bg" | "en" }) {
         </p>
       </div>
 
-      <div className="flex flex-col relative gap-1 justify-center h-full w-fit items-center">
+      <div className="flex flex-col relative gap-1 justify-center w-fit items-center">
         <a
           href={mapsUrl}
           target="_blank"
