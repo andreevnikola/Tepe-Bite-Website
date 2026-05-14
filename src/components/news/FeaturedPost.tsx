@@ -18,6 +18,9 @@ export default function FeaturedPost({ post }: { post: NewsPost }) {
     lang === "bg" ? "bg-BG" : "en-GB",
     { day: "numeric", month: "long", year: "numeric" },
   );
+  const isNew =
+    Date.now() - new Date(post.publishedAt).getTime() <
+    14 * 24 * 60 * 60 * 1000;
 
   return (
     <>
@@ -85,6 +88,39 @@ export default function FeaturedPost({ post }: { post: NewsPost }) {
                 style={{ objectFit: "cover", height: "100%", width: "100%" }}
                 sizes="auto"
               />
+              {isNew && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "16px",
+                    left: "16px",
+                    zIndex: 2,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "var(--caramel)",
+                    color: "white",
+                    fontSize: "0.68rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    padding: "5px 12px",
+                    borderRadius: "100px",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.18)",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "white",
+                      flexShrink: 0,
+                    }}
+                  />
+                  {lang === "bg" ? "Ново" : "New"}
+                </span>
+              )}
             </div>
 
             <div

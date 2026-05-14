@@ -16,6 +16,9 @@ export default function PostCard({ post }: { post: NewsPost }) {
     lang === "bg" ? "bg-BG" : "en-GB",
     { day: "numeric", month: "long", year: "numeric" }
   );
+  const isNew =
+    Date.now() - new Date(post.publishedAt).getTime() <
+    14 * 24 * 60 * 60 * 1000;
 
   return (
     <Link
@@ -44,6 +47,39 @@ export default function PostCard({ post }: { post: NewsPost }) {
           style={{ objectFit: "cover" }}
           sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
         />
+        {isNew && (
+          <span
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "12px",
+              zIndex: 2,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              background: "var(--caramel)",
+              color: "white",
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "4px 10px",
+              borderRadius: "100px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            }}
+          >
+            <span
+              style={{
+                width: "5px",
+                height: "5px",
+                borderRadius: "50%",
+                background: "white",
+                flexShrink: 0,
+              }}
+            />
+            {lang === "bg" ? "Ново" : "New"}
+          </span>
+        )}
       </div>
 
       <div
