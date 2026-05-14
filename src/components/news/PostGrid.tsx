@@ -28,14 +28,14 @@ export default function PostGrid({ posts }: { posts: NewsPost[] }) {
         }
       `}</style>
 
-      <section className="section-spacing">
+      <section className="section-spacing -mt-24">
         <div className="section-inner">
           <div style={{ marginBottom: "40px" }}>
             <span className="label-tag">
-              {lang === "bg" ? "ПО-СТАРИ ПУБЛИКАЦИИ" : "OLDER POSTS"}
+              {lang === "bg" ? "ВСИЧКИ ОСТАНАЛИ ПУБЛИКАЦИИ" : "ALL OTHER POSTS"}
             </span>
             <h2 className="heading-md" style={{ marginTop: "8px" }}>
-              {lang === "bg" ? "Архив" : "Archive"}
+              {lang === "bg" ? "Историята на ТЕПЕ bite" : "The TEPE bite Story"}
             </h2>
           </div>
 

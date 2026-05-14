@@ -65,15 +65,15 @@ export const newsPostSchema = defineType({
     }),
     defineField({
       name: "bodyBg",
-      title: "Съдържание (BG)",
-      type: "array",
-      of: [{ type: "block" }],
+      title: "Съдържание (BG) — Markdown",
+      type: "text",
+      description: "Поддържа Markdown: **удебелен**, *курсив*, ## заглавие, - списък",
     }),
     defineField({
       name: "bodyEn",
-      title: "Съдържание (EN)",
-      type: "array",
-      of: [{ type: "block" }],
+      title: "Съдържание (EN) — Markdown",
+      type: "text",
+      description: "Supports Markdown: **bold**, *italic*, ## heading, - list",
     }),
   ],
   preview: {

@@ -1,5 +1,3 @@
-export type PortableTextBlock = { _type: "block"; [key: string]: unknown };
-
 export interface SanityImageAsset {
   _type: "image";
   asset: { _ref: string; _type: "reference" };
@@ -26,8 +24,8 @@ export interface NewsPost {
   image: SanityImageAsset & { altBg?: string; altEn?: string };
   excerptBg?: string;
   excerptEn?: string;
-  bodyBg?: PortableTextBlock[];
-  bodyEn?: PortableTextBlock[];
+  bodyBg?: string;
+  bodyEn?: string;
 }
 
 export interface Location {
