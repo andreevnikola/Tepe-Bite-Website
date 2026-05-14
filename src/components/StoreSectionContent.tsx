@@ -199,7 +199,7 @@ export default function StoreSectionContent({
               overflowY: "auto",
             }}
           >
-            {locations.map((loc) => (
+            {locations.slice(0, 3).map((loc) => (
               <StoreRow key={loc._id} loc={loc} lang={lang} />
             ))}
           </div>

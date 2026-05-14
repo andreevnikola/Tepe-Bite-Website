@@ -139,7 +139,7 @@ export default function LocationsMap({
         borderRadius: "var(--r-lg,32px)",
         overflow: "hidden",
         boxShadow: "var(--shadow-lg)",
-        height: small ? 300 : "clamp(320px, 45vw, 520px)",
+        height: small ? 350 : "clamp(320px, 45vw, 520px)",
       }}
     >
       <MapContainer

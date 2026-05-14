@@ -1,5 +1,6 @@
 import { locationSchema } from "./location";
+import { newsPostSchema } from "./newsPost";
 
 export const schema = {
-  types: [locationSchema],
+  types: [locationSchema, newsPostSchema],
 };
