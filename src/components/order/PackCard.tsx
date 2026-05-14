@@ -15,6 +15,8 @@ type Props = {
 
 const available = (p: SafeProductPlan) => p.isActive && p.priceCents > 0
 
+const webOrdersUnavailable = process.env.NEXT_PUBLIC_WEB_ORDERS_AVAILABLE !== 'true'
+
 export default function PackCard({ plan }: Props) {
   const lang = useAtomValue(langAtom)
   const addToCart = useAddToCart()
@@ -110,13 +112,22 @@ export default function PackCard({ plan }: Props) {
           {lang === 'bg' ? 'Виж пакета' : 'View pack'}
         </Link>
 
-        {isAvailable ? (
+        {isAvailable && !webOrdersUnavailable ? (
           <button
             onClick={handleOrderNow}
             className="btn btn-caramel"
             style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 110 }}
           >
             {lang === 'bg' ? 'Поръчай' : 'Order'}
+          </button>
+        ) : isAvailable && webOrdersUnavailable ? (
+          <button
+            disabled
+            title={lang === 'bg' ? 'Онлайн поръчките не са налични' : 'Online orders are unavailable'}
+            className="btn"
+            style={{ flex: 1, justifyContent: 'center', fontSize: '0.88rem', minWidth: 110, background: 'var(--surface2)', color: 'var(--text-soft)', cursor: 'not-allowed', opacity: 0.6 }}
+          >
+            {lang === 'bg' ? 'Недостъпно' : 'Unavailable'}
           </button>
         ) : (
           <button

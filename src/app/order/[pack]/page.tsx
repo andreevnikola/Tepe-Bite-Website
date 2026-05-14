@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import Footer from '@/components/Footer'
 import PackDetailClient from '@/components/order/PackDetailClient'
+import DismissibleOrdersGate from '@/components/orders/DismissibleOrdersGate'
 import { getProductPlanBySlug } from '@/lib/db/product-plans'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -38,6 +39,8 @@ export default async function PackDetailPage({ params }: Props) {
       }}
     >
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 clamp(20px, 5vw, 48px)' }}>
+        <DismissibleOrdersGate />
+
         {/* Breadcrumb */}
         <nav
           aria-label="Навигация"

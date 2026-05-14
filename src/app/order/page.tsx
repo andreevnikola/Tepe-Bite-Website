@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import CartToast from '@/components/cart/CartToast'
 import Footer from '@/components/Footer'
 import PackCard from '@/components/order/PackCard'
+import DismissibleOrdersGate from '@/components/orders/DismissibleOrdersGate'
 import { getAllProductPlans } from '@/lib/db/product-plans'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -29,6 +30,8 @@ export default async function OrderPage() {
       }}
     >
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 clamp(20px, 5vw, 48px)' }}>
+
+        <DismissibleOrdersGate />
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 36 }}>

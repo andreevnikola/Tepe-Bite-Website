@@ -7,6 +7,7 @@ import StepCustomerInfo, { type CustomerInfoFields } from '@/components/checkout
 import StepDelivery, { type DeliveryFields } from '@/components/checkout/StepDelivery'
 import StepReview from '@/components/checkout/StepReview'
 import Footer from '@/components/Footer'
+import PermanentOrdersOverlay from '@/components/orders/PermanentOrdersOverlay'
 import { useCart, useCartSubtotalCents, useClearCart } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
@@ -277,6 +278,7 @@ export default function CheckoutPage() {
   if (items.length === 0 && status.kind === 'idle') {
     return (
       <Fragment>
+        <PermanentOrdersOverlay />
         <main style={containerStyle}>
           <div style={innerStyle}>
             <div style={{ ...cardStyle, textAlign: 'center', padding: '56px 32px' }}>
@@ -305,6 +307,7 @@ export default function CheckoutPage() {
   if (status.kind === 'check_email') {
     return (
       <Fragment>
+      <PermanentOrdersOverlay />
       <main style={{ ...containerStyle, background: `radial-gradient(ellipse 70% 50% at 50% 0%, oklch(88% 0.05 315 / 0.18), transparent), var(--bg)` }}>
         <div style={innerStyle}>
           <div style={{ ...cardStyle, padding: '0', overflow: 'hidden' }}>
@@ -406,6 +409,7 @@ export default function CheckoutPage() {
   if (status.kind === 'email_failed') {
     return (
       <Fragment>
+        <PermanentOrdersOverlay />
         <main style={containerStyle}>
           <div style={innerStyle}>
             <EmailRetryPanel
@@ -425,6 +429,7 @@ export default function CheckoutPage() {
   if (status.kind === 'insufficient_stock') {
     return (
       <Fragment>
+        <PermanentOrdersOverlay />
         <main style={containerStyle}>
           <div style={innerStyle}>
             <InsufficientStockError lang={lang} message={status.message} />
@@ -437,6 +442,7 @@ export default function CheckoutPage() {
 
   return (
     <Fragment>
+    <PermanentOrdersOverlay />
     <main style={containerStyle}>
       <div style={innerStyle}>
         {/* Header */}

@@ -89,6 +89,8 @@ const T = {
   },
 }
 
+const webOrdersUnavailable = process.env.NEXT_PUBLIC_WEB_ORDERS_AVAILABLE !== 'true'
+
 export default function PackDetailClient({ plan }: Props) {
   const lang = useAtomValue(langAtom)
   const [qty, setQty] = useState(1)
@@ -230,10 +232,29 @@ export default function PackDetailClient({ plan }: Props) {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <button onClick={handleOrderNow} className="btn btn-caramel" style={{ justifyContent: 'center' }}>
+                  <button
+                    onClick={webOrdersUnavailable ? undefined : handleOrderNow}
+                    disabled={webOrdersUnavailable}
+                    title={webOrdersUnavailable ? (lang === 'bg' ? 'Онлайн поръчките не са налични' : 'Online orders are unavailable') : undefined}
+                    className="btn btn-caramel"
+                    style={{
+                      justifyContent: 'center',
+                      ...(webOrdersUnavailable ? { opacity: 0.45, cursor: 'not-allowed', filter: 'grayscale(0.4)' } : {}),
+                    }}
+                  >
                     {t.orderNow}
                   </button>
-                  <button onClick={handleAddToCart} className="btn btn-secondary" style={{ justifyContent: 'center', fontSize: '0.9rem' }}>
+                  <button
+                    onClick={webOrdersUnavailable ? undefined : handleAddToCart}
+                    disabled={webOrdersUnavailable}
+                    title={webOrdersUnavailable ? (lang === 'bg' ? 'Онлайн поръчките не са налични' : 'Online orders are unavailable') : undefined}
+                    className="btn btn-secondary"
+                    style={{
+                      justifyContent: 'center',
+                      fontSize: '0.9rem',
+                      ...(webOrdersUnavailable ? { opacity: 0.45, cursor: 'not-allowed', filter: 'grayscale(0.4)' } : {}),
+                    }}
+                  >
                     {t.addToCart}
                   </button>
                 </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import Footer from '@/components/Footer'
+import PermanentOrdersOverlay from '@/components/orders/PermanentOrdersOverlay'
 import { Fragment } from 'react'
 import QuantitySelector from '@/components/order/QuantitySelector'
 import { PRICING } from '@/lib/config/pricing'
@@ -83,6 +84,7 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <Fragment>
+        <PermanentOrdersOverlay />
         <main style={{ minHeight: '100vh', background: 'var(--bg)', paddingTop: 100, paddingBottom: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ textAlign: 'center', maxWidth: 420, padding: '0 24px' }}>
             <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.2rem', margin: '0 auto 24px' }}>🛒</div>
@@ -98,6 +100,7 @@ export default function CartPage() {
 
   return (
     <Fragment>
+    <PermanentOrdersOverlay />
     <main style={{ minHeight: '100vh', background: 'var(--bg)', paddingTop: 100, paddingBottom: 80 }}>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 clamp(20px, 5vw, 48px)' }}>
 
