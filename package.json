@@ -12,6 +12,10 @@
     "migration:generate": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:generate src/lib/db/migrations/new -d typeorm.config.ts"
   },
   "dependencies": {
+    "@portabletext/react": "^6.2.0",
+    "@sanity/client": "^7.22.0",
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/vision": "^5.25.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/leaflet": "^1.9.21",
     "@types/nodemailer": "^8.0.0",
@@ -21,6 +25,7 @@
     "jotai": "^2.20.0",
     "leaflet": "^1.9.4",
     "next": "16.2.5",
+    "next-sanity": "^12.4.5",
     "nodemailer": "^8.0.7",
     "pg": "^8.20.0",
     "react": "19.2.4",
@@ -28,6 +33,8 @@
     "react-leaflet": "^5.0.0",
     "reflect-metadata": "^0.2.2",
     "resend": "^6.12.3",
+    "sanity": "^5.25.1",
+    "styled-components": "^6.4.1",
     "ts-node": "^10.9.2",
     "typeorm": "^0.3.29",
     "typeorm-ts-node-commonjs": "^0.3.20",

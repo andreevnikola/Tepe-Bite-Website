@@ -15,6 +15,10 @@ export default function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const isLegal = pathname.startsWith("/legal");
+  const isStudio = pathname.startsWith("/studio");
+  const isLocationDetail = /^\/partnering-locations\/.+/.test(pathname);
+
+  if (isStudio) return null;
 
   // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
   const p = isHome ? "" : "/";
@@ -67,12 +71,12 @@ export default function Nav() {
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 1000,
+        zIndex: 1100,
         viewTransitionName: "site-header",
-        background: (scrolled || isLegal) ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
-        backdropFilter: (scrolled || isLegal) ? "blur(16px)" : "none",
-        WebkitBackdropFilter: (scrolled || isLegal) ? "blur(16px)" : "none",
-        boxShadow: (scrolled || isLegal) ? "0 1px 0 oklch(90% 0.02 80)" : "none",
+        background: (scrolled || isLegal || isLocationDetail) ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
+        backdropFilter: (scrolled || isLegal || isLocationDetail) ? "blur(16px)" : "none",
+        WebkitBackdropFilter: (scrolled || isLegal || isLocationDetail) ? "blur(16px)" : "none",
+        boxShadow: (scrolled || isLegal || isLocationDetail) ? "0 1px 0 oklch(90% 0.02 80)" : "none",
         transition: "all 0.3s ease",
       }}
     >
