@@ -115,6 +115,11 @@ export default async function ArticlePage({
           </div>
         </div>
 
+        <style>{`
+          .article-back-link { color: var(--text-mid); }
+          .article-back-link:hover { color: var(--caramel); }
+        `}</style>
+
         <div
           style={{
             maxWidth: "720px",
@@ -124,23 +129,17 @@ export default async function ArticlePage({
         >
           <Link
             href="/news"
+            className="article-back-link"
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
               fontSize: "0.88rem",
               fontWeight: 600,
-              color: "var(--text-mid)",
               textDecoration: "none",
               marginBottom: "32px",
               transition: "color 0.2s",
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.color = "var(--caramel)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.color = "var(--text-mid)")
-            }
           >
             ← Всички новини
           </Link>

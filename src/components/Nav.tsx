@@ -17,6 +17,7 @@ export default function Nav() {
   const isLegal = pathname.startsWith("/legal");
   const isStudio = pathname.startsWith("/studio");
   const isLocationDetail = /^\/partnering-locations\/.+/.test(pathname);
+  const isNewsDetail = /^\/news\/.+/.test(pathname);
 
   if (isStudio) return null;
 
@@ -79,15 +80,15 @@ export default function Nav() {
         zIndex: 1100,
         viewTransitionName: "site-header",
         background:
-          scrolled || isLegal || isLocationDetail
+          scrolled || isLegal || isLocationDetail || isNewsDetail
             ? "oklch(99% 0.008 75 / 0.96)"
             : "transparent",
         backdropFilter:
-          scrolled || isLegal || isLocationDetail ? "blur(16px)" : "none",
+          scrolled || isLegal || isLocationDetail || isNewsDetail ? "blur(16px)" : "none",
         WebkitBackdropFilter:
-          scrolled || isLegal || isLocationDetail ? "blur(16px)" : "none",
+          scrolled || isLegal || isLocationDetail || isNewsDetail ? "blur(16px)" : "none",
         boxShadow:
-          scrolled || isLegal || isLocationDetail
+          scrolled || isLegal || isLocationDetail || isNewsDetail
             ? "0 1px 0 oklch(90% 0.02 80)"
             : "none",
         transition: "all 0.3s ease",
