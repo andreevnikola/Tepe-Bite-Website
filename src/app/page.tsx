@@ -14,7 +14,7 @@ import { getAllNewsPosts } from "@/sanity/queries";
 
 export default async function Home() {
   const allPosts = await getAllNewsPosts();
-  const latestPosts = allPosts.slice(0, 3);
+  const latestPosts = allPosts.slice(0, 4);
 
   return (
     <>

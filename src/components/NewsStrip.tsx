@@ -12,11 +12,29 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
   return (
     <>
       <style>{`
-        .news-strip-grid {
-          display: grid;
-          grid-template-columns: 180px repeat(3, 1fr) 140px;
-          gap: 16px;
+        .news-strip-scroll {
+          overflow-x: auto;
+          overflow-y: visible;
+          padding: 8px clamp(20px, 5vw, 80px) 12px;
+          scrollbar-width: thin;
+          scrollbar-color: oklch(66% 0.16 52 / 0.1) transparent;
+        }
+        .news-strip-scroll::-webkit-scrollbar {
+          height: 3px;
+        }
+        .news-strip-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .news-strip-scroll::-webkit-scrollbar-thumb {
+          background: oklch(66% 0.16 52 / 0.1);
+          border-radius: 10px;
+        }
+        .news-strip-row {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 14px;
           align-items: stretch;
+          width: max-content;
         }
         .news-strip-card-img {
           position: relative;
@@ -24,45 +42,28 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
           overflow: hidden;
           background: var(--surface2);
           border-radius: var(--r-sm) var(--r-sm) 0 0;
-          flex-shrink: 0;
-        }
-        @media (max-width: 1000px) {
-          .news-strip-grid {
-            grid-template-columns: repeat(2, 1fr) 140px;
-          }
-          .news-strip-heading {
-            display: none !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .news-strip-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-        @media (max-width: 440px) {
-          .news-strip-grid {
-            grid-template-columns: 1fr;
-          }
         }
       `}</style>
 
       <section
         style={{
-          padding: "clamp(32px, 5vw, 52px) clamp(20px, 5vw, 80px)",
-          background: "var(--bg)",
+          padding: "clamp(24px, 3.5vw, 40px) 0",
+          background: "var(--plum-lt)",
         }}
       >
-        <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-          <div className="news-strip-grid">
-
-            {/* Heading column */}
+        <div className="news-strip-scroll">
+          <div className="news-strip-row">
+            {/* Heading */}
             <div
-              className="news-strip-heading"
               style={{
+                flexShrink: 0,
+                width: "160px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 paddingRight: "8px",
+                overflow: "visible",
+                position: "relative",
               }}
             >
               <span className="label-tag">
@@ -80,13 +81,13 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
               <p
                 style={{
                   fontFamily: "var(--font-head)",
-                  fontSize: "1.15rem",
+                  fontSize: "1.1rem",
                   fontWeight: 600,
                   color: "var(--plum)",
                   lineHeight: 1.3,
                 }}
               >
-                {lang === "bg" ? "Последно от нас" : "Latest from us"}
+                {lang === "bg" ? "Последно от нас:" : "Latest from us:"}
               </p>
             </div>
 
@@ -110,8 +111,11 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
                 <Link
                   key={post._id}
                   href={`/news/${post.slug.current}`}
-                  className="card card-hover"
+                  className="card card-hover shadow-none!"
                   style={{
+                    flexShrink: 0,
+                    width: "310px",
+                    maxWidth: "65vw",
                     display: "flex",
                     flexDirection: "column",
                     overflow: "hidden",
@@ -121,11 +125,11 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
                 >
                   <div className="news-strip-card-img">
                     <Image
-                      src={urlFor(post.image).width(480).url()}
+                      src={urlFor(post.image).width(420).url()}
                       alt={alt || title}
                       fill
                       style={{ objectFit: "cover" }}
-                      sizes="(max-width: 640px) 50vw, 25vw"
+                      sizes="210px"
                     />
                     {isNew && (
                       <span
@@ -195,35 +199,30 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
               );
             })}
 
-            {/* View all card */}
+            {/* View all */}
             <Link
               href="/news"
               className="card card-hover"
               style={{
+                flexShrink: 0,
+                width: "120px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 textDecoration: "none",
                 gap: "10px",
-                padding: "20px 16px",
-                background: "var(--plum-lt)",
-                border: "1.5px dashed var(--plum-mid)",
+                padding: "16px 12px",
+                background: "var(--plum)",
+                border: "none",
                 textAlign: "center",
               }}
             >
               <span
                 style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: "var(--plum)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "white",
-                  fontSize: "1.1rem",
-                  flexShrink: 0,
+                  fontSize: "1.4rem",
+                  color: "var(--caramel)",
+                  lineHeight: 1,
                 }}
               >
                 →
@@ -231,16 +230,15 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
               <span
                 style={{
                   fontFamily: "var(--font-head)",
-                  fontSize: "0.88rem",
+                  fontSize: "0.82rem",
                   fontWeight: 600,
-                  color: "var(--plum)",
+                  color: "white",
                   lineHeight: 1.3,
                 }}
               >
                 {lang === "bg" ? "Всички новини" : "All news"}
               </span>
             </Link>
-
           </div>
         </div>
       </section>
