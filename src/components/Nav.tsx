@@ -47,19 +47,24 @@ export default function Nav() {
           ["/", "Начало"],
           ["/product", "Продуктът"],
           ["/initiatives", "Нашите инициативи"],
-          [`${p}#za-nas`, "За нас"],
+          ["/partnering-locations", "Партниращи обекти"],
+          ["/news", "Новини"],
         ]
       : [
           ["/", "Home"],
           ["/product", "The Product"],
           ["/initiatives", "Our Initiatives"],
-          [`${p}#za-nas`, "About"],
+          ["/partnering-locations", "Partnering Locations"],
+          ["/news", "News"],
         ];
 
   const isActive = (href: string) => {
     if (href === "/") return isHome;
     if (href === "/product") return pathname === "/product";
     if (href === "/initiatives") return pathname === "/initiatives";
+    if (href === "/partnering-locations")
+      return pathname.startsWith("/partnering-locations");
+    if (href === "/news") return pathname === "/news";
     return false;
   };
 
@@ -73,10 +78,18 @@ export default function Nav() {
         right: 0,
         zIndex: 1100,
         viewTransitionName: "site-header",
-        background: (scrolled || isLegal || isLocationDetail) ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
-        backdropFilter: (scrolled || isLegal || isLocationDetail) ? "blur(16px)" : "none",
-        WebkitBackdropFilter: (scrolled || isLegal || isLocationDetail) ? "blur(16px)" : "none",
-        boxShadow: (scrolled || isLegal || isLocationDetail) ? "0 1px 0 oklch(90% 0.02 80)" : "none",
+        background:
+          scrolled || isLegal || isLocationDetail
+            ? "oklch(99% 0.008 75 / 0.96)"
+            : "transparent",
+        backdropFilter:
+          scrolled || isLegal || isLocationDetail ? "blur(16px)" : "none",
+        WebkitBackdropFilter:
+          scrolled || isLegal || isLocationDetail ? "blur(16px)" : "none",
+        boxShadow:
+          scrolled || isLegal || isLocationDetail
+            ? "0 1px 0 oklch(90% 0.02 80)"
+            : "none",
         transition: "all 0.3s ease",
       }}
     >
@@ -200,59 +213,66 @@ export default function Nav() {
             })}
           </div>
 
-          {/* Lang switcher — desktop */}
+          {/* Right group: Lang switcher, Cart, CTA — desktop */}
           <div
+            className="desktop-nav"
             style={{
               display: "flex",
-              gap: 4,
-              padding: "4px 8px",
-              background: "var(--surface2)",
-              borderRadius: 100,
-              fontSize: "0.8rem",
-              fontWeight: 600,
+              gap: 30,
+              alignItems: "center",
             }}
-            className="desktop-nav"
           >
-            {(["bg", "en"] as Lang[]).map((l) => (
-              <button
-                key={l}
-                onClick={() => handleLangChange(l)}
-                style={{
-                  padding: "4px 10px",
-                  borderRadius: 100,
-                  border: "none",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: "0.78rem",
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  background: lang === l ? "var(--plum)" : "transparent",
-                  color: lang === l ? "white" : "var(--text-soft)",
-                  transition: "all 0.2s",
-                }}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
+            {/* Lang switcher — desktop */}
+            <div
+              style={{
+                display: "flex",
+                gap: 4,
+                padding: "4px 8px",
+                background: "var(--surface2)",
+                borderRadius: 100,
+                fontSize: "0.8rem",
+                fontWeight: 600,
+              }}
+            >
+              {(["bg", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => handleLangChange(l)}
+                  style={{
+                    padding: "4px 10px",
+                    borderRadius: 100,
+                    border: "none",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: "0.78rem",
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    background: lang === l ? "var(--plum)" : "transparent",
+                    color: lang === l ? "white" : "var(--text-soft)",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
 
-          {/* Cart icon — desktop */}
-          <div className="desktop-nav">
+            {/* Cart icon — desktop */}
             <CartNavIcon />
-          </div>
 
-          {/* CTA — desktop */}
-          <Link
-            href="/order"
-            className="btn btn-primary desktop-nav"
-            style={{
-              fontSize: "0.88rem",
-              padding: "11px 22px",
-              cursor: "pointer",
-            }}
-          >
-            {lang === "bg" ? "Поръчай" : "Order"} <IconArrow />
-          </Link>
+            {/* CTA — desktop */}
+            <Link
+              href="/order"
+              className="btn btn-primary"
+              style={{
+                fontSize: "0.88rem",
+                padding: "11px 22px",
+                cursor: "pointer",
+              }}
+            >
+              {lang === "bg" ? "Поръчай" : "Order"} <IconArrow />
+            </Link>
+          </div>
 
           {/* Mobile right group */}
           <div
