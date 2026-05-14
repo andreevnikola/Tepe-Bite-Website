@@ -6,6 +6,7 @@ import HowItHelps from "@/components/HowItHelps";
 import InitiativesPromo from "@/components/InitiativesPromo";
 import OrderCTA from "@/components/OrderCTA";
 import ProductSection from "@/components/ProductSection";
+import StoresSection from "@/components/StoresSection";
 import TrustSection from "@/components/TrustSection";
 import WhySection from "@/components/WhySection";
 
@@ -21,6 +22,7 @@ export default function Home() {
         <HowItHelps />
         <TrustSection />
         <OrderCTA />
+        <StoresSection />
         <Community />
       </main>
       <Footer />

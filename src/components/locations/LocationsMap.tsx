@@ -63,7 +63,7 @@ function FindMeControl({ lang }: { lang: "bg" | "en" }) {
         setLoading(false);
       },
       () => setLoading(false),
-      { timeout: 6000 }
+      { timeout: 6000 },
     );
   };
 
@@ -125,8 +125,10 @@ function FindMeControl({ lang }: { lang: "bg" | "en" }) {
 
 export default function LocationsMap({
   locations,
+  small = false,
 }: {
   locations: Location[];
+  small?: boolean;
 }) {
   const lang = useAtomValue(langAtom);
 
@@ -137,12 +139,12 @@ export default function LocationsMap({
         borderRadius: "var(--r-lg,32px)",
         overflow: "hidden",
         boxShadow: "var(--shadow-lg)",
-        height: "clamp(320px, 45vw, 520px)",
+        height: small ? 300 : "clamp(320px, 45vw, 520px)",
       }}
     >
       <MapContainer
         center={PLOVDIV}
-        zoom={13}
+        zoom={12}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
       >
@@ -150,11 +152,10 @@ export default function LocationsMap({
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        <FindMeControl lang={lang} />
+        {!small && !(<FindMeControl lang={lang} />)}
         {locations.map((loc) => {
           if (!loc.coordinates?.lat || !loc.coordinates?.lng) return null;
-          const name =
-            lang === "en" && loc.nameEn ? loc.nameEn : loc.nameBg;
+          const name = lang === "en" && loc.nameEn ? loc.nameEn : loc.nameBg;
           return (
             <Marker
               key={loc._id}
