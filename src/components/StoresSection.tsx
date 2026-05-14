@@ -6,7 +6,6 @@ export default async function StoresSection() {
   let locations: Location[] = [];
   try {
     locations = await getAllLocations();
-    x;
   } catch {
     // Sanity not configured or unavailable
   }

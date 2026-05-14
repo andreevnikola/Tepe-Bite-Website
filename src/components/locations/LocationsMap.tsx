@@ -152,7 +152,7 @@ export default function LocationsMap({
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        {!small && !(<FindMeControl lang={lang} />)}
+        {!small && <FindMeControl lang={lang} />}
         {locations.map((loc) => {
           if (!loc.coordinates?.lat || !loc.coordinates?.lng) return null;
           const name = lang === "en" && loc.nameEn ? loc.nameEn : loc.nameBg;
