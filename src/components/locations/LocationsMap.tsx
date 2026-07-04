@@ -126,9 +126,11 @@ function FindMeControl({ lang }: { lang: "bg" | "en" }) {
 export default function LocationsMap({
   locations,
   small = false,
+  fill = false,
 }: {
   locations: Location[];
   small?: boolean;
+  fill?: boolean;
 }) {
   const lang = useAtomValue(langAtom);
 
@@ -139,7 +141,8 @@ export default function LocationsMap({
         borderRadius: "var(--r-lg,32px)",
         overflow: "hidden",
         boxShadow: "var(--shadow-lg)",
-        height: small ? 350 : "clamp(320px, 45vw, 520px)",
+        height: fill ? "100%" : small ? 350 : "clamp(320px, 45vw, 520px)",
+        minHeight: fill ? 300 : undefined,
       }}
     >
       <MapContainer

@@ -1,5 +1,6 @@
 "use client";
 import { IconArrow, IconShop } from "@/components/icons";
+import ImpactPledge from "@/components/ImpactPledge";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -62,7 +63,7 @@ export default function Hero() {
         style={{
           width: 320,
           height: 320,
-          background: "oklch(88% 0.08 55)",
+          background: "oklch(85% 0.08 230)",
           bottom: -80,
           left: "10%",
         }}
@@ -101,6 +102,11 @@ export default function Hero() {
         >
           {/* Left: copy */}
           <div style={{ maxWidth: 580 }}>
+            {/* Fixed-pledge chip — top of hero */}
+            <div style={{ marginBottom: 22 }}>
+              <ImpactPledge variant="chip" />
+            </div>
+
             {/* Eyebrow */}
             <div
               style={{
@@ -143,9 +149,6 @@ export default function Hero() {
             </div>
 
             <h1 className="heading-xl font-bold leading-tight mb-8">
-              {/* <span className="block whitespace-nowrap !text-[clamp(24px,9vw,54px)]">
-                {lang === "bg" ? HERO_HEADLINE_BG[0] : HERO_HEADLINE_EN[0]}
-              </span> */}
               {lang === "bg" ? (
                 <span className="block whitespace-nowrap text-[clamp(24px,9vw,54px)]!">
                   {" "}
@@ -157,9 +160,6 @@ export default function Hero() {
                   {HERO_HEADLINE_EN[0]}{" "}
                 </span>
               )}
-              {/* <span className="block whitespace-nowrap !text-[clamp(24px,7vw,48px)]">
-                {lang === "bg" ? HERO_HEADLINE_BG[1] : HERO_HEADLINE_EN[1]}
-              </span> */}
               {lang === "bg" ? (
                 <span className="block whitespace-nowrap text-[clamp(24px,7vw,48px)]!">
                   {" "}
@@ -233,9 +233,9 @@ export default function Hero() {
                   key={i}
                   className="max-lg:grow"
                   style={{
-                    background: i === 4 ? "var(--plum)" : "var(--surface)",
-                    color: i === 4 ? "white" : "var(--text)",
-                    borderRadius: i === 4 ? 100 : 14,
+                    background: "var(--surface)",
+                    color: "var(--text)",
+                    borderRadius: 14,
                     padding: "10px 16px",
                     boxShadow: "var(--shadow)",
                     border: "1px solid var(--border)",
@@ -250,7 +250,7 @@ export default function Hero() {
                       fontFamily: "var(--font-head)",
                       fontWeight: 700,
                       fontSize: "1.1rem",
-                      color: i === 4 ? "white" : "var(--plum)",
+                      color: "var(--plum)",
                     }}
                   >
                     {val}
@@ -259,8 +259,7 @@ export default function Hero() {
                     style={{
                       fontSize: "0.72rem",
                       fontWeight: 500,
-                      color:
-                        i === 4 ? "rgba(255,255,255,0.8)" : "var(--text-soft)",
+                      color: "var(--text-soft)",
                       letterSpacing: "0.04em",
                     }}
                   >

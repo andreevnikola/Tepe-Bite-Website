@@ -10,7 +10,7 @@ const copy = {
   bg: {
     label: "Налично в Пловдив",
     heading: "Намери ни в магазин удобен за теб",
-    desc: "ТЕПЕ bite се предлага в избрани оебкти из Пловдив.",
+    desc: "ТЕПЕ bite се предлага в избрани обекти из Пловдив.",
     cta: "Всички локации",
     navigate: "Навигирай",
     details: "Виж повече",
@@ -180,34 +180,58 @@ export default function StoreSectionContent({
           </p>
         </div>
 
-        {/* Map + List */}
+        {/* Map + List — map matches the height of the 3 rows */}
         <div
           className="stores-layout"
           style={{
             display: "grid",
             gridTemplateColumns: "3fr 2fr",
             gap: 28,
-            alignItems: "start",
+            alignItems: "stretch",
           }}
         >
-          <LocationsMapSection locations={locations} small={true} />
+          <div className="stores-map-wrap" style={{ height: "100%" }}>
+            <LocationsMapSection locations={locations} small={true} fill={true} />
+          </div>
 
           <div
+            className="stores-list"
             style={{
               display: "flex",
               flexDirection: "column",
               gap: 12,
-              maxHeight: "clamp(320px, 45vw, 520px)",
-              overflowY: "auto",
             }}
           >
             {locations.slice(0, 3).map((loc) => (
               <StoreRow key={loc._id} loc={loc} lang={lang} />
             ))}
+
+            {/* Note after the last location */}
+            <div
+              style={{
+                marginTop: 2,
+                padding: "10px 14px",
+                borderRadius: "var(--r-sm)",
+                border: "1px dashed var(--border)",
+                background: "var(--bg)",
+                fontSize: "0.78rem",
+                color: "var(--text-soft)",
+                textAlign: "center",
+                lineHeight: 1.5,
+              }}
+            >
+              {lang === "bg"
+                ? locations.length > 3
+                  ? `Тук показваме само 3 от ${locations.length} обекта.`
+                  : "Тук показваме само няколко обекта."
+                : locations.length > 3
+                  ? `We show only 3 of ${locations.length} stores here.`
+                  : "We show only a few stores here."}
+            </div>
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA — all locations */}
         <div style={{ textAlign: "center", marginTop: 36 }}>
           <Link href="/partnering-locations" className="btn btn-secondary">
             {t.cta}

@@ -12,7 +12,7 @@ const steps = {
     {
       num: "02",
       title: "Подкрепяш инициатива",
-      copy: "Част от стойността на всяка покупка се насочва към социална кауза.",
+      copy: "Фиксирани 0.15 € от всяко барче влизат във фонд ТЕПЕ bite Impact.",
     },
     {
       num: "03",
@@ -29,7 +29,7 @@ const steps = {
     {
       num: "02",
       title: "You support a cause",
-      copy: "Part of the value from every purchase goes towards a social initiative.",
+      copy: "A fixed 0.15 € from every bar goes into the ТЕПЕ bite Impact fund.",
     },
     {
       num: "03",

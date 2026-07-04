@@ -15,7 +15,7 @@ const sections = [
   { id: "first-initiative", labelBg: "Първата инициатива", labelEn: "First Initiative" },
   { id: "funding", labelBg: "Модел на финансиране", labelEn: "Funding Model" },
   { id: "transparency-promise", labelBg: "Обещание за прозрачност", labelEn: "Transparency Promise" },
-  { id: "no-promises", labelBg: "Какво не обещаваме", labelEn: "What We Don't Promise" },
+  { id: "no-promises", labelBg: "Честни граници", labelEn: "Honest Limits" },
 ];
 
 export default function InitiativeTransparencyPage() {
@@ -69,15 +69,19 @@ export default function InitiativeTransparencyPage() {
         <LegalSectionCard id="funding" title={bg ? "3. Модел на финансиране" : "3. Funding Model"}>
           <p style={bodyText}>
             {bg
-              ? "ТЕПЕ bite подкрепя градски инициативи чрез част от печалбата на бранда и чрез конкретни кампании, реализирани или подпомогнати от екипа."
-              : "ТЕПЕ bite supports local city initiatives through part of the brand's profit and through specific campaigns implemented or supported by the team."}
+              ? "За всяко продадено барче ТЕПЕ bite заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact. Това е обвързващо обещание — не зависи от промоции или отделни кампании."
+              : "For every ТЕПЕ bite bar sold, we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund. This is a binding commitment — it does not depend on promotions or individual campaigns."}
           </p>
           <p style={bodyText}>
             {bg
-              ? "Не обещаваме фиксиран процент от всяка продажба, освен ако това не е изрично обявено за конкретна кампания."
-              : "We do not promise a fixed percentage from each sale unless this is explicitly announced for a specific campaign."}
+              ? "Фондът се води по отделна сметка от фирмената и може да приема и външни дарения. Публично обявяваме събраните до момента средства."
+              : "The fund is held in a separate account from the company's and can also accept external donations. We publicly announce the amount collected to date."}
           </p>
-          <LegalTodo label="Legal / business review: align website wording with packaging claim 'Част от всяка продажба подкрепя грижата за символа на Пловдив – тепетата.' Ensure no misleading financial promise. // TODO legal review / TODO business owner confirmation" />
+          <p style={bodyText}>
+            {bg
+              ? "Не спираме до дарение: избираме каузата, координираме партньори, търсим съфинансиране и спонсори и участваме в реализацията, за да извлечем максимума от всеки лев във фонда."
+              : "We don't stop at a donation: we choose the cause, coordinate partners, seek co-funding and sponsors, and take part in delivery — to get the most out of every lev in the fund."}
+          </p>
         </LegalSectionCard>
 
         {/* 4. Transparency promise */}
@@ -105,10 +109,10 @@ export default function InitiativeTransparencyPage() {
               },
               {
                 icon: "✅",
-                titleBg: "Не обещаваме повече",
-                titleEn: "We don't over-promise",
-                descBg: "Без фиктивни проценти или нереалистични ангажименти.",
-                descEn: "No fake percentages or unrealistic commitments.",
+                titleBg: "Фиксиран ангажимент",
+                titleEn: "A fixed commitment",
+                descBg: "0.15 € от всяко барче — ясно и обвързващо.",
+                descEn: "0.15 € from every bar — clear and binding.",
               },
             ].map((c, i) => (
               <div
@@ -132,23 +136,23 @@ export default function InitiativeTransparencyPage() {
           </div>
         </LegalSectionCard>
 
-        {/* 5. What we don't promise */}
-        <LegalSectionCard id="no-promises" title={bg ? "5. Какво не обещаваме" : "5. What We Don't Promise"}>
+        {/* 5. Honest limits */}
+        <LegalSectionCard id="no-promises" title={bg ? "5. Честни граници" : "5. Honest Limits"}>
           <ul style={{ ...bodyText, paddingLeft: 22 }}>
             <li style={{ marginBottom: 8 }}>
               {bg
-                ? "Не обещаваме фиксиран процент от всяка продажба за дарения или инициативи, освен ако това не е изрично обявено."
-                : "We do not promise a fixed percentage from each sale for donations or initiatives, unless explicitly announced."}
+                ? "0.15 € от всяко барче е обвързващо обещание. Над тази основа не гарантираме конкретна крайна сума — тя зависи от обема продажби, кампаниите и външните дарения."
+                : "The 0.15 € from every bar is a binding commitment. Above that base we don't guarantee a specific final amount — it depends on sales volume, campaigns and external donations."}
             </li>
             <li style={{ marginBottom: 8 }}>
               {bg
-                ? "Не публикуваме формални финансови отчети за дарения."
-                : "We do not publish formal financial donation reports."}
+                ? "Публикуваме събрания баланс на фонда, но не издаваме официални одитирани финансови отчети."
+                : "We publish the fund's collected balance, but do not issue formal audited financial statements."}
             </li>
             <li style={{ marginBottom: 8 }}>
               {bg
-                ? "Не гарантираме конкретен резултат от инициативите — показваме реалния напредък."
-                : "We do not guarantee a specific outcome from initiatives — we show real progress."}
+                ? "Не гарантираме конкретен резултат или срок за всяка инициатива — те зависят и от партньори и институции. Показваме реалния напредък."
+                : "We don't guarantee a specific outcome or timeline for each initiative — these also depend on partners and institutions. We show the real progress."}
             </li>
           </ul>
           <LegalNote>

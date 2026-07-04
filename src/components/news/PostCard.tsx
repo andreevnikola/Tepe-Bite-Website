@@ -103,6 +103,11 @@ export default function PostCard({ post }: { post: NewsPost }) {
             color: "var(--plum)",
             lineHeight: 1.3,
             marginTop: "4px",
+            minHeight: "2.6em",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
           }}
         >
           {title}

@@ -1,6 +1,7 @@
 'use client'
 
 import Footer from '@/components/Footer'
+import ImpactPledge from '@/components/ImpactPledge'
 import PermanentOrdersOverlay from '@/components/orders/PermanentOrdersOverlay'
 import { Fragment } from 'react'
 import QuantitySelector from '@/components/order/QuantitySelector'
@@ -79,6 +80,7 @@ export default function CartPage() {
   const progress = showProgress ? Math.min((subtotalCents / threshold) * 100, 100) : 0
   const remaining = showProgress ? Math.max(threshold - subtotalCents, 0) : 0
   const freeDelivery = showProgress && subtotalCents >= threshold
+  const totalBars = items.reduce((n, i) => n + i.packSize * i.quantity, 0)
 
   // Empty state
   if (items.length === 0) {
@@ -206,6 +208,11 @@ export default function CartPage() {
 
             {/* Mobile CTA */}
             <div className="mobile-cta">
+              {totalBars > 0 && (
+                <div style={{ marginBottom: 12 }}>
+                  <ImpactPledge variant="total" count={totalBars} style={{ width: '100%' }} />
+                </div>
+              )}
               <div style={{ borderTop: '2px solid var(--border)', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
                 <span style={{ fontWeight: 600, color: 'var(--text)' }}>{t.subtotal}</span>
                 <span style={{ fontWeight: 700, fontSize: '1.2rem', color: 'var(--plum)' }}>
@@ -260,6 +267,9 @@ export default function CartPage() {
                     <span style={{ color: 'var(--plum)' }}>{subtotalCents > 0 ? formatDualMoney(subtotalCents) : '—'}</span>
                   </div>
                 </div>
+
+                {/* Impact pledge total */}
+                {totalBars > 0 && <ImpactPledge variant="total" count={totalBars} />}
 
                 {/* Progress bar in sidebar */}
                 {showProgress && !freeDelivery && (

@@ -19,7 +19,7 @@ const pillars = {
     {
       icon: <IconHeart />,
       title: "Реално въздействие",
-      copy: "Част от стойността на всяка покупка подкрепя социални инициативи, които развиваме и показваме прозрачно.",
+      copy: "Фиксирани 0.15 € от всяко барче влизат във фонд ТЕПЕ bite Impact — организираме, съфинансираме и отчитаме прозрачно всяка инициатива.",
     },
   ],
   en: [
@@ -36,7 +36,7 @@ const pillars = {
     {
       icon: <IconHeart />,
       title: "Real Impact",
-      copy: "Part of the value from every purchase supports social initiatives that we develop and share openly.",
+      copy: "A fixed 0.15 € from every bar goes to the ТЕПЕ bite Impact fund — we organise, co-fund and openly report every initiative.",
     },
   ],
 };

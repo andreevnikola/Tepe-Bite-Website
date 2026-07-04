@@ -1,6 +1,7 @@
 'use client'
 
 import { Fragment } from 'react'
+import ImpactPledge from '@/components/ImpactPledge'
 import { PRICING } from '@/lib/config/pricing'
 import { formatDualMoney, formatMoneyEUR } from '@/lib/money'
 import type { CartItem } from '@/store/cart'
@@ -108,6 +109,7 @@ export default function StepReview({
   const t = T[lang]
 
   const subtotalCents = items.reduce((sum, i) => sum + i.unitPriceCents * i.quantity, 0)
+  const totalBars = items.reduce((n, i) => n + i.packSize * i.quantity, 0)
   const threshold = PRICING.FREE_DELIVERY_THRESHOLD_CENTS
   const freeBase = threshold > 0 && subtotalCents >= threshold
   const baseCents = PRICING.DELIVERY.BASE_LOCKER_CENTS
@@ -192,6 +194,12 @@ export default function StepReview({
           <span style={{ color: 'var(--text)' }}>{t.total}</span>
           <span style={{ color: 'var(--plum)' }}>{formatDualMoney(totalCents)}</span>
         </div>
+
+        {totalBars > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <ImpactPledge variant="total" count={totalBars} style={{ width: '100%' }} />
+          </div>
+        )}
       </div>
 
       {/* Delivery & payment info */}

@@ -15,6 +15,10 @@ export default function PostGrid({ posts }: { posts: NewsPost[] }) {
         .post-grid-card {
           flex: 1 1 calc((100% - 56px) / 3);
           min-width: 260px;
+          display: flex;
+        }
+        .post-grid-card > a {
+          width: 100%;
         }
         @media (max-width: 900px) {
           .post-grid-card {

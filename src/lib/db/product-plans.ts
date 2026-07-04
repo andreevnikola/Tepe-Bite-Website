@@ -1,5 +1,8 @@
 // Server-only — never import this in client components. No TypeORM in client code.
-import { ProductPlan } from './entities/ProductPlan.entity'
+// NOTE: the entity is imported *lazily* inside each function so that a failure to
+// evaluate the TypeORM entity module (e.g. missing DB deps) degrades gracefully
+// instead of crashing every page that imports this module at the top level.
+import type { ProductPlan } from './entities/ProductPlan.entity'
 
 export type SafeProductPlan = {
   id: string
@@ -33,7 +36,10 @@ function toSafe(p: ProductPlan): SafeProductPlan {
 
 export async function getAllProductPlans(): Promise<SafeProductPlan[]> {
   try {
-    const { getDataSource } = await import('@/lib/db')
+    const [{ getDataSource }, { ProductPlan }] = await Promise.all([
+      import('@/lib/db'),
+      import('./entities/ProductPlan.entity'),
+    ])
     const ds = await getDataSource()
     const repo = ds.getRepository(ProductPlan)
     const plans = await repo.find({ order: { sortOrder: 'ASC' } })
@@ -45,7 +51,10 @@ export async function getAllProductPlans(): Promise<SafeProductPlan[]> {
 
 export async function getProductPlanBySlug(slug: string): Promise<SafeProductPlan | null> {
   try {
-    const { getDataSource } = await import('@/lib/db')
+    const [{ getDataSource }, { ProductPlan }] = await Promise.all([
+      import('@/lib/db'),
+      import('./entities/ProductPlan.entity'),
+    ])
     const ds = await getDataSource()
     const repo = ds.getRepository(ProductPlan)
     const plan = await repo.findOne({ where: { slug } })

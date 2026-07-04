@@ -261,8 +261,8 @@ export default function TermsPage() {
         <LegalSectionCard id="initiatives" title={bg ? "11. Инициативи" : "11. Initiatives"}>
           <p style={bodyText}>
             {bg
-              ? "ТЕПЕ bite подкрепя градски инициативи чрез част от печалбата на бранда и чрез конкретни кампании, реализирани или подпомогнати от екипа. Не обещаваме фиксиран процент от всяка продажба, освен ако това не е изрично обявено за конкретна кампания."
-              : "ТЕПЕ bite supports local city initiatives through part of the brand's profit and through specific campaigns implemented or supported by the team. We do not promise a fixed percentage from each sale unless this is explicitly announced for a specific campaign."}
+              ? "За всяко продадено барче ТЕПЕ bite заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact, който подкрепя градски инициативи в Пловдив. Фондът се води по отделна сметка, може да приема външни дарения и публично обявява събраните средства. Освен финансиране, екипът избира каузите, координира партньори, търси съфинансиране и участва в реализацията им."
+              : "For every ТЕПЕ bite bar sold, we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund, which supports urban initiatives in Plovdiv. The fund is held in a separate account, may accept external donations and publicly announces the amounts collected. Beyond funding, the team chooses the causes, coordinates partners, seeks co-funding and takes part in delivery."}
           </p>
           <LegalNote>
             <Link href="/legal/initiative-transparency" style={{ color: "var(--plum)", fontWeight: 600 }}>

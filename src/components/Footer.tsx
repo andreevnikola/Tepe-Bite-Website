@@ -14,12 +14,14 @@ export default function Footer() {
           ["/", "Начало"],
           ["/#produkt", "Продуктът"],
           ["/initiatives", "Нашите инициативи"],
+          ["/impact", "ТЕПЕ bite Impact"],
           ["/#za-nas", "За нас"],
         ]
       : [
           ["/", "Home"],
           ["/#produkt", "The Product"],
           ["/initiatives", "Our Initiatives"],
+          ["/impact", "ТЕПЕ bite Impact"],
           ["/#za-nas", "About"],
         ];
 
@@ -103,6 +105,36 @@ export default function Footer() {
                 ? "Барче с характер, вдъхновено от Пловдив и създадено с мисия."
                 : "A bar with character, inspired by Plovdiv and created with purpose."}
             </p>
+            <Link
+              href="/impact"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                marginTop: 16,
+                padding: "8px 14px",
+                borderRadius: 100,
+                background: "oklch(74% 0.1 230 / 0.14)",
+                border: "1px solid oklch(74% 0.1 230 / 0.3)",
+                textDecoration: "none",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-head)",
+                  fontWeight: 800,
+                  fontSize: "0.82rem",
+                  color: "var(--caramel)",
+                }}
+              >
+                0.15 €
+              </span>
+              <span style={{ fontSize: "0.78rem", color: "oklch(88% 0.03 310)" }}>
+                {lang === "bg"
+                  ? "от всяка продажба → ТЕПЕ bite Impact"
+                  : "from every sale → ТЕПЕ bite Impact"}
+              </span>
+            </Link>
             <div
               style={{
                 marginTop: 20,
@@ -112,7 +144,7 @@ export default function Footer() {
             >
               <div style={{ marginBottom: 2, fontSize: "0.6rem" }}>
                 {lang === "bg"
-                  ? "Произведено в с. Брестовица,  обласат Пловдив"
+                  ? "Произведено в с. Брестовица, област Пловдив"
                   : "Made in Brestovitsa, Plovdiv Region"}
               </div>
               <div>

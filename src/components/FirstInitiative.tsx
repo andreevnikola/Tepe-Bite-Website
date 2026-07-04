@@ -563,8 +563,8 @@ export default function FirstInitiative() {
                 }}
               >
                 {lang === "bg"
-                  ? '"Всяко закупено барче ТЕПЕ bite е пряк принос към тази инициатива."'
-                  : '"Every ТЕПЕ bite bar purchased is a direct contribution to this initiative."'}
+                  ? '"Фиксирани 0.15 € от всяко барче отиват във фонд ТЕПЕ bite Impact — и директно захранват тази инициатива."'
+                  : '"A fixed 0.15 € from every bar goes to the ТЕПЕ bite Impact fund — directly powering this initiative."'}
               </p>
               <Link
                 href="/order"

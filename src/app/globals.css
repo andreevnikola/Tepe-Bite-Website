@@ -10,14 +10,23 @@
   }
 
   :root {
-    --bg: oklch(97% 0.015 80);
-    --surface: oklch(99% 0.008 75);
-    --surface2: oklch(96% 0.018 78);
+    --bg: oklch(96.5% 0.022 82);
+    --surface: oklch(99% 0.01 78);
+    --surface2: oklch(95.5% 0.026 80);
     --plum: oklch(32% 0.09 315);
     --plum-mid: oklch(48% 0.09 315);
     --plum-lt: oklch(88% 0.04 315);
     --caramel: oklch(66% 0.16 52);
     --caramel-lt: oklch(93% 0.06 70);
+    /* Transparency / Impact signal — the "Transparent" block on the wrap */
+    --sky: oklch(74% 0.1 230);
+    --sky-mid: oklch(58% 0.12 235);
+    --sky-dk: oklch(46% 0.11 240);
+    --sky-lt: oklch(95% 0.035 230);
+    /* Deep salted-caramel band neutral — the "СОЛЕН КАРАМЕЛ" band */
+    --espresso: oklch(31% 0.045 55);
+    --espresso-mid: oklch(44% 0.055 55);
+    --espresso-lt: oklch(90% 0.03 62);
     --text: oklch(18% 0.04 315);
     --text-mid: oklch(42% 0.05 310);
     --text-soft: oklch(62% 0.04 295);
@@ -147,6 +156,16 @@
     box-shadow: 0 6px 24px oklch(66% 0.16 52 / 0.4);
   }
 
+  .btn-sky {
+    background: var(--sky-mid);
+    color: white;
+  }
+  .btn-sky:hover {
+    background: var(--sky-dk);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px oklch(58% 0.12 235 / 0.35);
+  }
+
   .btn-ghost {
     background: white;
     color: var(--plum);
@@ -155,6 +174,37 @@
   .btn-ghost:hover {
     background: var(--surface2);
     transform: translateY(-1px);
+  }
+
+  /* Impact pledge chip — the fixed 0.15 € promise, reused site-wide */
+  .impact-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 16px 8px 8px;
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .impact-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Subtle caramel-cream wave texture echoing the wrap stripes */
+  .wave-strip {
+    background-image: repeating-linear-gradient(
+      -18deg,
+      oklch(66% 0.16 52 / 0.05) 0px,
+      oklch(66% 0.16 52 / 0.05) 18px,
+      transparent 18px,
+      transparent 46px
+    );
   }
 
   .card {

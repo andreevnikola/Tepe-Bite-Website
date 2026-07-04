@@ -1,5 +1,6 @@
 'use client'
 import CartToast from '@/components/cart/CartToast'
+import ImpactPledge from '@/components/ImpactPledge'
 import QuantitySelector from '@/components/order/QuantitySelector'
 import { PRICING } from '@/lib/config/pricing'
 import type { SafeProductPlan } from '@/lib/db/product-plans'
@@ -228,6 +229,9 @@ export default function PackDetailClient({ plan }: Props) {
                   <QuantitySelector value={qty} onChange={setQty} min={1} max={20} />
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-soft)', marginTop: 8 }}>
                     {t.barsTotal(plan.packSize * qty)} · {formatMoneyEUR(plan.priceCents * qty)}
+                  </div>
+                  <div style={{ marginTop: 12 }}>
+                    <ImpactPledge variant="total" count={plan.packSize * qty} style={{ width: '100%' }} />
                   </div>
                 </div>
 

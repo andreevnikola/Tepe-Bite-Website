@@ -26,9 +26,11 @@ const LocationsMap = dynamic(() => import("./LocationsMap"), {
 export default function LocationsMapSection({
   locations,
   small = false,
+  fill = false,
 }: {
   locations: Location[];
   small?: boolean;
+  fill?: boolean;
 }) {
-  return <LocationsMap locations={locations} small={small} />;
+  return <LocationsMap locations={locations} small={small} fill={fill} />;
 }

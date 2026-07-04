@@ -1,5 +1,6 @@
 "use client";
 import { IconCheck, IconLink, IconShop } from "@/components/icons";
+import ImpactPledge from "@/components/ImpactPledge";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -222,6 +223,10 @@ export default function ProductSection() {
                   ? "Бадеми, фибри от корен на цикория, слънчогледови семки, хрупкави протеинови хапки от слънчоглед, тиквени семки, еритритол, лукума, натурален карамелен аромат, морска сол."
                   : "Almonds, chicory root fibre, sunflower seeds, crunchy sunflower protein bites, pumpkin seeds, erythritol, lucuma, natural caramel flavour, sea salt."}
               </p>
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <ImpactPledge variant="tag" />
             </div>
 
             <div className="w-full flex justify-start gap-3 max-sm:justify-stretch max-sm:flex-col">

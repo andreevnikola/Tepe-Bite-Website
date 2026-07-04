@@ -1,9 +1,11 @@
 "use client";
 
 import { IconArrow, IconCheck, IconHeart, IconShop } from "@/components/icons";
+import ImpactPledge, { PledgeHeart } from "@/components/ImpactPledge";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 /* ─── Extra icons ────────────────────────────────────────────────────────── */
@@ -469,6 +471,10 @@ function HeroSection({ lang }: { lang: Lang }) {
                     : "How the model works"}
                 </a>
               </div>
+
+              <div style={{ marginTop: 24 }}>
+                <ImpactPledge variant="chip" />
+              </div>
             </div>
           </div>
 
@@ -773,8 +779,8 @@ function ModelSection({ lang }: { lang: Lang }) {
           </h2>
           <p style={{ maxWidth: 540, fontSize: "1rem" }}>
             {lang === "bg"
-              ? "Идеята е проста: ТЕПЕ bite създава стойност чрез продукт и кампании, а част от тази стойност се насочва към конкретни градски инициативи."
-              : "The idea is simple: ТЕПЕ bite creates value through a product and campaigns, and part of that value is directed toward concrete urban initiatives."}
+              ? "Идеята е проста: от всяко продадено барче заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact — и ги насочваме към конкретни градски инициативи."
+              : "The idea is simple: from every bar sold we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund — and direct it toward concrete urban initiatives."}
           </p>
         </div>
 
@@ -914,7 +920,7 @@ function GeneralFAQSection({ lang }: { lang: Lang }) {
           },
           {
             q: "Откъде идват средствата?",
-            a: "От продукта, кампаниите и партньорствата около ТЕПЕ bite. Когато има точни проценти и бюджети, ще ги публикуваме прозрачно.",
+            a: "Основата е фиксирана: 0.15 € от всяко барче влизат във фонд ТЕПЕ bite Impact. Към тях добавяме приходи от кампании, партньорства и външни дарения, за да умножим ефекта. Събраните средства обявяваме прозрачно.",
           },
           {
             q: "Защо тепетата?",
@@ -928,7 +934,7 @@ function GeneralFAQSection({ lang }: { lang: Lang }) {
           },
           {
             q: "Where do the funds come from?",
-            a: "From the product, campaigns, and partnerships around ТЕПЕ bite. Once exact percentages and budgets are confirmed, we will publish them transparently.",
+            a: "The base is fixed: 0.15 € from every bar goes into the ТЕПЕ bite Impact fund. On top of that we add campaign revenue, partnerships and external donations to multiply the effect. We announce the collected amount transparently.",
           },
           {
             q: "Why the hills?",
@@ -2745,6 +2751,183 @@ function CTASection({ lang }: { lang: Lang }) {
    MAIN EXPORT
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION · ТЕПЕ bite Impact — gateway to the fund page
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function ImpactGatewaySection({ lang }: { lang: Lang }) {
+  const bg = lang === "bg";
+
+  const facts = bg
+    ? [
+        { k: "0.15 €", v: "фиксирано от всяко барче" },
+        { k: "Отделна сметка", v: "фондът е отделен от фирмата" },
+        { k: "Публичен баланс", v: "обявяваме събраните средства" },
+      ]
+    : [
+        { k: "0.15 €", v: "fixed from every bar" },
+        { k: "Separate account", v: "the fund is kept apart from the company" },
+        { k: "Public balance", v: "we announce what's been collected" },
+      ];
+
+  return (
+    <section className="section-spacing" style={{ background: "var(--bg)" }}>
+      <div className="section-inner">
+        <div
+          className="impact-gateway"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: "var(--r-lg)",
+            background:
+              "linear-gradient(135deg, var(--sky-dk) 0%, var(--sky-mid) 55%, oklch(64% 0.11 250) 100%)",
+            color: "white",
+            padding: "clamp(32px, 5vw, 56px)",
+            display: "grid",
+            gridTemplateColumns: "1.4fr 1fr",
+            gap: "clamp(28px, 5vw, 56px)",
+            alignItems: "center",
+            boxShadow: "var(--shadow-lg)",
+          }}
+        >
+          {/* soft glow */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: -80,
+              right: -40,
+              width: 320,
+              height: 320,
+              borderRadius: "50%",
+              background: "oklch(100% 0 0 / 0.12)",
+              filter: "blur(60px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <div
+              className="label-tag"
+              style={{ color: "oklch(96% 0.02 230)", marginBottom: 14 }}
+            >
+              {bg ? "Двигателят зад инициативите" : "The engine behind the initiatives"}
+            </div>
+            <h2
+              className="heading-lg"
+              style={{ color: "white", marginBottom: 16, maxWidth: 520 }}
+            >
+              {bg ? "ТЕПЕ bite Impact" : "ТЕПЕ bite Impact"}
+            </h2>
+            <p
+              style={{
+                color: "oklch(97% 0.02 230)",
+                fontSize: "1.02rem",
+                maxWidth: 560,
+                marginBottom: 24,
+              }}
+            >
+              {bg
+                ? "Фондът, в който се събират фиксираните 0.15 € от всяка продажба. Но ние не спираме до дарение — избираме каузата, намираме партньори и съфинансиране, реализираме и отчитаме, за да извлечем максимума от всеки лев."
+                : "The fund where the fixed 0.15 € from every sale is pooled. But we don't stop at a donation — we choose the cause, find partners and co-funding, execute and report, to get the most out of every lev."}
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                marginBottom: 30,
+              }}
+            >
+              {facts.map((f, i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: "oklch(100% 0 0 / 0.12)",
+                    border: "1px solid oklch(100% 0 0 / 0.22)",
+                    borderRadius: "var(--r-sm)",
+                    padding: "12px 16px",
+                    minWidth: 140,
+                    flex: "1 1 140px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "var(--font-head)",
+                      fontWeight: 700,
+                      fontSize: "1.05rem",
+                      color: "white",
+                    }}
+                  >
+                    {f.k}
+                  </div>
+                  <div style={{ fontSize: "0.78rem", color: "oklch(94% 0.02 230)" }}>
+                    {f.v}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/impact"
+              className="btn"
+              style={{
+                background: "white",
+                color: "var(--sky-dk)",
+                fontWeight: 700,
+              }}
+            >
+              {bg ? "Разгледай ТЕПЕ bite Impact" : "Explore ТЕПЕ bite Impact"}
+              <IconArrow />
+            </Link>
+          </div>
+
+          {/* Right: pledge heart lockup */}
+          <div
+            className="impact-gateway-visual"
+            style={{
+              position: "relative",
+              zIndex: 1,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                background: "oklch(100% 0 0 / 0.1)",
+                border: "1px solid oklch(100% 0 0 / 0.22)",
+                borderRadius: "var(--r-lg)",
+                padding: "32px 28px",
+                textAlign: "center",
+                width: "100%",
+                maxWidth: 280,
+              }}
+            >
+              <div style={{ marginBottom: 12 }}>
+                <PledgeHeart size={96} fill="var(--caramel)" textColor="white" />
+              </div>
+              <div style={{ fontWeight: 700, color: "white", fontSize: "1rem", marginBottom: 4 }}>
+                {bg ? "Фиксирано обещание" : "A fixed promise"}
+              </div>
+              <div style={{ fontSize: "0.82rem", color: "oklch(94% 0.02 230)" }}>
+                {bg ? "от всяко барче, при всяка продажба" : "from every bar, on every sale"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 820px) {
+          .impact-gateway { grid-template-columns: 1fr !important; }
+          .impact-gateway-visual { order: -1; max-width: 280px; margin: 0 auto; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 export default function InitiativesClient() {
   const lang = useAtomValue(langAtom);
 
@@ -2753,6 +2936,7 @@ export default function InitiativesClient() {
       <HeroSection lang={lang} />
       <IntroSection lang={lang} />
       <ModelSection lang={lang} />
+      <ImpactGatewaySection lang={lang} />
       <GeneralFAQSection lang={lang} />
       <TransitionSection lang={lang} />
       <FeaturedInitiativeSection lang={lang} />
