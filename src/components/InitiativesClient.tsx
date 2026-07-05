@@ -409,8 +409,8 @@ function HeroSection({ lang }: { lang: Lang }) {
                   }}
                 >
                   {lang === "bg"
-                    ? "С грижа за символа на града - тепетата"
-                    : "Caring for the symbol of the city - the hills"}
+                    ? "Проекти с видими резултати"
+                    : "Projects with visible results"}
                 </span>
                 <span
                   style={{
@@ -424,8 +424,8 @@ function HeroSection({ lang }: { lang: Lang }) {
                   }}
                 >
                   {lang === "bg"
-                    ? "Младежка инициатива"
-                    : "Youth-led initiative"}
+                    ? "Подкрепяме младежката инициативност"
+                    : "We support youth initiatives"}
                 </span>
               </div>
 
@@ -473,7 +473,7 @@ function HeroSection({ lang }: { lang: Lang }) {
               </div>
 
               <div style={{ marginTop: 24 }}>
-                <ImpactPledge variant="chip" />
+                <ImpactPledge variant="chip" className="w-full!" />
               </div>
             </div>
           </div>
@@ -2761,12 +2761,15 @@ function ImpactGatewaySection({ lang }: { lang: Lang }) {
   const facts = bg
     ? [
         { k: "0.15 €", v: "фиксирано от всяко барче" },
-        { k: "Отделна сметка", v: "фондът е отделен от фирмата" },
+        {
+          k: "Обособени средства",
+          v: "водени отделно, ползвани както е обявено",
+        },
         { k: "Публичен баланс", v: "обявяваме събраните средства" },
       ]
     : [
         { k: "0.15 €", v: "fixed from every bar" },
-        { k: "Separate account", v: "the fund is kept apart from the company" },
+        { k: "Ring-fenced funds", v: "tracked separately, used as stated" },
         { k: "Public balance", v: "we announce what's been collected" },
       ];
 
@@ -2811,7 +2814,9 @@ function ImpactGatewaySection({ lang }: { lang: Lang }) {
               className="label-tag"
               style={{ color: "oklch(96% 0.02 230)", marginBottom: 14 }}
             >
-              {bg ? "Двигателят зад инициативите" : "The engine behind the initiatives"}
+              {bg
+                ? "Двигателят зад инициативите"
+                : "The engine behind the initiatives"}
             </div>
             <h2
               className="heading-lg"
@@ -2862,7 +2867,12 @@ function ImpactGatewaySection({ lang }: { lang: Lang }) {
                   >
                     {f.k}
                   </div>
-                  <div style={{ fontSize: "0.78rem", color: "oklch(94% 0.02 230)" }}>
+                  <div
+                    style={{
+                      fontSize: "0.78rem",
+                      color: "oklch(94% 0.02 230)",
+                    }}
+                  >
                     {f.v}
                   </div>
                 </div>
@@ -2905,13 +2915,28 @@ function ImpactGatewaySection({ lang }: { lang: Lang }) {
               }}
             >
               <div style={{ marginBottom: 12 }}>
-                <PledgeHeart size={96} fill="var(--caramel)" textColor="white" />
+                <PledgeHeart
+                  size={96}
+                  fill="var(--caramel)"
+                  textColor="white"
+                />
               </div>
-              <div style={{ fontWeight: 700, color: "white", fontSize: "1rem", marginBottom: 4 }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  color: "white",
+                  fontSize: "1rem",
+                  marginBottom: 4,
+                }}
+              >
                 {bg ? "Фиксирано обещание" : "A fixed promise"}
               </div>
-              <div style={{ fontSize: "0.82rem", color: "oklch(94% 0.02 230)" }}>
-                {bg ? "от всяко барче, при всяка продажба" : "from every bar, on every sale"}
+              <div
+                style={{ fontSize: "0.82rem", color: "oklch(94% 0.02 230)" }}
+              >
+                {bg
+                  ? "от всяко барче, при всяка продажба"
+                  : "from every bar, on every sale"}
               </div>
             </div>
           </div>

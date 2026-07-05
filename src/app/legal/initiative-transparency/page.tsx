@@ -74,8 +74,8 @@ export default function InitiativeTransparencyPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "Фондът се води по отделна сметка от фирмената и може да приема и външни дарения. Публично обявяваме събраните до момента средства."
-              : "The fund is held in a separate account from the company's and can also accept external donations. We publicly announce the amount collected to date."}
+              ? "Засега — като малка фирма — водим средствата като ясно обособено и внимателно проследявано перо в сметката на фирмата и ги използваме точно както е обявено. С разрастването ни планираме напълно отделна сметка. Фондът може да приема и външни дарения. Публично обявяваме събраните до момента средства."
+              : "For now — as a small company — we track the funds as a clearly ring-fenced, carefully monitored line within the company's account and use them exactly as stated. As we grow, we plan a fully separate account. The fund can also accept external donations. We publicly announce the amount collected to date."}
           </p>
           <p style={bodyText}>
             {bg
