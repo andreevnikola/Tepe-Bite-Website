@@ -261,8 +261,8 @@ export default function TermsPage() {
         <LegalSectionCard id="initiatives" title={bg ? "11. Инициативи" : "11. Initiatives"}>
           <p style={bodyText}>
             {bg
-              ? "За всяко продадено барче ТЕПЕ bite заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact, който подкрепя градски инициативи в Пловдив. Фондът се води по отделна сметка, може да приема външни дарения и публично обявява събраните средства. Освен финансиране, екипът избира каузите, координира партньори, търси съфинансиране и участва в реализацията им."
-              : "For every ТЕПЕ bite bar sold, we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund, which supports urban initiatives in Plovdiv. The fund is held in a separate account, may accept external donations and publicly announces the amounts collected. Beyond funding, the team chooses the causes, coordinates partners, seeks co-funding and takes part in delivery."}
+              ? "За всяко продадено барче ТЕПЕ bite заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact, който подкрепя градски инициативи в Пловдив. Средствата се водят като обособено, внимателно проследявано перо в сметката на фирмата и се използват както е обявено; с разрастването ни планираме напълно отделна сметка. Фондът може да приема външни дарения и публично обявява събраните средства. Освен финансиране, екипът избира каузите, координира партньори, търси съфинансиране и участва в реализацията им."
+              : "For every ТЕПЕ bite bar sold, we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund, which supports urban initiatives in Plovdiv. The funds are tracked as a ring-fenced, carefully monitored line within the company's account and used as stated; as we grow, we plan a fully separate account. The fund may accept external donations and publicly announces the amounts collected. Beyond funding, the team chooses the causes, coordinates partners, seeks co-funding and takes part in delivery."}
           </p>
           <LegalNote>
             <Link href="/legal/initiative-transparency" style={{ color: "var(--plum)", fontWeight: 600 }}>
