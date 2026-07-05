@@ -1,7 +1,7 @@
 "use client";
 
 import { IconArrow, IconHeart, IconInsta, IconShop } from "@/components/icons";
-import { PledgeHeart } from "@/components/ImpactPledge";
+import ImpactPledge, { PledgeHeart } from "@/components/ImpactPledge";
 import { IMPACT } from "@/lib/config/impact";
 import { formatDualMoney } from "@/lib/money";
 import { langAtom, type Lang } from "@/store/lang";
@@ -236,7 +236,7 @@ function HeroSection({ lang }: { lang: Lang }) {
           }}
         >
           {/* Copy */}
-          <div>
+          <div className="max-w-[600px] justify-self-center">
             <div
               className="label-tag"
               style={{ color: "var(--sky-dk)", marginBottom: 16 }}
@@ -250,7 +250,7 @@ function HeroSection({ lang }: { lang: Lang }) {
               style={{ maxWidth: 620, marginBottom: 20 }}
             >
               {bg
-                ? "Не просто дарение — двигател за Пловдив."
+                ? "Не просто дарение, a двигател за Пловдив."
                 : "Not just a donation — an engine for Plovdiv."}
             </h1>
             <p
@@ -266,60 +266,25 @@ function HeroSection({ lang }: { lang: Lang }) {
                 : "ТЕПЕ bite Impact is the fund that collects the fixed 0.15 € from every bar sold. We pool the money, choose the cause, find partners and co-funding, execute, and report openly."}
             </p>
 
-            <div style={{ marginBottom: 30 }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 14,
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 100,
-                  padding: "10px 20px 10px 10px",
-                  boxShadow: "var(--shadow)",
-                }}
-              >
-                <PledgeHeart size={52} />
-                <span style={{ lineHeight: 1.35 }}>
-                  <span
-                    style={{
-                      display: "block",
-                      fontWeight: 800,
-                      color: "var(--plum)",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {bg ? "0.15 € от всяко барче" : "0.15 € from every bar"}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "0.82rem",
-                      fontWeight: 600,
-                      color: "var(--sky-dk)",
-                    }}
-                  >
-                    {bg
-                      ? "фиксирано обещание, при всяка продажба"
-                      : "a fixed promise, on every sale"}
-                  </span>
-                </span>
-              </div>
-            </div>
+            <ImpactPledge variant="chip" className="max-[900px]:w-full!" />
 
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <Link href="/order" className="btn btn-primary">
+            <div
+              style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
+              className="mt-7"
+            >
+              <Link
+                href="/order"
+                className="btn btn-primary max-[900px]:w-full! justify-center"
+              >
                 {bg ? "Поръчай" : "Order"} <IconShop />
               </Link>
               <a
                 href={proposeHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sky"
+                className="btn btn-sky max-[900px]:w-full! justify-center"
               >
                 {bg ? "Предложи кауза" : "Propose a cause"} <IconArrow />
-              </a>
-              <a href="#donate" className="btn btn-secondary">
-                {bg ? "Подкрепи фонда" : "Support the fund"}
               </a>
             </div>
           </div>
@@ -332,9 +297,9 @@ function HeroSection({ lang }: { lang: Lang }) {
                 borderRadius: "var(--r-lg)",
                 border: "1px solid var(--border)",
                 boxShadow: "var(--shadow-lg)",
-                padding: "clamp(28px, 4vw, 44px)",
+                padding: "10px",
                 width: "100%",
-                maxWidth: 420,
+                maxWidth: 500,
                 textAlign: "center",
                 position: "relative",
                 overflow: "hidden",
@@ -357,44 +322,19 @@ function HeroSection({ lang }: { lang: Lang }) {
                     ? "ТЕПЕ bite Impact — фондът"
                     : "ТЕПЕ bite Impact — the fund"
                 }
-                width={640}
-                height={360}
+                width={800}
+                height={500}
                 priority
                 style={{
                   width: "100%",
-                  height: "auto",
+                  height: "100%",
+                  aspectRatio: "2 / 1",
+                  objectFit: "cover",
+                  display: "block",
                   position: "relative",
                   zIndex: 1,
                 }}
               />
-              <div
-                style={{
-                  position: "relative",
-                  zIndex: 1,
-                  marginTop: 18,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "var(--sky-lt)",
-                  border: "1px solid oklch(85% 0.06 230)",
-                  borderRadius: 100,
-                  padding: "6px 14px",
-                  fontSize: "0.78rem",
-                  fontWeight: 700,
-                  color: "var(--sky-dk)",
-                }}
-              >
-                <span
-                  style={{
-                    width: 7,
-                    height: 7,
-                    borderRadius: "50%",
-                    background: "var(--caramel)",
-                    animation: "pulse-dot 2s infinite",
-                  }}
-                />
-                {bg ? "Фондът стартира скоро" : "The fund is launching soon"}
-              </div>
             </div>
           </div>
         </div>
