@@ -473,7 +473,7 @@ function HeroSection({ lang }: { lang: Lang }) {
               </div>
 
               <div style={{ marginTop: 24 }}>
-                <ImpactPledge variant="chip" className="w-full!" />
+                <ImpactPledge variant="chip" className="max-[640px]:w-full!" />
               </div>
             </div>
           </div>

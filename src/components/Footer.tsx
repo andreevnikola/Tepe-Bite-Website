@@ -129,7 +129,9 @@ export default function Footer() {
               >
                 0.15 €
               </span>
-              <span style={{ fontSize: "0.78rem", color: "oklch(88% 0.03 310)" }}>
+              <span
+                style={{ fontSize: "0.78rem", color: "oklch(88% 0.03 310)" }}
+              >
                 {lang === "bg"
                   ? "от всяка продажба → ТЕПЕ bite Impact"
                   : "from every sale → ТЕПЕ bite Impact"}

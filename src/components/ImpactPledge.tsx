@@ -2,6 +2,7 @@
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 /** Fixed pledge amount, in euros, per bar sold. Single source of truth. */
 export const PLEDGE_EUR = 0.15;
@@ -89,7 +90,10 @@ export function PledgeHeart({
 type Variant = "chip" | "tag" | "total";
 
 const fmt = (n: number) =>
-  n.toLocaleString("bg-BG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  n.toLocaleString("bg-BG", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
 /**
  * The fixed-0.15-€ pledge motif, reused across the site.
@@ -112,6 +116,8 @@ export default function ImpactPledge({
 }) {
   const lang = useAtomValue(langAtom);
   const bg = lang === "bg";
+
+  const pathname = usePathname();
 
   if (variant === "tag") {
     return (
@@ -147,7 +153,7 @@ export default function ImpactPledge({
         >
           15¢
         </span>
-        <span
+        <p
           style={{
             fontSize: "0.78rem",
             fontWeight: 600,
@@ -158,7 +164,7 @@ export default function ImpactPledge({
           {bg
             ? "0.15 € от това барче → ТЕПЕ bite Impact"
             : "0.15 € from this bar → ТЕПЕ bite Impact"}
-        </span>
+        </p>
       </Link>
     );
   }
@@ -218,9 +224,20 @@ export default function ImpactPledge({
 
   // chip
   return (
-    <Link href={href} className={`impact-chip ${className ?? ""}`} style={style}>
+    <Link
+      href={href}
+      className={`impact-chip ${className ?? ""}`}
+      style={style}
+    >
       <PledgeHeart size={52} />
-      <span style={{ lineHeight: 1.35 }}>
+      <div
+        style={{ lineHeight: 1.35 }}
+        className={
+          pathname === "/initiatives"
+            ? "w-full max-[640px]:items-center max-[640px]:justify-center flex flex-col"
+            : ""
+        }
+      >
         <span
           style={{
             display: "block",
@@ -241,10 +258,12 @@ export default function ImpactPledge({
             color: "var(--sky-dk)",
           }}
         >
-          {bg ? "влиза във фонд ТЕПЕ bite Impact" : "goes to the ТЕПЕ bite Impact fund"}
+          {bg
+            ? "влиза във фонд ТЕПЕ bite Impact"
+            : "goes to the ТЕПЕ bite Impact fund"}
           <IconArrowSm />
         </span>
-      </span>
+      </div>
     </Link>
   );
 }
