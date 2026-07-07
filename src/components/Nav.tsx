@@ -16,10 +16,11 @@ export default function Nav() {
   const isHome = pathname === "/";
   const isLegal = pathname.startsWith("/legal");
   const isStudio = pathname.startsWith("/studio");
+  const isAdmin = pathname.startsWith("/admin");
   const isLocationDetail = /^\/partnering-locations\/.+/.test(pathname);
   const isNewsDetail = /^\/news\/.+/.test(pathname);
 
-  if (isStudio) return null;
+  if (isStudio || isAdmin) return null;
 
   // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
   const p = isHome ? "" : "/";

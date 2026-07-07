@@ -1,0 +1,92 @@
+import { z } from 'zod'
+import {
+  INITIATIVE_STATUSES,
+  INITIATIVE_CATEGORIES,
+  PARTNERSHIP_TYPES,
+  INFLOW_SOURCES,
+} from './constants'
+
+/** A URL or an empty string (fields are optional links). */
+const urlOrEmpty = z.union([z.string().url(), z.literal('')]).default('')
+
+export const ImageInputSchema = z.object({
+  url: z.string().url(),
+  key: z.string().min(1),
+})
+
+export const PartnerLinksSchema = z
+  .object({
+    website: urlOrEmpty,
+    instagram: urlOrEmpty,
+    facebook: urlOrEmpty,
+    tiktok: urlOrEmpty,
+  })
+  .partial()
+
+export const PartnerCreateSchema = z.object({
+  nameBg: z.string().min(1).max(200),
+  nameEn: z.string().max(200).optional(), // manual EN override (org names)
+  descriptionBg: z.string().max(5000).default(''),
+  descriptionEn: z.string().max(5000).optional(),
+  image: ImageInputSchema.nullable().optional(),
+  links: PartnerLinksSchema.optional(),
+})
+
+export const PartnerUpdateSchema = PartnerCreateSchema.partial()
+
+// ─── Initiatives ────────────────────────────────────────────────────────────
+
+export const StepInputSchema = z.object({
+  labelBg: z.string().min(1).max(300),
+  labelEn: z.string().max(300).optional(),
+  detailBg: z.string().max(2000).default(''),
+  detailEn: z.string().max(2000).optional(),
+  done: z.boolean().default(false),
+})
+
+export const InitiativePartnerInputSchema = z.object({
+  partnerId: z.string().min(1),
+  partnershipType: z.enum(PARTNERSHIP_TYPES),
+  contributionBg: z.string().max(2000).default(''),
+  contributionEn: z.string().max(2000).optional(),
+})
+
+export const InflowInputSchema = z.object({
+  source: z.enum(INFLOW_SOURCES),
+  partnerId: z.string().nullable().optional(),
+  sourceLabelBg: z.string().max(300).default(''),
+  sourceLabelEn: z.string().max(300).optional(),
+  amountCents: z.number().int().min(0),
+  dateISO: z.string().min(1),
+  noteBg: z.string().max(1000).default(''),
+  noteEn: z.string().max(1000).optional(),
+})
+
+export const GalleryItemInputSchema = z.object({
+  url: z.string().url(),
+  key: z.string().min(1),
+  captionBg: z.string().max(500).default(''),
+  captionEn: z.string().max(500).optional(),
+})
+
+export const InitiativeCreateSchema = z.object({
+  titleBg: z.string().min(1).max(300),
+  titleEn: z.string().min(1).max(300), // required manual EN
+  descriptionBg: z.string().min(1).max(20000),
+  descriptionEn: z.string().max(20000).optional(),
+  status: z.enum(INITIATIVE_STATUSES).default('planned'),
+  isPublished: z.boolean().default(false),
+  category: z.enum(INITIATIVE_CATEGORIES).nullable().optional(),
+  locationBg: z.string().max(300).default(''),
+  locationEn: z.string().max(300).optional(),
+  coverImage: ImageInputSchema.nullable().optional(),
+  gallery: z.array(GalleryItemInputSchema).max(50).default([]),
+  steps: z.array(StepInputSchema).max(50).default([]),
+  currentStepIndex: z.number().int().min(0).default(0),
+  expectedCostCents: z.number().int().min(0).default(0),
+  spentCents: z.number().int().min(0).default(0),
+  partners: z.array(InitiativePartnerInputSchema).max(50).default([]),
+  inflows: z.array(InflowInputSchema).max(200).default([]),
+})
+
+export const InitiativeUpdateSchema = InitiativeCreateSchema.partial()

@@ -7,6 +7,8 @@
     "build": "node node_modules/next/dist/bin/next build",
     "start": "node node_modules/next/dist/bin/next start",
     "lint": "eslint",
+    "hash": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/hash.ts",
+    "admin:create": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/admin-create.ts",
     "migration:run": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:run -d typeorm.config.ts",
     "migration:revert": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:revert -d typeorm.config.ts",
     "migration:generate": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:generate src/lib/db/migrations/new -d typeorm.config.ts"
@@ -20,10 +22,13 @@
     "@types/leaflet": "^1.9.21",
     "@types/nodemailer": "^8.0.0",
     "@types/pg": "^8.20.0",
+    "@uploadthing/react": "^7.3.3",
     "bcryptjs": "^3.0.3",
+    "deepl-node": "^1.27.0",
     "dotenv": "^17.4.2",
     "jotai": "^2.20.0",
     "leaflet": "^1.9.4",
+    "mongoose": "^9.7.3",
     "next": "16.2.5",
     "next-sanity": "^12.4.5",
     "nodemailer": "^8.0.7",
@@ -40,6 +45,7 @@
     "ts-node": "^10.9.2",
     "typeorm": "^0.3.29",
     "typeorm-ts-node-commonjs": "^0.3.20",
+    "uploadthing": "^7.7.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {
