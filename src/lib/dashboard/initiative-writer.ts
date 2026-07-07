@@ -70,6 +70,9 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     sourceLabelEn: en(`inflow_${i}_src`, f.sourceLabelEn),
     amountCents: f.amountCents,
     dateISO: f.dateISO,
+    phase: f.phase,
+    // arrangedType only applies while the inflow is in the 'arranged' phase.
+    arrangedType: f.phase === 'arranged' ? (f.arrangedType ?? 'awaiting_transfer') : null,
     noteBg: f.noteBg ?? '',
     noteEn: en(`inflow_${i}_note`, f.noteEn),
   }))

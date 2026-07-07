@@ -78,6 +78,8 @@ export function serializeInitiative(i: any): InitiativeDTO {
       sourceLabelEn: f.sourceLabelEn ?? '',
       amountCents: f.amountCents ?? 0,
       dateISO: f.dateISO ?? '',
+      phase: f.phase ?? 'planned',
+      arrangedType: f.arrangedType ?? null,
       noteBg: f.noteBg ?? '',
       noteEn: f.noteEn ?? '',
     })),

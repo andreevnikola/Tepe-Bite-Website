@@ -4,8 +4,11 @@ import {
   INITIATIVE_CATEGORIES,
   PARTNERSHIP_TYPES,
   INFLOW_SOURCES,
+  INFLOW_PHASES,
+  ARRANGED_TYPES,
 } from '../../dashboard/constants'
 import { ImageSchema } from './Partner'
+import { defineModel } from '../define-model'
 
 const GalleryItemSchema = new Schema(
   {
@@ -51,6 +54,10 @@ const InflowSchema = new Schema(
     sourceLabelEn: { type: String, default: '' },
     amountCents: { type: Number, required: true, min: 0 },
     dateISO: { type: String, required: true },
+    // Lifecycle phase: planned → arranged → available.
+    phase: { type: String, enum: INFLOW_PHASES, default: 'planned' },
+    // Only meaningful when phase === 'arranged'.
+    arrangedType: { type: String, enum: ARRANGED_TYPES, default: null },
     noteBg: { type: String, default: '' },
     noteEn: { type: String, default: '' },
   },
@@ -88,6 +95,7 @@ export type InitiativeDoc = InferSchemaType<typeof InitiativeSchema> & {
   _id: mongoose.Types.ObjectId
 }
 
-export const Initiative: Model<InitiativeDoc> =
-  (mongoose.models.Initiative as Model<InitiativeDoc>) ||
-  mongoose.model<InitiativeDoc>('Initiative', InitiativeSchema)
+export const Initiative: Model<InitiativeDoc> = defineModel<InitiativeDoc>(
+  'Initiative',
+  InitiativeSchema,
+)

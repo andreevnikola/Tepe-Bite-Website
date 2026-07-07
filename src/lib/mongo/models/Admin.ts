@@ -1,5 +1,6 @@
 import mongoose, { Schema, type InferSchemaType, type Model } from 'mongoose'
 import { ADMIN_ROLES } from '../../dashboard/constants'
+import { defineModel } from '../define-model'
 
 const AdminSchema = new Schema(
   {
@@ -15,5 +16,4 @@ const AdminSchema = new Schema(
 
 export type AdminDoc = InferSchemaType<typeof AdminSchema> & { _id: mongoose.Types.ObjectId }
 
-export const Admin: Model<AdminDoc> =
-  (mongoose.models.Admin as Model<AdminDoc>) || mongoose.model<AdminDoc>('Admin', AdminSchema)
+export const Admin: Model<AdminDoc> = defineModel<AdminDoc>('Admin', AdminSchema)

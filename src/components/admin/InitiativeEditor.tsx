@@ -16,10 +16,16 @@ import {
   PARTNERSHIP_TYPE_LABELS,
   INFLOW_SOURCES,
   INFLOW_SOURCE_LABELS,
+  INFLOW_PHASES,
+  INFLOW_PHASE_LABELS,
+  ARRANGED_TYPES,
+  ARRANGED_TYPE_LABELS,
   type InitiativeStatus,
   type InitiativeCategory,
   type PartnershipType,
   type InflowSource,
+  type InflowPhase,
+  type ArrangedType,
 } from '@/lib/dashboard/constants'
 import type { ImageDTO, InitiativeDTO, PartnerDTO } from '@/lib/dashboard/dto'
 
@@ -53,6 +59,8 @@ type EditInflow = {
   sourceLabelEn: string
   amount: string
   dateISO: string
+  phase: InflowPhase
+  arrangedType: ArrangedType
   noteBg: string
 }
 type EditGallery = { key: string; url: string; ukey: string; captionBg: string }
@@ -112,6 +120,8 @@ export default function InitiativeEditor({
       sourceLabelEn: f.sourceLabelEn,
       amount: centsToStr(f.amountCents),
       dateISO: f.dateISO ? f.dateISO.slice(0, 10) : '',
+      phase: f.phase,
+      arrangedType: f.arrangedType ?? 'awaiting_transfer',
       noteBg: f.noteBg,
     })),
   )
@@ -133,10 +143,14 @@ export default function InitiativeEditor({
 
   const doneCount = steps.filter((s) => s.done).length
   const progress = steps.length ? Math.round((doneCount / steps.length) * 100) : 0
-  const raisedCents = useMemo(
-    () => inflows.reduce((sum, f) => sum + strToCents(f.amount), 0),
-    [inflows],
-  )
+
+  // Money grouped by lifecycle phase (each inflow counts in exactly one bucket).
+  const phaseTotals = useMemo(() => {
+    const totals = { planned: 0, arranged: 0, available: 0 }
+    for (const f of inflows) totals[f.phase] += strToCents(f.amount)
+    return totals
+  }, [inflows])
+  const totalCents = phaseTotals.planned + phaseTotals.arranged + phaseTotals.available
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -181,6 +195,8 @@ export default function InitiativeEditor({
         sourceLabelBg: f.sourceLabelBg,
         amountCents: strToCents(f.amount),
         dateISO: f.dateISO || new Date().toISOString().slice(0, 10),
+        phase: f.phase,
+        arrangedType: f.phase === 'arranged' ? f.arrangedType : null,
         noteBg: f.noteBg,
       })),
       gallery: gallery.map((g) => ({ url: g.url, key: g.ukey, captionBg: g.captionBg })),
@@ -247,7 +263,7 @@ export default function InitiativeEditor({
           Напредък: <strong>{progress}%</strong> ({doneCount}/{steps.length})
         </span>
         <span>
-          Събрани: <strong>{eur(raisedCents)}</strong>
+          Налично: <strong>{eur(phaseTotals.available)}</strong>
         </span>
         <span>
           Очаквана цена: <strong>{eur(strToCents(expectedCost))}</strong>
@@ -554,13 +570,40 @@ export default function InitiativeEditor({
 
       {tab === 'Финанси' && (
         <Card>
-          <div className="mb-4 flex flex-wrap gap-4 text-sm">
-            <span>
-              Общо събрани: <strong>{eur(raisedCents)}</strong>
-            </span>
-            <span>
-              Очаквана цена: <strong>{eur(strToCents(expectedCost))}</strong>
-            </span>
+          {/* Financial situation of the campaign */}
+          <div className="mb-5 rounded-[var(--r-sm)] bg-[var(--surface2)] p-4">
+            <div className="mb-4 max-w-xs">
+              <Field label="Очаквана обща цена (€)">
+                <TextInput
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={expectedCost}
+                  onChange={(e) => setExpectedCost(e.target.value)}
+                />
+              </Field>
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <PhaseStat
+                label={INFLOW_PHASE_LABELS.planned.bg}
+                value={eur(phaseTotals.planned)}
+                hint="Очаквано, но несигурно"
+              />
+              <PhaseStat
+                label={INFLOW_PHASE_LABELS.arranged.bg}
+                value={eur(phaseTotals.arranged)}
+                hint="Договорено, но още не в наличност"
+              />
+              <PhaseStat
+                label={INFLOW_PHASE_LABELS.available.bg}
+                value={eur(phaseTotals.available)}
+                hint="Реално достъпно сега"
+              />
+            </div>
+            <p className="mt-3 text-xs text-[var(--text-soft)]">
+              Общо по всички фази: <strong>{eur(totalCents)}</strong> · Похарчени:{' '}
+              <strong>{eur(strToCents(spent))}</strong>
+            </p>
           </div>
           <div className="flex flex-col gap-3">
             {inflows.map((f, idx) => {
@@ -648,6 +691,46 @@ export default function InitiativeEditor({
                         }
                       />
                     </Field>
+                    <Field label="Фаза" hint={INFLOW_PHASE_LABELS[f.phase].hintBg}>
+                      <Select
+                        value={f.phase}
+                        onChange={(e) =>
+                          setInflows((prev) =>
+                            prev.map((x, i) =>
+                              i === idx ? { ...x, phase: e.target.value as InflowPhase } : x,
+                            ),
+                          )
+                        }
+                      >
+                        {INFLOW_PHASES.map((p) => (
+                          <option key={p} value={p}>
+                            {INFLOW_PHASE_LABELS[p].bg}
+                          </option>
+                        ))}
+                      </Select>
+                    </Field>
+                    {f.phase === 'arranged' && (
+                      <Field label="Тип на осигуряването" hint={ARRANGED_TYPE_LABELS[f.arrangedType].hintBg}>
+                        <Select
+                          value={f.arrangedType}
+                          onChange={(e) =>
+                            setInflows((prev) =>
+                              prev.map((x, i) =>
+                                i === idx
+                                  ? { ...x, arrangedType: e.target.value as ArrangedType }
+                                  : x,
+                              ),
+                            )
+                          }
+                        >
+                          {ARRANGED_TYPES.map((t) => (
+                            <option key={t} value={t}>
+                              {ARRANGED_TYPE_LABELS[t].bg}
+                            </option>
+                          ))}
+                        </Select>
+                      </Field>
+                    )}
                   </div>
                   <div className="mt-3">
                     <Field label="Бележка (BG, по избор)">
@@ -684,6 +767,8 @@ export default function InitiativeEditor({
                     sourceLabelEn: '',
                     amount: '',
                     dateISO: new Date().toISOString().slice(0, 10),
+                    phase: 'planned',
+                    arrangedType: 'awaiting_transfer',
                     noteBg: '',
                   },
                 ])
@@ -770,5 +855,15 @@ export default function InitiativeEditor({
         )}
       </div>
     </form>
+  )
+}
+
+function PhaseStat({ label, value, hint }: { label: string; value: string; hint: string }) {
+  return (
+    <div className="rounded-[var(--r-sm)] border border-[var(--border)] bg-[var(--surface)] p-3">
+      <p className="text-xs text-[var(--text-soft)]">{label}</p>
+      <p className="text-lg font-bold text-[var(--plum)]">{value}</p>
+      <p className="text-[11px] text-[var(--text-soft)]">{hint}</p>
+    </div>
   )
 }

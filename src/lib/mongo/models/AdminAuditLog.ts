@@ -1,4 +1,5 @@
 import mongoose, { Schema, type InferSchemaType, type Model } from 'mongoose'
+import { defineModel } from '../define-model'
 
 /** Transparency-minded audit trail: one row per admin mutation. */
 const AdminAuditLogSchema = new Schema(
@@ -19,6 +20,7 @@ export type AdminAuditLogDoc = InferSchemaType<typeof AdminAuditLogSchema> & {
   _id: mongoose.Types.ObjectId
 }
 
-export const AdminAuditLog: Model<AdminAuditLogDoc> =
-  (mongoose.models.AdminAuditLog as Model<AdminAuditLogDoc>) ||
-  mongoose.model<AdminAuditLogDoc>('AdminAuditLog', AdminAuditLogSchema)
+export const AdminAuditLog: Model<AdminAuditLogDoc> = defineModel<AdminAuditLogDoc>(
+  'AdminAuditLog',
+  AdminAuditLogSchema,
+)

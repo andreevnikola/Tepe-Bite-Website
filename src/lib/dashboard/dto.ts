@@ -7,6 +7,8 @@ import type {
   InitiativeCategory,
   PartnershipType,
   InflowSource,
+  InflowPhase,
+  ArrangedType,
 } from './constants'
 
 export type ImageDTO = { url: string; key: string }
@@ -50,6 +52,8 @@ export type InflowDTO = {
   sourceLabelEn: string
   amountCents: number
   dateISO: string
+  phase: InflowPhase
+  arrangedType: ArrangedType | null
   noteBg: string
   noteEn: string
 }

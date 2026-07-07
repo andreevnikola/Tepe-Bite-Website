@@ -48,8 +48,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { username, password } = parsed.data
   const invalid = NextResponse.json({ error: 'Invalid username or password' }, { status: 401 })
 
-  await getMongoose()
-  const admin = await Admin.findOne({ username: username.trim().toLowerCase() })
+  let admin
+  try {
+    await getMongoose()
+    admin = await Admin.findOne({ username: username.trim().toLowerCase() })
+  } catch (err) {
+    console.error('[admin/login] database unavailable:', err)
+    return NextResponse.json(
+      { error: 'Базата данни е недостъпна в момента. Опитайте отново по-късно.' },
+      { status: 503 },
+    )
+  }
 
   if (!admin || !admin.isActive) {
     await verifyPassword(password, DUMMY_HASH) // equalize timing

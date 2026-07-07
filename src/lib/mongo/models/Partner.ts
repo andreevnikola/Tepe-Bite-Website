@@ -1,4 +1,5 @@
 import mongoose, { Schema, type InferSchemaType, type Model } from 'mongoose'
+import { defineModel } from '../define-model'
 
 /** UploadThing asset reference — store both so we can render and later delete. */
 export const ImageSchema = new Schema(
@@ -36,6 +37,4 @@ const PartnerSchema = new Schema(
 
 export type PartnerDoc = InferSchemaType<typeof PartnerSchema> & { _id: mongoose.Types.ObjectId }
 
-export const Partner: Model<PartnerDoc> =
-  (mongoose.models.Partner as Model<PartnerDoc>) ||
-  mongoose.model<PartnerDoc>('Partner', PartnerSchema)
+export const Partner: Model<PartnerDoc> = defineModel<PartnerDoc>('Partner', PartnerSchema)

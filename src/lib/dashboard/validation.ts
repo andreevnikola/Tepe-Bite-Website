@@ -4,6 +4,8 @@ import {
   INITIATIVE_CATEGORIES,
   PARTNERSHIP_TYPES,
   INFLOW_SOURCES,
+  INFLOW_PHASES,
+  ARRANGED_TYPES,
 } from './constants'
 
 /** A URL or an empty string (fields are optional links). */
@@ -58,6 +60,8 @@ export const InflowInputSchema = z.object({
   sourceLabelEn: z.string().max(300).optional(),
   amountCents: z.number().int().min(0),
   dateISO: z.string().min(1),
+  phase: z.enum(INFLOW_PHASES).default('planned'),
+  arrangedType: z.enum(ARRANGED_TYPES).nullable().optional(),
   noteBg: z.string().max(1000).default(''),
   noteEn: z.string().max(1000).optional(),
 })
