@@ -9,6 +9,8 @@
     "lint": "eslint",
     "hash": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/hash.ts",
     "admin:create": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/admin-create.ts",
+    "partners:backfill-slugs": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/backfill-partner-slugs.ts",
+    "impact:seed": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/seed-impact-data.ts",
     "migration:run": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:run -d typeorm.config.ts",
     "migration:revert": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:revert -d typeorm.config.ts",
     "migration:generate": "TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs migration:generate src/lib/db/migrations/new -d typeorm.config.ts"

@@ -6,6 +6,7 @@ import { Partner } from '@/lib/mongo/models/Partner'
 import { Initiative } from '@/lib/mongo/models/Initiative'
 import { translateFields } from '@/lib/translate'
 import { serializePartner } from '@/lib/dashboard/serialize'
+import { uniquePartnerSlug } from '@/lib/dashboard/partner-slug'
 import { writeAudit } from '@/lib/dashboard/audit'
 import { deleteUploads } from '@/lib/uploadthing/server'
 import { getIp } from '@/lib/dashboard/http'
@@ -65,6 +66,7 @@ export async function PATCH(
 
   if (data.nameBg !== undefined) partner.nameBg = data.nameBg
   if (data.descriptionBg !== undefined) partner.descriptionBg = data.descriptionBg
+  if (data.isStarPartner !== undefined) partner.isStarPartner = data.isStarPartner
   if (data.links !== undefined) partner.set('links', { ...partner.links, ...data.links })
   if (data.image !== undefined) partner.set('image', data.image)
 
@@ -77,6 +79,9 @@ export async function PATCH(
   partner.nameEn = data.nameEn?.trim() || result.nameEn || partner.nameBg
   partner.descriptionEn = data.descriptionEn?.trim() || result.descriptionEn || ''
   partner.needsTranslationReview = !ok
+
+  // Backfill a slug for legacy partners created before the field existed.
+  if (!partner.slug) partner.slug = await uniquePartnerSlug(partner.nameEn, id)
 
   await partner.save()
 

@@ -76,6 +76,14 @@ export async function PATCH(
   doc.updatedByAdminId = admin._id
   await doc.save()
 
+  // Only one initiative may be the site-wide spotlight ("На фокус").
+  if (doc.isFeatured) {
+    await Initiative.updateMany(
+      { _id: { $ne: doc._id }, isFeatured: true },
+      { $set: { isFeatured: false } },
+    )
+  }
+
   // Delete blobs that are no longer referenced.
   const newKeys = new Set(imageKeys(doc))
   const removed = [...oldKeys].filter((k) => !newKeys.has(k))

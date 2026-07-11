@@ -60,6 +60,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     updatedByAdminId: admin._id,
   })
 
+  // Only one initiative may be the site-wide spotlight ("На фокус").
+  if (created.isFeatured) {
+    await Initiative.updateMany(
+      { _id: { $ne: created._id }, isFeatured: true },
+      { $set: { isFeatured: false } },
+    )
+  }
+
   await writeAudit({
     actorAdminId: admin._id.toString(),
     actorDisplayName: admin.displayName,

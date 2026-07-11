@@ -43,6 +43,7 @@ type EditStep = {
   detailBg: string
   detailEn: string
   done: boolean
+  completedDateISO: string
 }
 type EditPartner = {
   key: string
@@ -83,6 +84,8 @@ export default function InitiativeEditor({
   const [descriptionBg, setDescriptionBg] = useState(initial?.descriptionBg ?? '')
   const [status, setStatus] = useState<InitiativeStatus>(initial?.status ?? 'planned')
   const [isPublished, setIsPublished] = useState(initial?.isPublished ?? false)
+  const [isFeatured, setIsFeatured] = useState(initial?.isFeatured ?? false)
+  const [frozenReasonBg, setFrozenReasonBg] = useState(initial?.frozenReasonBg ?? '')
   const [category, setCategory] = useState<InitiativeCategory | ''>(initial?.category ?? '')
   const [locationBg, setLocationBg] = useState(initial?.locationBg ?? '')
   const [coverImage, setCoverImage] = useState<ImageDTO | null>(initial?.coverImage ?? null)
@@ -97,6 +100,7 @@ export default function InitiativeEditor({
       detailBg: s.detailBg,
       detailEn: s.detailEn,
       done: s.done,
+      completedDateISO: s.completedDateISO ? s.completedDateISO.slice(0, 10) : '',
     })),
   )
   const [currentStepIndex, setCurrentStepIndex] = useState(initial?.currentStepIndex ?? 0)
@@ -160,6 +164,12 @@ export default function InitiativeEditor({
       setTab('Детайли')
       return
     }
+    // Every completed step must have a completion date.
+    if (steps.some((s) => s.done && !s.completedDateISO)) {
+      setError('Всяка завършена стъпка изисква дата на завършване.')
+      setTab('Стъпки')
+      return
+    }
     setSaving(true)
 
     const payload = {
@@ -168,6 +178,8 @@ export default function InitiativeEditor({
       descriptionBg,
       status,
       isPublished,
+      isFeatured,
+      frozenReasonBg: status === 'frozen' ? frozenReasonBg : '',
       category: category || null,
       locationBg,
       coverImage,
@@ -180,6 +192,7 @@ export default function InitiativeEditor({
         detailBg: s.detailBg,
         detailEn: s.detailEn,
         done: s.done,
+        completedDateISO: s.done ? s.completedDateISO : '',
       })),
       partners: partners
         .filter((p) => p.partnerId)
@@ -335,6 +348,23 @@ export default function InitiativeEditor({
               />
               Публикувана (видима на сайта)
             </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+              />
+              На фокус (спотлайт на публичната страница — само една инициатива)
+            </label>
+            {status === 'frozen' && (
+              <Field label="Причина за замразяване (BG)" hint="Показва се публично; преведена автоматично на EN.">
+                <TextArea
+                  value={frozenReasonBg}
+                  onChange={(e) => setFrozenReasonBg(e.target.value)}
+                  className="min-h-20"
+                />
+              </Field>
+            )}
             <Field label="Локация (BG)">
               <TextInput value={locationBg} onChange={(e) => setLocationBg(e.target.value)} />
             </Field>
@@ -452,6 +482,28 @@ export default function InitiativeEditor({
                     )
                   }
                 />
+                {s.done && (
+                  <div className="mt-2">
+                    <Field label="Дата на завършване">
+                      <TextInput
+                        type="date"
+                        value={s.completedDateISO}
+                        onChange={(e) =>
+                          setSteps((prev) =>
+                            prev.map((x, i) =>
+                              i === idx ? { ...x, completedDateISO: e.target.value } : x,
+                            ),
+                          )
+                        }
+                      />
+                    </Field>
+                    {!s.completedDateISO && (
+                      <p className="mt-1 text-xs text-red-600">
+                        Изберете дата на завършване, за да запазите.
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
             <button
@@ -459,7 +511,15 @@ export default function InitiativeEditor({
               onClick={() =>
                 setSteps((prev) => [
                   ...prev,
-                  { key: uid(), labelBg: '', labelEn: '', detailBg: '', detailEn: '', done: false },
+                  {
+                    key: uid(),
+                    labelBg: '',
+                    labelEn: '',
+                    detailBg: '',
+                    detailEn: '',
+                    done: false,
+                    completedDateISO: '',
+                  },
                 ])
               }
               className="btn btn-secondary self-start"

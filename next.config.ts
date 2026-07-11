@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "utfs.io",
       },
+      // Placeholder photos for seeded test data (initiative covers + galleries).
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
     ],
   },
 };

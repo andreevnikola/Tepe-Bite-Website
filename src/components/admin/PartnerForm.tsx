@@ -22,6 +22,7 @@ export default function PartnerForm({ initial }: { initial?: PartnerDTO }) {
   const [nameEn, setNameEn] = useState(initial?.nameEn ?? '')
   const [descriptionBg, setDescriptionBg] = useState(initial?.descriptionBg ?? '')
   const [descriptionEn, setDescriptionEn] = useState(initial?.descriptionEn ?? '')
+  const [isStarPartner, setIsStarPartner] = useState(initial?.isStarPartner ?? false)
   const [image, setImage] = useState<ImageDTO | null>(initial?.image ?? null)
   const [links, setLinks] = useState<Record<PartnerLinkType, string>>({
     website: initial?.links.website ?? '',
@@ -38,7 +39,7 @@ export default function PartnerForm({ initial }: { initial?: PartnerDTO }) {
     e.preventDefault()
     setError(null)
     setSaving(true)
-    const payload = { nameBg, nameEn, descriptionBg, descriptionEn, image, links }
+    const payload = { nameBg, nameEn, descriptionBg, descriptionEn, isStarPartner, image, links }
     try {
       const res = await fetch(
         isEdit ? `/api/admin/partners/${initial!.id}` : '/api/admin/partners',
@@ -103,6 +104,15 @@ export default function PartnerForm({ initial }: { initial?: PartnerDTO }) {
               onChange={(e) => setDescriptionBg(e.target.value)}
             />
           </Field>
+
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={isStarPartner}
+              onChange={(e) => setIsStarPartner(e.target.checked)}
+            />
+            ★ Звезден партньор (дългосрочен ангажимент / значителен принос — подрежда се напред)
+          </label>
 
           <button
             type="button"

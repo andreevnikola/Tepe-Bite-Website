@@ -26,8 +26,13 @@ const PartnerSchema = new Schema(
     // (org names shouldn't be translated literally).
     nameBg: { type: String, required: true, trim: true },
     nameEn: { type: String, required: true, trim: true },
+    // SEO-friendly public slug (generated from nameEn). Sparse so legacy docs
+    // without a slug don't collide on the unique index until backfilled.
+    slug: { type: String, unique: true, sparse: true, lowercase: true, trim: true, default: undefined },
     descriptionBg: { type: String, default: '' },
     descriptionEn: { type: String, default: '' },
+    // Brand-wide star flag — long-term commitment / major contribution.
+    isStarPartner: { type: Boolean, default: false },
     image: { type: ImageSchema, default: null },
     links: { type: PartnerLinksSchema, default: () => ({}) },
     needsTranslationReview: { type: Boolean, default: false },

@@ -28,6 +28,8 @@ export async function composeInitiativeFields(data: InitiativeInput) {
 
   if (need(data.descriptionEn, data.descriptionBg)) toTranslate.desc = data.descriptionBg
   if (need(data.locationEn, data.locationBg ?? '')) toTranslate.loc = data.locationBg ?? ''
+  if (need(data.frozenReasonEn, data.frozenReasonBg ?? ''))
+    toTranslate.frozen = data.frozenReasonBg ?? ''
   data.steps.forEach((s, i) => {
     if (need(s.labelEn, s.labelBg)) toTranslate[`step_${i}_label`] = s.labelBg
     if (need(s.detailEn, s.detailBg ?? '')) toTranslate[`step_${i}_detail`] = s.detailBg ?? ''
@@ -53,6 +55,8 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     detailBg: s.detailBg ?? '',
     detailEn: en(`step_${i}_detail`, s.detailEn),
     done: s.done,
+    // Completion date only kept for done steps.
+    completedDateISO: s.done ? (s.completedDateISO ?? '') : '',
   }))
 
   const partners = data.partners.map((p, i) => ({
@@ -87,6 +91,10 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     descriptionEn: en('desc', data.descriptionEn),
     status: data.status,
     isPublished: data.isPublished,
+    isFeatured: data.isFeatured,
+    // Keep the freeze reason only while the initiative is actually frozen.
+    frozenReasonBg: data.status === 'frozen' ? (data.frozenReasonBg ?? '') : '',
+    frozenReasonEn: data.status === 'frozen' ? en('frozen', data.frozenReasonEn) : '',
     category: data.category ?? null,
     locationBg: data.locationBg ?? '',
     locationEn: en('loc', data.locationEn),

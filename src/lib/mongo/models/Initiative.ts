@@ -28,6 +28,8 @@ const StepSchema = new Schema(
     detailBg: { type: String, default: '' },
     detailEn: { type: String, default: '' },
     done: { type: Boolean, default: false },
+    // Manually set when a step is marked done (required in that case). Shown publicly.
+    completedDateISO: { type: String, default: '' },
   },
   { _id: true },
 )
@@ -73,6 +75,11 @@ const InitiativeSchema = new Schema(
     descriptionEn: { type: String, default: '' },
     status: { type: String, enum: INITIATIVE_STATUSES, default: 'planned' },
     isPublished: { type: Boolean, default: false },
+    // Single-selected site-wide spotlight ("На фокус"). Enforced unique in the API layer.
+    isFeatured: { type: Boolean, default: false },
+    // Shown publicly when status === 'frozen'. EN is auto-translated like other BG fields.
+    frozenReasonBg: { type: String, default: '' },
+    frozenReasonEn: { type: String, default: '' },
     category: { type: String, enum: INITIATIVE_CATEGORIES, default: null },
     locationBg: { type: String, default: '' },
     locationEn: { type: String, default: '' },

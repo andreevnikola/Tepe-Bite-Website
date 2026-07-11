@@ -30,6 +30,7 @@ export const PartnerCreateSchema = z.object({
   nameEn: z.string().max(200).optional(), // manual EN override (org names)
   descriptionBg: z.string().max(5000).default(''),
   descriptionEn: z.string().max(5000).optional(),
+  isStarPartner: z.boolean().default(false),
   image: ImageInputSchema.nullable().optional(),
   links: PartnerLinksSchema.optional(),
 })
@@ -44,6 +45,7 @@ export const StepInputSchema = z.object({
   detailBg: z.string().max(2000).default(''),
   detailEn: z.string().max(2000).optional(),
   done: z.boolean().default(false),
+  completedDateISO: z.string().default(''),
 })
 
 export const InitiativePartnerInputSchema = z.object({
@@ -73,13 +75,16 @@ export const GalleryItemInputSchema = z.object({
   captionEn: z.string().max(500).optional(),
 })
 
-export const InitiativeCreateSchema = z.object({
+const InitiativeCreateBase = z.object({
   titleBg: z.string().min(1).max(300),
   titleEn: z.string().min(1).max(300), // required manual EN
   descriptionBg: z.string().min(1).max(20000),
   descriptionEn: z.string().max(20000).optional(),
   status: z.enum(INITIATIVE_STATUSES).default('planned'),
   isPublished: z.boolean().default(false),
+  isFeatured: z.boolean().default(false),
+  frozenReasonBg: z.string().max(2000).default(''),
+  frozenReasonEn: z.string().max(2000).optional(),
   category: z.enum(INITIATIVE_CATEGORIES).nullable().optional(),
   locationBg: z.string().max(300).default(''),
   locationEn: z.string().max(300).optional(),
@@ -93,4 +98,17 @@ export const InitiativeCreateSchema = z.object({
   inflows: z.array(InflowInputSchema).max(200).default([]),
 })
 
-export const InitiativeUpdateSchema = InitiativeCreateSchema.partial()
+// A completed step must carry a completion date (enforced on both create + update).
+export const InitiativeCreateSchema = InitiativeCreateBase.superRefine((data, ctx) => {
+  data.steps.forEach((s, i) => {
+    if (s.done && !s.completedDateISO.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['steps', i, 'completedDateISO'],
+        message: 'Дата на завършване е задължителна за завършена стъпка.',
+      })
+    }
+  })
+})
+
+export const InitiativeUpdateSchema = InitiativeCreateBase.partial()

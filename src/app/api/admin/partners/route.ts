@@ -4,6 +4,7 @@ import { getMongoose } from '@/lib/mongo'
 import { Partner } from '@/lib/mongo/models/Partner'
 import { translateFields } from '@/lib/translate'
 import { serializePartner } from '@/lib/dashboard/serialize'
+import { uniquePartnerSlug } from '@/lib/dashboard/partner-slug'
 import { writeAudit } from '@/lib/dashboard/audit'
 import { getIp } from '@/lib/dashboard/http'
 import { PartnerCreateSchema } from '@/lib/dashboard/validation'
@@ -49,11 +50,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const descriptionEn = data.descriptionEn?.trim() || result.descriptionEn || ''
 
   await getMongoose()
+  const slug = await uniquePartnerSlug(nameEn)
   const created = await Partner.create({
     nameBg: data.nameBg,
     nameEn,
+    slug,
     descriptionBg: data.descriptionBg ?? '',
     descriptionEn,
+    isStarPartner: data.isStarPartner,
     image: data.image ?? null,
     links: data.links ?? {},
     needsTranslationReview: !ok,

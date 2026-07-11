@@ -19,6 +19,11 @@ export default function Nav() {
   const isAdmin = pathname.startsWith("/admin");
   const isLocationDetail = /^\/partnering-locations\/.+/.test(pathname);
   const isNewsDetail = /^\/news\/.+/.test(pathname);
+  // Data-driven initiatives pages (/initiatives/all, /initiatives/[slug],
+  // /initiatives/partners/[slug]) have image/gradient heroes at the very top,
+  // so the nav needs a solid background even before scrolling. The hardcoded
+  // /initiatives gateway keeps its transparent-on-hero look.
+  const isInitiativesData = pathname.startsWith("/initiatives/");
 
   if (isStudio || isAdmin) return null;
 
@@ -81,15 +86,15 @@ export default function Nav() {
         zIndex: 1100,
         viewTransitionName: "site-header",
         background:
-          scrolled || isLegal || isLocationDetail || isNewsDetail
+          scrolled || isLegal || isLocationDetail || isNewsDetail || isInitiativesData
             ? "oklch(99% 0.008 75 / 0.96)"
             : "transparent",
         backdropFilter:
-          scrolled || isLegal || isLocationDetail || isNewsDetail ? "blur(16px)" : "none",
+          scrolled || isLegal || isLocationDetail || isNewsDetail || isInitiativesData ? "blur(16px)" : "none",
         WebkitBackdropFilter:
-          scrolled || isLegal || isLocationDetail || isNewsDetail ? "blur(16px)" : "none",
+          scrolled || isLegal || isLocationDetail || isNewsDetail || isInitiativesData ? "blur(16px)" : "none",
         boxShadow:
-          scrolled || isLegal || isLocationDetail || isNewsDetail
+          scrolled || isLegal || isLocationDetail || isNewsDetail || isInitiativesData
             ? "0 1px 0 oklch(90% 0.02 80)"
             : "none",
         transition: "all 0.3s ease",

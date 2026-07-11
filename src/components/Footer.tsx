@@ -14,6 +14,7 @@ export default function Footer() {
           ["/", "Начало"],
           ["/#produkt", "Продуктът"],
           ["/initiatives", "Нашите инициативи"],
+          ["/initiatives/all", "Всички социални инициативи"],
           ["/impact", "ТЕПЕ bite Impact"],
           ["/#za-nas", "За нас"],
         ]
@@ -21,6 +22,7 @@ export default function Footer() {
           ["/", "Home"],
           ["/#produkt", "The Product"],
           ["/initiatives", "Our Initiatives"],
+          ["/initiatives/all", "All social initiatives"],
           ["/impact", "ТЕПЕ bite Impact"],
           ["/#za-nas", "About"],
         ];

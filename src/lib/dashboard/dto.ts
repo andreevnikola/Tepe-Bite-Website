@@ -17,8 +17,10 @@ export type PartnerDTO = {
   id: string
   nameBg: string
   nameEn: string
+  slug: string
   descriptionBg: string
   descriptionEn: string
+  isStarPartner: boolean
   image: ImageDTO | null
   links: { website: string; instagram: string; facebook: string; tiktok: string }
   needsTranslationReview: boolean
@@ -34,6 +36,7 @@ export type StepDTO = {
   detailBg: string
   detailEn: string
   done: boolean
+  completedDateISO: string
 }
 
 export type InitiativePartnerDTO = {
@@ -67,6 +70,9 @@ export type InitiativeDTO = {
   descriptionEn: string
   status: InitiativeStatus
   isPublished: boolean
+  isFeatured: boolean
+  frozenReasonBg: string
+  frozenReasonEn: string
   category: InitiativeCategory | null
   locationBg: string
   locationEn: string

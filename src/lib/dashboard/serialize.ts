@@ -15,8 +15,10 @@ export function serializePartner(p: any): PartnerDTO {
     id: idStr(p._id),
     nameBg: p.nameBg ?? '',
     nameEn: p.nameEn ?? '',
+    slug: p.slug ?? '',
     descriptionBg: p.descriptionBg ?? '',
     descriptionEn: p.descriptionEn ?? '',
+    isStarPartner: Boolean(p.isStarPartner),
     image: p.image ? { url: p.image.url, key: p.image.key } : null,
     links: {
       website: p.links?.website ?? '',
@@ -39,6 +41,9 @@ export function serializeInitiative(i: any): InitiativeDTO {
     descriptionEn: i.descriptionEn ?? '',
     status: i.status,
     isPublished: Boolean(i.isPublished),
+    isFeatured: Boolean(i.isFeatured),
+    frozenReasonBg: i.frozenReasonBg ?? '',
+    frozenReasonEn: i.frozenReasonEn ?? '',
     category: i.category ?? null,
     locationBg: i.locationBg ?? '',
     locationEn: i.locationEn ?? '',
@@ -60,6 +65,7 @@ export function serializeInitiative(i: any): InitiativeDTO {
       detailBg: s.detailBg ?? '',
       detailEn: s.detailEn ?? '',
       done: Boolean(s.done),
+      completedDateISO: s.completedDateISO ?? '',
     })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     partners: (i.partners ?? []).map((p: any) => ({
