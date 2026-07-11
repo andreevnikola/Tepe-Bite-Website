@@ -95,6 +95,8 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     // Keep the freeze reason only while the initiative is actually frozen.
     frozenReasonBg: data.status === 'frozen' ? (data.frozenReasonBg ?? '') : '',
     frozenReasonEn: data.status === 'frozen' ? en('frozen', data.frozenReasonEn) : '',
+    // Completion date only kept while the initiative is actually done.
+    completionDateISO: data.status === 'done' ? (data.completionDateISO ?? '') : '',
     category: data.category ?? null,
     locationBg: data.locationBg ?? '',
     locationEn: en('loc', data.locationEn),

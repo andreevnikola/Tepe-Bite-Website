@@ -10,6 +10,7 @@ import {
   StatusBadge,
   StepsProgress,
   FreezeNote,
+  CompletedDateBadge,
   pick,
 } from "@/components/public/impactUi";
 
@@ -103,6 +104,9 @@ export default function InitiativeCard({
           {initiative.category && (
             <CategoryChip category={initiative.category} lang={lang} />
           )}
+          {initiative.status === "done" && (
+            <CompletedDateBadge dateISO={initiative.completionDateISO} lang={lang} />
+          )}
         </div>
 
         <h3
@@ -178,7 +182,9 @@ export default function InitiativeCard({
             />
           )}
 
-          {initiative.steps.length > 0 && initiative.status !== "frozen" && (
+          {initiative.steps.length > 0 &&
+            initiative.status !== "frozen" &&
+            initiative.status !== "planned" && (
             <StepsProgress
               done={doneSteps}
               total={initiative.steps.length}

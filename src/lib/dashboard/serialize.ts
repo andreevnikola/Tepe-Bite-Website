@@ -44,6 +44,7 @@ export function serializeInitiative(i: any): InitiativeDTO {
     isFeatured: Boolean(i.isFeatured),
     frozenReasonBg: i.frozenReasonBg ?? '',
     frozenReasonEn: i.frozenReasonEn ?? '',
+    completionDateISO: i.completionDateISO ?? '',
     category: i.category ?? null,
     locationBg: i.locationBg ?? '',
     locationEn: i.locationEn ?? '',

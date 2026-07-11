@@ -9,20 +9,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-function truncate(s: string, n: number): string {
-  if (!s) return "";
-  if (s.length <= n) return s;
-  return s.slice(0, n).replace(/\s+\S*$/, "") + "…";
-}
-
 const CARD_W = 300;
 
 export default function PartnersCarousel({
   items,
   lang,
+  background = "var(--bg)",
 }: {
   items: PartnerCarouselItem[];
   lang: Lang;
+  background?: string;
 }) {
   const bg = lang === "bg";
   const scroller = useRef<HTMLDivElement>(null);
@@ -53,9 +49,10 @@ export default function PartnersCarousel({
 
   if (items.length === 0) return null;
   const showArrows = !(atStart && atEnd); // only when overflowing
+  const edgeMask = `linear-gradient(to right, ${atStart ? "black" : "transparent"} 0, black 32px, black calc(100% - 32px), ${atEnd ? "black" : "transparent"} 100%)`;
 
   return (
-    <section className="section-spacing" style={{ background: "var(--bg)" }}>
+    <section className="section-spacing" style={{ background }}>
       <div className="section-inner">
         <div
           style={{
@@ -93,11 +90,14 @@ export default function PartnersCarousel({
             scrollSnapType: "x mandatory",
             paddingBottom: 6,
             scrollbarWidth: "none",
+            maskImage: edgeMask,
+            WebkitMaskImage: edgeMask,
           }}
         >
           {items.map(({ partner, initiativeCount, financial }) => {
             const name = pick(lang, partner.nameBg, partner.nameEn);
             const desc = pick(lang, partner.descriptionBg, partner.descriptionEn);
+            const descFade = desc.length > 130;
             return (
               <Link
                 key={partner.id}
@@ -180,9 +180,19 @@ export default function PartnersCarousel({
                       color: "var(--text-mid)",
                       margin: 0,
                       flex: 1,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      maskImage: descFade
+                        ? "linear-gradient(180deg, black 55%, transparent 100%)"
+                        : undefined,
+                      WebkitMaskImage: descFade
+                        ? "linear-gradient(180deg, black 55%, transparent 100%)"
+                        : undefined,
                     }}
                   >
-                    {truncate(desc, 120)}
+                    {desc}
                   </p>
                 )}
 

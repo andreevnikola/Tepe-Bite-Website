@@ -80,6 +80,8 @@ const InitiativeSchema = new Schema(
     // Shown publicly when status === 'frozen'. EN is auto-translated like other BG fields.
     frozenReasonBg: { type: String, default: '' },
     frozenReasonEn: { type: String, default: '' },
+    // Manually set when status === 'done' (required in that case). Shown publicly.
+    completionDateISO: { type: String, default: '' },
     category: { type: String, enum: INITIATIVE_CATEGORIES, default: null },
     locationBg: { type: String, default: '' },
     locationEn: { type: String, default: '' },

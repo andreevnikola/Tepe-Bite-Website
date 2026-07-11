@@ -6,6 +6,7 @@ import {
   FreezeNote,
   StatusBadge,
   StarBadge,
+  CompletedDateBadge,
   formatDate,
   pick,
   INFLOW_PHASE_LABELS,
@@ -101,6 +102,9 @@ function Hero({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
             <StatusBadge status={i.status} lang={lang} />
             {i.category && <CategoryChip category={i.category} lang={lang} />}
+            {i.status === "done" && (
+              <CompletedDateBadge dateISO={i.completionDateISO} lang={lang} />
+            )}
           </div>
           <h1 className="heading-xl" style={{ color: "white", maxWidth: 800 }}>
             {title}
@@ -197,7 +201,7 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
             display: "grid",
             gridTemplateColumns: facts.length ? "1.6fr 1fr" : "1fr",
             gap: "clamp(24px, 4vw, 48px)",
-            alignItems: "start",
+            alignItems: "center",
           }}
         >
           <div style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "var(--text-mid)", whiteSpace: "pre-line" }}>
@@ -205,10 +209,8 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
           </div>
 
           {facts.length > 0 && (
-            <div
-              className="card"
-              style={{ padding: "22px 24px", alignSelf: "start" }}
-            >
+            <div className="card" style={{ padding: "22px 24px" }}>
+
               <div
                 style={{
                   fontSize: "0.72rem",
@@ -300,7 +302,7 @@ function Gallery({ detail, lang }: { detail: InitiativeDetailData; lang: Lang })
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
             gap: 14,
           }}
         >
@@ -481,7 +483,6 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
   if (steps.length === 0) return null;
 
   const doneCount = steps.filter((s) => s.done).length;
-  const pct = Math.round((doneCount / steps.length) * 100);
   const currentIdx = detail.initiative.currentStepIndex;
 
   return (
@@ -494,7 +495,7 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
           {bg ? "Докъде сме стигнали" : "Where we are now"}
         </h2>
         <p style={{ fontSize: "0.9rem", color: "var(--text-soft)", marginBottom: 40 }}>
-          {pct}% · {doneCount}/{steps.length} {bg ? "стъпки завършени" : "steps completed"}
+          {doneCount}/{steps.length} {bg ? "стъпки завършени" : "steps completed"}
         </p>
 
         <div
@@ -503,7 +504,7 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
             display: "grid",
             gridTemplateColumns: "minmax(0, 1.5fr) minmax(260px, 0.9fr)",
             gap: "clamp(28px, 4vw, 52px)",
-            alignItems: "start",
+            alignItems: "center",
           }}
         >
           {/* Timeline */}
@@ -755,7 +756,11 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
             const financial = partnerTotals(detail.initiative.inflows, partner!.id);
             const typeLabel = PARTNERSHIP_TYPE_LABELS[link.partnershipType];
             return (
-              <div key={link.id} className="card" style={{ padding: "22px 24px" }}>
+              <div
+                key={link.id}
+                className="card"
+                style={{ padding: "22px 24px", display: "flex", flexDirection: "column", height: "100%" }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
                   <span
                     style={{
@@ -821,7 +826,16 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                   </div>
                 )}
 
-                <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    marginTop: "auto",
+                    paddingTop: 14,
+                  }}
+                >
                   <Link
                     href={`/initiatives/partners/${partner!.slug}`}
                     style={{
@@ -865,16 +879,44 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
 }
 
 /* ═══ FINANCES ═══ */
-function inflowSourceLabel(f: InflowDTO, detail: InitiativeDetailData, lang: Lang): string {
-  if (f.source === "impact_fund")
-    return lang === "en" ? INFLOW_SOURCE_LABELS.impact_fund.en : INFLOW_SOURCE_LABELS.impact_fund.bg;
+const SOURCE_ACCENT: Record<InflowDTO["source"], string> = {
+  impact_fund: "var(--sky-dk)",
+  partner: "var(--caramel)",
+  external_other: "var(--text-soft)",
+};
+
+/* Name/link for the source (partner names link to their profile); category badge shown separately. */
+function InflowSourceName({
+  f,
+  detail,
+  lang,
+}: {
+  f: InflowDTO;
+  detail: InitiativeDetailData;
+  lang: Lang;
+}) {
+  const nameStyle: React.CSSProperties = { fontWeight: 700, color: "var(--plum)", fontSize: "0.95rem" };
   if (f.source === "partner") {
     const p = f.partnerId ? detail.partnersById[f.partnerId] : undefined;
-    if (p) return pick(lang, p.nameBg, p.nameEn);
-    return lang === "en" ? INFLOW_SOURCE_LABELS.partner.en : INFLOW_SOURCE_LABELS.partner.bg;
+    if (p)
+      return (
+        <Link
+          href={`/initiatives/partners/${p.slug}`}
+          style={{ ...nameStyle, textDecoration: "underline", textDecorationColor: "var(--border)", textUnderlineOffset: 3 }}
+        >
+          {pick(lang, p.nameBg, p.nameEn)}
+        </Link>
+      );
+    return <span style={nameStyle}>{INFLOW_SOURCE_LABELS.partner[lang === "en" ? "en" : "bg"]}</span>;
   }
+  if (f.source === "impact_fund")
+    return <span style={nameStyle}>{INFLOW_SOURCE_LABELS.impact_fund[lang === "en" ? "en" : "bg"]}</span>;
   const custom = pick(lang, f.sourceLabelBg, f.sourceLabelEn);
-  return custom || (lang === "en" ? INFLOW_SOURCE_LABELS.external_other.en : INFLOW_SOURCE_LABELS.external_other.bg);
+  return (
+    <span style={nameStyle}>
+      {custom || INFLOW_SOURCE_LABELS.external_other[lang === "en" ? "en" : "bg"]}
+    </span>
+  );
 }
 
 const PHASE_ACCENT: Record<InflowDTO["phase"], string> = {
@@ -1015,8 +1057,23 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                   >
                     <div style={{ minWidth: 0, flex: "1 1 240px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
-                        <span style={{ fontWeight: 700, color: "var(--plum)", fontSize: "0.95rem" }}>
-                          {inflowSourceLabel(f, detail, lang)}
+                        <InflowSourceName f={f} detail={detail} lang={lang} />
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 5,
+                            background: "var(--surface2)",
+                            borderRadius: 100,
+                            padding: "2px 10px",
+                            fontSize: "0.62rem",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: SOURCE_ACCENT[f.source],
+                          }}
+                        >
+                          {INFLOW_SOURCE_LABELS[f.source][bg ? "bg" : "en"]}
                         </span>
                         <span
                           style={{

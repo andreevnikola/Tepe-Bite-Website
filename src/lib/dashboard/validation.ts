@@ -85,6 +85,7 @@ const InitiativeCreateBase = z.object({
   isFeatured: z.boolean().default(false),
   frozenReasonBg: z.string().max(2000).default(''),
   frozenReasonEn: z.string().max(2000).optional(),
+  completionDateISO: z.string().default(''),
   category: z.enum(INITIATIVE_CATEGORIES).nullable().optional(),
   locationBg: z.string().max(300).default(''),
   locationEn: z.string().max(300).optional(),
@@ -109,6 +110,13 @@ export const InitiativeCreateSchema = InitiativeCreateBase.superRefine((data, ct
       })
     }
   })
+  if (data.status === 'done' && !data.completionDateISO.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['completionDateISO'],
+      message: 'Дата на завършване е задължителна за завършена инициатива.',
+    })
+  }
 })
 
 export const InitiativeUpdateSchema = InitiativeCreateBase.partial()

@@ -57,6 +57,8 @@ export type OverviewData = {
   /** Partners for the carousel: involved-in-published ∪ star partners, stars first. */
   partners: PartnerCarouselItem[]
   byStatus: Record<InitiativeStatus, InitiativeDTO[]>
+  /** Up to 3 most recently completed initiatives (by completionDateISO), for the hero carousel. */
+  recentlyCompleted: InitiativeDTO[]
   /** True when at least one initiative is published. */
   hasAnyInitiative: boolean
   /** True when at least one partner exists in the carousel. */
@@ -159,11 +161,18 @@ export async function getPublicOverviewData(): Promise<OverviewData> {
   }
   for (const i of initiatives) byStatus[i.status].push(i)
 
+  // ── Most recently completed (for the hero carousel) ─────────────────────
+  const recentlyCompleted = byStatus.done
+    .filter((i) => i.completionDateISO)
+    .sort((a, b) => b.completionDateISO.localeCompare(a.completionDateISO))
+    .slice(0, 3)
+
   return {
     stats,
     featured,
     partners,
     byStatus,
+    recentlyCompleted,
     hasAnyInitiative: initiatives.length > 0,
     hasAnyPartner: partners.length > 0,
   }

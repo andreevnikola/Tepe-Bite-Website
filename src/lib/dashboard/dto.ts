@@ -73,6 +73,7 @@ export type InitiativeDTO = {
   isFeatured: boolean
   frozenReasonBg: string
   frozenReasonEn: string
+  completionDateISO: string
   category: InitiativeCategory | null
   locationBg: string
   locationEn: string

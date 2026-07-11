@@ -1,10 +1,137 @@
 "use client";
 
+import { IconInfo } from "@/components/icons";
 import { INFLOW_PHASE_LABELS } from "@/lib/dashboard/constants";
 import type { InflowDTO } from "@/lib/dashboard/dto";
 import { formatMoneyEUR } from "@/lib/money";
 import type { Lang } from "@/store/lang";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+
+/* Plain-language explanation of each phase, for the info popover — written for
+   someone with zero prior context on how the fund works. */
+const PHASE_INFO: Record<(typeof ORDER)[number], { bg: string; en: string }> = {
+  available: {
+    bg: "Средствата вече са реално преведени и достъпни — могат да се използват веднага за реализация на инициатива.",
+    en: "The money has actually been transferred and is on hand — ready to be used for an initiative right away.",
+  },
+  arranged: {
+    bg: "Финансирането е договорено и конкретно (напр. подписано партньорство или одобрен бюджет), но все още не е физически преведено.",
+    en: "The funding is contracted and specific (e.g. a signed partnership or approved budget) but hasn't been physically transferred yet.",
+  },
+  planned: {
+    bg: "Очакваме тези средства въз основа на предварителна оценка, но те още не са формално обвързани — сумата може да се променя.",
+    en: "We expect this money based on an early estimate, but it isn't formally committed yet — the amount may still change.",
+  },
+};
+
+/* Small click-to-toggle info button + popover — works on both hover-less
+   touch screens and desktop, unlike a pure CSS :hover tooltip. */
+function PhaseInfoButton({
+  phase,
+  lang,
+}: {
+  phase: (typeof ORDER)[number];
+  lang: Lang;
+}) {
+  const [open, setOpen] = useState(false);
+  const [align, setAlign] = useState<"left" | "center" | "right">("center");
+  const ref = useRef<HTMLDivElement>(null);
+  const bg = lang === "bg";
+
+  useEffect(() => {
+    if (!open) return;
+    function onDocClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: "relative",
+        marginLeft: "auto",
+        display: "inline-flex",
+      }}
+    >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((o) => {
+            const next = !o;
+            if (next && ref.current) {
+              const r = ref.current.getBoundingClientRect();
+              if (r.left < 120) setAlign("left");
+              else if (window.innerWidth - r.right < 120) setAlign("right");
+              else setAlign("center");
+            }
+            return next;
+          });
+        }}
+        aria-label={bg ? "Какво означава това?" : "What does this mean?"}
+        aria-expanded={open}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 20,
+          height: 20,
+          borderRadius: "50%",
+          border: "none",
+          background: open ? "var(--border)" : "transparent",
+          color: "var(--text-soft)",
+          cursor: "pointer",
+          padding: 0,
+          flexShrink: 0,
+        }}
+      >
+        <IconInfo size={13} />
+      </button>
+      {open && (
+        <div
+          role="tooltip"
+          style={{
+            position: "absolute",
+            zIndex: 30,
+            top: "calc(100% + 8px)",
+            ...(align === "left"
+              ? { left: 0 }
+              : align === "right"
+                ? { right: 0 }
+                : { left: "50%", transform: "translateX(-50%)" }),
+            width: 220,
+            maxWidth: "calc(100vw - 32px)",
+            background: "var(--plum)",
+            color: "white",
+            borderRadius: "var(--r-sm)",
+            padding: "12px 14px",
+            fontSize: "0.78rem",
+            lineHeight: 1.55,
+            fontWeight: 400,
+            textTransform: "none",
+            letterSpacing: "normal",
+            boxShadow: "var(--shadow-lg)",
+          }}
+        >
+          {PHASE_INFO[phase][bg ? "bg" : "en"]}
+        </div>
+      )}
+    </div>
+  );
+}
 
 /* Phase colours — shared across every financial visual. */
 export const PHASE_COLOR = {
@@ -22,7 +149,13 @@ export type PhaseTotals = {
 };
 
 export function inflowPhaseTotals(inflows: InflowDTO[]): PhaseTotals {
-  const t: PhaseTotals = { available: 0, arranged: 0, planned: 0, total: 0, recordCount: 0 };
+  const t: PhaseTotals = {
+    available: 0,
+    arranged: 0,
+    planned: 0,
+    total: 0,
+    recordCount: 0,
+  };
   for (const f of inflows) {
     t[f.phase] += f.amountCents;
     t.total += f.amountCents;
@@ -59,7 +192,7 @@ export function PhaseBreakdown({
           <div
             key={phase}
             className="card"
-            style={{ padding: "18px 20px", position: "relative", overflow: "hidden" }}
+            style={{ padding: "18px 20px", position: "relative" }}
           >
             <div
               aria-hidden="true"
@@ -69,6 +202,8 @@ export function PhaseBreakdown({
                 left: 0,
                 width: "100%",
                 height: 4,
+                borderTopLeftRadius: "inherit",
+                borderTopRightRadius: "inherit",
                 background: PHASE_COLOR[phase],
               }}
             />
@@ -95,6 +230,7 @@ export function PhaseBreakdown({
                 }}
               />
               {INFLOW_PHASE_LABELS[phase][bg ? "bg" : "en"]}
+              <PhaseInfoButton phase={phase} lang={lang} />
             </div>
             <div
               style={{
@@ -167,7 +303,14 @@ export function PhaseBarMini({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "baseline",
+          gap: 10,
+        }}
+      >
         <span
           style={{
             fontSize: "0.68rem",
@@ -179,7 +322,13 @@ export function PhaseBarMini({
         >
           {label ?? (bg ? "Финансова подкрепа" : "Financial support")}
         </span>
-        <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--caramel)" }}>
+        <span
+          style={{
+            fontSize: "0.82rem",
+            fontWeight: 700,
+            color: "var(--caramel)",
+          }}
+        >
           {formatMoneyEUR(grand)}
         </span>
       </div>
@@ -196,7 +345,10 @@ export function PhaseBarMini({
           totals[phase] > 0 ? (
             <div
               key={phase}
-              style={{ width: `${(totals[phase] / grand) * 100}%`, background: PHASE_COLOR[phase] }}
+              style={{
+                width: `${(totals[phase] / grand) * 100}%`,
+                background: PHASE_COLOR[phase],
+              }}
               title={`${INFLOW_PHASE_LABELS[phase][bg ? "bg" : "en"]}: ${formatMoneyEUR(totals[phase])}`}
             />
           ) : null,
@@ -223,75 +375,98 @@ export function FundingSplitBar({
   const partnersPct = (partnersCents / total) * 100;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--sky-dk)" }} />
-          <span style={{ fontSize: "0.82rem", color: "var(--text-mid)" }}>
-            {bg ? "Фонд ТЕПЕ bite Impact" : "ТЕПЕ bite Impact fund"}:{" "}
-            <strong style={{ color: "var(--plum)" }}>{formatMoneyEUR(impactCents)}</strong>
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--caramel)" }} />
-          <span style={{ fontSize: "0.82rem", color: "var(--text-mid)" }}>
-            {bg ? "Партньорски организации" : "Partnering organisations"}:{" "}
-            <strong style={{ color: "var(--plum)" }}>{formatMoneyEUR(partnersCents)}</strong>
-          </span>
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          height: 40,
-          borderRadius: 10,
-          overflow: "hidden",
-          background: "var(--border)",
-        }}
-        role="img"
-        aria-label={bg ? "Разпределение на финансирането" : "Funding split"}
-      >
-        {impactCents > 0 && (
-          <div
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        height: 60,
+        borderRadius: 14,
+        overflow: "hidden",
+        background: "var(--border)",
+      }}
+      role="img"
+      aria-label={
+        bg
+          ? `Разпределение на финансирането: ТЕПЕ bite Impact ${formatMoneyEUR(impactCents)}, партньори ${formatMoneyEUR(partnersCents)}`
+          : `Funding split: ТЕПЕ bite Impact ${formatMoneyEUR(impactCents)}, partners ${formatMoneyEUR(partnersCents)}`
+      }
+    >
+      {impactCents > 0 && (
+        <div
+          title={`${bg ? "Фонд ТЕПЕ bite Impact" : "ТЕПЕ bite Impact fund"}: ${formatMoneyEUR(impactCents)}`}
+          style={{
+            width: `${impactPct}%`,
+            background: "linear-gradient(90deg, var(--sky-dk), var(--sky-mid))",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            paddingLeft: 14,
+            paddingRight: 10,
+            minWidth: 0,
+          }}
+        >
+          <span
             style={{
-              width: `${impactPct}%`,
-              background: "linear-gradient(90deg, var(--sky-dk), var(--sky-mid))",
-              display: "flex",
+              background: "rgba(255,255,255,0.95)",
+              borderRadius: 7,
+              padding: "5px 8px",
+              display: "inline-flex",
               alignItems: "center",
-              paddingLeft: 8,
-              minWidth: 0,
+              flexShrink: 0,
             }}
           >
-            <span
-              style={{
-                background: "rgba(255,255,255,0.92)",
-                borderRadius: 6,
-                padding: "3px 6px",
-                display: "inline-flex",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                src="/TEPEbiteImpact.png"
-                alt="ТЕПЕ bite Impact"
-                width={72}
-                height={22}
-                style={{ height: 16, width: "auto", display: "block" }}
-              />
-            </span>
-          </div>
-        )}
-        {partnersCents > 0 && (
-          <div
+            <Image
+              src="/TEPEbiteImpact-crop.png"
+              alt="ТЕПЕ bite Impact"
+              width={90}
+              height={42}
+              style={{ height: 30, width: "auto", display: "block" }}
+            />
+          </span>
+          <span
             style={{
-              width: `${partnersPct}%`,
-              background: "linear-gradient(90deg, oklch(70% 0.15 55), var(--caramel))",
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "0.9rem",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              textShadow: "0 1px 3px rgba(0,0,0,0.25)",
             }}
-          />
-        )}
-      </div>
+          >
+            {formatMoneyEUR(impactCents)}
+          </span>
+        </div>
+      )}
+      {partnersCents > 0 && (
+        <div
+          title={`${bg ? "Партньорски организации" : "Partnering organisations"}: ${formatMoneyEUR(partnersCents)}`}
+          style={{
+            width: `${partnersPct}%`,
+            background:
+              "linear-gradient(90deg, oklch(70% 0.15 55), var(--caramel))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minWidth: 0,
+            padding: "0 10px",
+          }}
+        >
+          <span
+            style={{
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "0.85rem",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              textShadow: "0 1px 3px rgba(0,0,0,0.25)",
+            }}
+          >
+            {bg ? "Партньори" : "Partners"} · {formatMoneyEUR(partnersCents)}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

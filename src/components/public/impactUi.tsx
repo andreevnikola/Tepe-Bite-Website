@@ -164,13 +164,43 @@ export function StepsProgress({
         <span
           style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--plum)" }}
         >
-          {pct}% · {done}/{total}
+          {done}/{total}
         </span>
       </div>
       <div className="progress-track">
         <div className="progress-fill" style={{ width: `${pct}%` }} />
       </div>
     </div>
+  );
+}
+
+/* ─── completion date pill (done initiatives) ─────────────────────────────── */
+export function CompletedDateBadge({
+  dateISO,
+  lang,
+}: {
+  dateISO: string;
+  lang: Lang;
+}) {
+  if (!dateISO) return null;
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        background: "var(--caramel-lt)",
+        color: "oklch(44% 0.13 55)",
+        borderRadius: 100,
+        padding: "4px 12px",
+        fontSize: "0.68rem",
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+      }}
+    >
+      {lang === "en" ? "Completed" : "Завършена"} · {formatDate(dateISO, lang)}
+    </span>
   );
 }
 

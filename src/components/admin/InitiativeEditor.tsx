@@ -86,6 +86,9 @@ export default function InitiativeEditor({
   const [isPublished, setIsPublished] = useState(initial?.isPublished ?? false)
   const [isFeatured, setIsFeatured] = useState(initial?.isFeatured ?? false)
   const [frozenReasonBg, setFrozenReasonBg] = useState(initial?.frozenReasonBg ?? '')
+  const [completionDateISO, setCompletionDateISO] = useState(
+    initial?.completionDateISO ? initial.completionDateISO.slice(0, 10) : '',
+  )
   const [category, setCategory] = useState<InitiativeCategory | ''>(initial?.category ?? '')
   const [locationBg, setLocationBg] = useState(initial?.locationBg ?? '')
   const [coverImage, setCoverImage] = useState<ImageDTO | null>(initial?.coverImage ?? null)
@@ -170,6 +173,11 @@ export default function InitiativeEditor({
       setTab('Стъпки')
       return
     }
+    if (status === 'done' && !completionDateISO) {
+      setError('Изберете дата на завършване на инициативата.')
+      setTab('Детайли')
+      return
+    }
     setSaving(true)
 
     const payload = {
@@ -180,6 +188,7 @@ export default function InitiativeEditor({
       isPublished,
       isFeatured,
       frozenReasonBg: status === 'frozen' ? frozenReasonBg : '',
+      completionDateISO: status === 'done' ? completionDateISO : '',
       category: category || null,
       locationBg,
       coverImage,
@@ -364,6 +373,22 @@ export default function InitiativeEditor({
                   className="min-h-20"
                 />
               </Field>
+            )}
+            {status === 'done' && (
+              <div>
+                <Field label="Дата на завършване" hint="Показва се публично на картите и страницата на инициативата.">
+                  <TextInput
+                    type="date"
+                    value={completionDateISO}
+                    onChange={(e) => setCompletionDateISO(e.target.value)}
+                  />
+                </Field>
+                {!completionDateISO && (
+                  <p className="mt-1 text-xs text-red-600">
+                    Изберете дата на завършване, за да запазите.
+                  </p>
+                )}
+              </div>
             )}
             <Field label="Локация (BG)">
               <TextInput value={locationBg} onChange={(e) => setLocationBg(e.target.value)} />
