@@ -24,8 +24,11 @@ export default function Nav() {
   // so the nav needs a solid background even before scrolling. The hardcoded
   // /initiatives gateway keeps its transparent-on-hero look.
   const isInitiativesData = pathname.startsWith("/initiatives/");
+  // The /links link-hub is a standalone, mobile-first landing with its own
+  // header and language switch — the site chrome would only get in its way.
+  const isLinks = pathname.startsWith("/links");
 
-  if (isStudio || isAdmin) return null;
+  if (isStudio || isAdmin || isLinks) return null;
 
   // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
   const p = isHome ? "" : "/";
