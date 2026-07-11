@@ -192,6 +192,23 @@ export const IconInfo = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
+export const IconExternal = ({ size = 14 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.4"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M14 4h6v6" />
+    <path d="M20 4 11 13" />
+    <path d="M18 13.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10" />
+  </svg>
+);
+
 export const IconLink = () => (
   <svg
     width="14"

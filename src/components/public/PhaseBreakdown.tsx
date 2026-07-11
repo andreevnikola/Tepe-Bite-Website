@@ -192,21 +192,15 @@ export function PhaseBreakdown({
           <div
             key={phase}
             className="card"
-            style={{ padding: "18px 20px", position: "relative" }}
+            style={{
+              padding: "18px 20px",
+              position: "relative",
+              borderRadius: "var(--r-md)",
+              // top accent drawn as an inset shadow so it follows the rounded
+              // corners exactly (no overflow:hidden needed → popover can escape)
+              boxShadow: `inset 0 4px 0 ${PHASE_COLOR[phase]}, var(--shadow)`,
+            }}
           >
-            <div
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: 4,
-                borderTopLeftRadius: "inherit",
-                borderTopRightRadius: "inherit",
-                background: PHASE_COLOR[phase],
-              }}
-            />
             <div
               style={{
                 display: "flex",

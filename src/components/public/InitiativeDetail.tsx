@@ -638,8 +638,6 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
               borderRadius: "var(--r-lg)",
               padding: "clamp(26px, 3vw, 34px)",
               color: "white",
-              position: "sticky",
-              top: 100,
               boxShadow: "var(--shadow-lg)",
               overflow: "hidden",
             }}
@@ -816,26 +814,27 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                   </p>
                 )}
 
-                {financial.total > 0 && (
-                  <div style={{ marginBottom: 12 }}>
-                    <PhaseBarMini
-                      totals={financial}
-                      lang={lang}
-                      label={bg ? "Финансов принос" : "Financial support"}
-                    />
-                  </div>
-                )}
+                <div style={{ marginTop: "auto" }}>
+                  {financial.total > 0 && (
+                    <div style={{ marginBottom: 14 }}>
+                      <PhaseBarMini
+                        totals={financial}
+                        lang={lang}
+                        label={bg ? "Финансов принос" : "Financial support"}
+                      />
+                    </div>
+                  )}
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 16,
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    marginTop: "auto",
-                    paddingTop: 14,
-                  }}
-                >
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 16,
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                      paddingTop: 14,
+                      borderTop: "1px solid var(--border)",
+                    }}
+                  >
                   <Link
                     href={`/initiatives/partners/${partner!.slug}`}
                     style={{
@@ -868,6 +867,7 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                       <IconLink /> {bg ? "Уебсайт" : "Website"}
                     </a>
                   )}
+                  </div>
                 </div>
               </div>
             );

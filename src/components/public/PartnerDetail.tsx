@@ -43,7 +43,7 @@ export default function PartnerDetail({ detail }: { detail: PartnerDetailData })
           paddingRight: "clamp(20px, 5vw, 80px)",
         }}
       >
-        <div className="section-inner" style={{ maxWidth: 900 }}>
+        <div className="section-inner" style={{ maxWidth: 1120 }}>
           <Link
             href="/initiatives/all"
             style={{
@@ -64,112 +64,149 @@ export default function PartnerDetail({ detail }: { detail: PartnerDetailData })
             className="partner-head"
             style={{
               display: "flex",
-              gap: "clamp(20px, 3vw, 36px)",
-              alignItems: "flex-start",
+              gap: "clamp(24px, 3vw, 48px)",
+              alignItems: "stretch",
             }}
           >
-            <span
+            {/* identity */}
+            <div
+              className="partner-id"
               style={{
-                position: "relative",
-                width: 96,
-                height: 96,
-                borderRadius: "50%",
-                overflow: "hidden",
-                flexShrink: 0,
-                background: "var(--plum-lt)",
-                border: "1px solid var(--border)",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "var(--shadow)",
+                gap: "clamp(18px, 2.4vw, 32px)",
+                alignItems: "flex-start",
+                flex: "1 1 auto",
+                minWidth: 0,
               }}
             >
-              {partner.image ? (
-                <Image src={partner.image.url} alt={name} fill sizes="96px" style={{ objectFit: "cover" }} />
-              ) : (
-                <span style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "2rem", color: "var(--plum)" }}>
-                  {name.slice(0, 1)}
-                </span>
-              )}
-            </span>
+              <span
+                style={{
+                  position: "relative",
+                  width: 96,
+                  height: 96,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  flexShrink: 0,
+                  background: "var(--plum-lt)",
+                  border: "1px solid var(--border)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "var(--shadow)",
+                }}
+              >
+                {partner.image ? (
+                  <Image src={partner.image.url} alt={name} fill sizes="96px" style={{ objectFit: "cover" }} />
+                ) : (
+                  <span style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "2rem", color: "var(--plum)" }}>
+                    {name.slice(0, 1)}
+                  </span>
+                )}
+              </span>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="label-tag" style={{ marginBottom: 10 }}>
-                {bg ? "Партньор" : "Partner"}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="label-tag" style={{ marginBottom: 10 }}>
+                  {bg ? "Партньор" : "Partner"}
+                </div>
+                <h1 className="heading-xl" style={{ marginBottom: 14 }}>
+                  {name}
+                </h1>
+
+                {partner.isStarPartner && (
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 10,
+                      background: "var(--caramel-lt)",
+                      border: "1px solid oklch(84% 0.09 60)",
+                      borderRadius: "var(--r-sm)",
+                      padding: "10px 16px",
+                      marginBottom: 18,
+                    }}
+                  >
+                    <span style={{ color: "var(--caramel)", display: "inline-flex" }}>
+                      <IconStar />
+                    </span>
+                    <span style={{ fontSize: "0.86rem", color: "oklch(42% 0.12 55)", fontWeight: 600, lineHeight: 1.4 }}>
+                      {bg
+                        ? "Звезден партньор — дългосрочен ангажимент и значителен принос."
+                        : "Star partner — long-term commitment and a major contribution."}
+                    </span>
+                  </div>
+                )}
+
+                {description && (
+                  <p style={{ fontSize: "1.02rem", lineHeight: 1.75, color: "var(--text-mid)", marginBottom: 20, maxWidth: 620 }}>
+                    {description}
+                  </p>
+                )}
+
+                {links.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                    {links.map((l) => (
+                      <a
+                        key={l.key}
+                        href={partner.links[l.key]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-ghost"
+                        style={{ padding: "8px 16px", fontSize: "0.85rem" }}
+                      >
+                        {l.icon} {bg ? l.labelBg : l.labelEn}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-              <h1 className="heading-xl" style={{ marginBottom: 14 }}>
-                {name}
-              </h1>
-
-              {partner.isStarPartner && (
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 10,
-                    background: "var(--caramel-lt)",
-                    border: "1px solid oklch(84% 0.09 60)",
-                    borderRadius: "var(--r-sm)",
-                    padding: "10px 16px",
-                    marginBottom: 18,
-                  }}
-                >
-                  <span style={{ color: "var(--caramel)", display: "inline-flex" }}>
-                    <IconStar />
-                  </span>
-                  <span style={{ fontSize: "0.86rem", color: "oklch(42% 0.12 55)", fontWeight: 600, lineHeight: 1.4 }}>
-                    {bg
-                      ? "Звезден партньор — дългосрочен ангажимент и значителен принос."
-                      : "Star partner — long-term commitment and a major contribution."}
-                  </span>
-                </div>
-              )}
-
-              {description && (
-                <p style={{ fontSize: "1.02rem", lineHeight: 1.75, color: "var(--text-mid)", marginBottom: 20, maxWidth: 620 }}>
-                  {description}
-                </p>
-              )}
-
-              {links.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: totalDonatedCents > 0 ? 20 : 0 }}>
-                  {links.map((l) => (
-                    <a
-                      key={l.key}
-                      href={partner.links[l.key]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-ghost"
-                      style={{ padding: "8px 16px", fontSize: "0.85rem" }}
-                    >
-                      {l.icon} {bg ? l.labelBg : l.labelEn}
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              {totalDonatedCents > 0 && (
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "baseline",
-                    gap: 10,
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "var(--r-md)",
-                    padding: "12px 20px",
-                    boxShadow: "var(--shadow)",
-                  }}
-                >
-                  <span style={{ fontSize: "0.8rem", color: "var(--text-soft)", fontWeight: 600 }}>
-                    {bg ? "Общо дарени" : "Total donated"}
-                  </span>
-                  <span style={{ fontFamily: "var(--font-head)", fontSize: "1.3rem", fontWeight: 700, color: "var(--caramel)" }}>
-                    {formatDualMoney(totalDonatedCents)}
-                  </span>
-                </div>
-              )}
             </div>
+
+            {/* summary card — balances the header on wide screens */}
+            {(totalDonatedCents > 0 || initiatives.length > 0) && (
+              <aside
+                className="partner-summary card"
+                style={{
+                  flex: "0 0 auto",
+                  width: 280,
+                  alignSelf: "center",
+                  padding: "24px 26px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16,
+                }}
+              >
+                {totalDonatedCents > 0 && (
+                  <div>
+                    <div style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-soft)", marginBottom: 6 }}>
+                      {bg ? "Общо дарени" : "Total donated"}
+                    </div>
+                    <div style={{ fontFamily: "var(--font-head)", fontSize: "1.7rem", fontWeight: 800, color: "var(--caramel)", lineHeight: 1.05 }}>
+                      {formatDualMoney(totalDonatedCents)}
+                    </div>
+                  </div>
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                    paddingTop: totalDonatedCents > 0 ? 16 : 0,
+                    borderTop: totalDonatedCents > 0 ? "1px solid var(--border)" : "none",
+                  }}
+                >
+                  <SummaryRow
+                    label={bg ? "Инициативи" : "Initiatives"}
+                    value={String(initiatives.length)}
+                  />
+                  {financial.total > 0 && (
+                    <SummaryRow
+                      label={bg ? "Обвързани средства" : "Committed"}
+                      value={formatMoneyEUR(financial.total)}
+                    />
+                  )}
+                </div>
+              </aside>
+            )}
           </div>
         </div>
       </section>
@@ -280,10 +317,23 @@ export default function PartnerDetail({ detail }: { detail: PartnerDetailData })
       </section>
 
       <style>{`
-        @media (max-width: 620px) {
-          .partner-head { flex-direction: column !important; }
+        @media (max-width: 860px) {
+          .partner-head { flex-direction: column !important; align-items: stretch !important; }
+          .partner-summary { width: 100% !important; align-self: stretch !important; }
+        }
+        @media (max-width: 560px) {
+          .partner-id { flex-direction: column !important; }
         }
       `}</style>
     </main>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+      <span style={{ fontSize: "0.85rem", color: "var(--text-soft)" }}>{label}</span>
+      <span style={{ fontWeight: 700, color: "var(--plum)", fontSize: "0.95rem" }}>{value}</span>
+    </div>
   );
 }
