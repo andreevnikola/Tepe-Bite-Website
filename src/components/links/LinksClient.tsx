@@ -2,9 +2,12 @@
 
 import { PledgeHeart } from "@/components/ImpactPledge";
 import { IconArrow, IconInsta, IconTiktok, IconFb } from "@/components/icons";
+import { StatusBadge, pick } from "@/components/public/impactUi";
+import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import { LANG_COOKIE, langAtom, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 /* ── Small link-hub-only icons (kept local so the hub stays self-contained) ── */
 
@@ -127,12 +130,9 @@ type Copy = {
   pledgeTop: string;
   pledgeSub: string;
   focusKicker: string;
-  focusActive: string;
-  focusTitle: string;
-  focusLine: string;
-  focusPlace: string;
-  focusProgress: string;
   focusCta: string;
+  stepsWord: string;
+  backTo: string;
   primaryLabel: string;
   primaryHint: string;
   linksTitle: string;
@@ -166,13 +166,9 @@ const COPY: Record<Lang, Copy> = {
     pledgeTop: "0.15 € от всяко барче",
     pledgeSub: "влизат във фонд ТЕПЕ bite Impact",
     focusKicker: "Инициатива на фокус",
-    focusActive: "Активна",
-    focusTitle: "RE-CONNECT Бунарджика",
-    focusLine:
-      "Съвременна графична намеса около чешмичката на „Кръгчето“ — превръщаме транзитна точка в място, което хората преживяват.",
-    focusPlace: "Бунарджика, Пловдив",
-    focusProgress: "5 / 7 стъпки · в подготовка",
-    focusCta: "Проследи напредъка",
+    focusCta: "Разгледай инициативата",
+    stepsWord: "стъпки",
+    backTo: "Назад към",
     primaryLabel: "Поръчай онлайн",
     primaryHint: "Изпробвай барчето — и подкрепи каузата",
     linksTitle: "Открий ни",
@@ -246,13 +242,9 @@ const COPY: Record<Lang, Copy> = {
     pledgeTop: "0.15 € from every bar",
     pledgeSub: "goes to the ТЕПЕ bite Impact fund",
     focusKicker: "Initiative in focus",
-    focusActive: "Active",
-    focusTitle: "RE-CONNECT Bunardzhika",
-    focusLine:
-      "A contemporary graphic intervention around the “Krugcheto” fountain — turning a transit point into a place people experience.",
-    focusPlace: "Bunardzhika, Plovdiv",
-    focusProgress: "5 / 7 steps · in preparation",
-    focusCta: "Follow the progress",
+    focusCta: "Explore the initiative",
+    stepsWord: "steps",
+    backTo: "Back to",
     primaryLabel: "Order online",
     primaryHint: "Taste the bar — and back the cause",
     linksTitle: "Find us",
@@ -315,11 +307,48 @@ const COPY: Record<Lang, Copy> = {
   },
 };
 
-const FOCUS_PCT = 71;
+/* Short, 1–2-word names for the "Back to …" note, keyed by route base. */
+const ROUTE_NAMES: { test: (p: string) => boolean; name: [string, string] }[] = [
+  { test: (p) => p === "/", name: ["Начало", "Home"] },
+  { test: (p) => p.startsWith("/product"), name: ["Продукт", "Product"] },
+  { test: (p) => p.startsWith("/initiatives"), name: ["Инициативи", "Initiatives"] },
+  { test: (p) => p.startsWith("/impact"), name: ["Impact", "Impact"] },
+  { test: (p) => p.startsWith("/partnering-locations"), name: ["Обекти", "Locations"] },
+  { test: (p) => p.startsWith("/news"), name: ["Новини", "News"] },
+  { test: (p) => p.startsWith("/order"), name: ["Поръчка", "Order"] },
+  { test: (p) => p.startsWith("/cart"), name: ["Количка", "Cart"] },
+  { test: (p) => p.startsWith("/checkout"), name: ["Плащане", "Checkout"] },
+  { test: (p) => p.startsWith("/legal"), name: ["Правно", "Legal"] },
+];
 
-export default function LinksClient() {
+function routeName(pathname: string): [string, string] {
+  return ROUTE_NAMES.find((r) => r.test(pathname))?.name ?? ["Сайта", "Site"];
+}
+
+type BackTarget = { href: string; name: [string, string] };
+
+export default function LinksClient({
+  featured,
+}: {
+  featured: InitiativeDTO | null;
+}) {
   const [lang, setLang] = useAtom(langAtom);
   const t = COPY[lang];
+
+  // "Back to …" note — only when the visitor arrived from our own site.
+  // Resolved after mount (needs document.referrer), so it fades in client-side.
+  const [back, setBack] = useState<BackTarget | null>(null);
+  useEffect(() => {
+    try {
+      if (!document.referrer) return;
+      const ref = new URL(document.referrer);
+      if (ref.origin !== window.location.origin) return;
+      if (ref.pathname === "/links" || ref.pathname.startsWith("/links/")) return;
+      setBack({ href: ref.pathname + ref.search, name: routeName(ref.pathname) });
+    } catch {
+      /* malformed referrer — no back note */
+    }
+  }, []);
 
   const setLanguage = (value: Lang) => {
     setLang(value);
@@ -329,6 +358,23 @@ export default function LinksClient() {
       )}; path=/; max-age=31536000; samesite=lax`;
     }
   };
+
+  // Featured initiative (real data) → focus card values.
+  const focusTitle = featured ? pick(lang, featured.titleBg, featured.titleEn) : "";
+  const focusDesc = featured
+    ? pick(lang, featured.descriptionBg, featured.descriptionEn)
+    : "";
+  const focusPlace = featured
+    ? pick(lang, featured.locationBg, featured.locationEn)
+    : "";
+  const totalSteps = featured?.steps.length ?? 0;
+  const doneSteps = featured?.steps.filter((s) => s.done).length ?? 0;
+  const showProgress =
+    !!featured &&
+    totalSteps > 0 &&
+    featured.status !== "frozen" &&
+    featured.status !== "planned";
+  const focusPct = totalSteps ? Math.round((doneSteps / totalSteps) * 100) : 0;
 
   return (
     <main className="lk-page">
@@ -344,8 +390,30 @@ export default function LinksClient() {
       </div>
 
       <div className="lk-shell">
-        {/* Language switch */}
-        <div className="lk-langbar">
+        {/* Top row: back-note (when arriving from the site) + language switch */}
+        <div
+          className="lk-langbar"
+          style={{ justifyContent: back ? "space-between" : "flex-end" }}
+        >
+          {back && (
+            <a className="lk-back" href={back.href}>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+              <span className="lk-back-label">
+                {t.backTo} <strong>{back.name[lang === "bg" ? 0 : 1]}</strong>
+              </span>
+            </a>
+          )}
           <div className="lk-langswitch" role="group" aria-label="Език / Language">
             {(["bg", "en"] as Lang[]).map((l) => (
               <button
@@ -404,43 +472,53 @@ export default function LinksClient() {
           </a>
         </header>
 
-        {/* Initiative in focus — minimalist */}
-        <a
-          href="/initiatives"
-          className="lk-card lk-focus lk-reveal"
-          style={{ ["--d" as string]: "80ms" }}
-        >
-          <div className="lk-focus-head">
-            <span className="lk-kicker">{t.focusKicker}</span>
-            <span className="lk-active">
-              <span className="lk-dot" />
-              {t.focusActive}
-            </span>
-          </div>
-          <div className="lk-focus-title">{t.focusTitle}</div>
-          <p className="lk-focus-line">{t.focusLine}</p>
-
-          <div className="lk-focus-meta">
-            <span className="lk-place">
-              <IconPin />
-              {t.focusPlace}
-            </span>
-            <span className="lk-focus-cta">
-              {t.focusCta}
-              <Arrow />
-            </span>
-          </div>
-
-          <div className="lk-progress">
-            <div className="lk-progress-track">
-              <div className="lk-progress-fill" style={{ width: `${FOCUS_PCT}%` }} />
+        {/* Initiative in focus — the featured initiative from the API */}
+        {featured && (
+          <a
+            href={`/initiatives/${featured.slug}`}
+            className="lk-card lk-focus lk-reveal"
+            style={{ ["--d" as string]: "80ms" }}
+          >
+            <div className="lk-focus-head">
+              <span className="lk-kicker">{t.focusKicker}</span>
+              <StatusBadge status={featured.status} lang={lang} />
             </div>
-            <div className="lk-progress-row">
-              <span>{t.focusProgress}</span>
-              <span className="lk-progress-pct">{FOCUS_PCT}%</span>
+            <div className="lk-focus-title">{focusTitle}</div>
+            {focusDesc && <p className="lk-focus-line">{focusDesc}</p>}
+
+            <div className="lk-focus-meta">
+              {focusPlace ? (
+                <span className="lk-place">
+                  <IconPin />
+                  {focusPlace}
+                </span>
+              ) : (
+                <span />
+              )}
+              <span className="lk-focus-cta">
+                {t.focusCta}
+                <Arrow />
+              </span>
             </div>
-          </div>
-        </a>
+
+            {showProgress && (
+              <div className="lk-progress">
+                <div className="lk-progress-track">
+                  <div
+                    className="lk-progress-fill"
+                    style={{ width: `${focusPct}%` }}
+                  />
+                </div>
+                <div className="lk-progress-row">
+                  <span>
+                    {doneSteps} / {totalSteps} {t.stepsWord}
+                  </span>
+                  <span className="lk-progress-pct">{focusPct}%</span>
+                </div>
+              </div>
+            )}
+          </a>
+        )}
 
         {/* Primary CTA — order */}
         <a
@@ -609,6 +687,36 @@ export default function LinksClient() {
         }
         .lk-langbtn.active { background: var(--plum); color: #fff; }
 
+        /* Back-to-site note — mirrors the language pill's weight, sits at the
+           card's left edge (start of the shell, not the screen). */
+        .lk-back {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 7px 14px 7px 11px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 100px;
+          box-shadow: var(--shadow);
+          color: var(--text-mid);
+          text-decoration: none;
+          font-size: 0.76rem;
+          line-height: 1;
+          white-space: nowrap;
+          max-width: 62%;
+          overflow: hidden;
+          transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .lk-back svg { width: 15px; height: 15px; flex-shrink: 0; transition: transform 0.2s ease; }
+        .lk-back strong { color: var(--plum); font-weight: 700; }
+        .lk-back-label { overflow: hidden; text-overflow: ellipsis; }
+        .lk-back:hover {
+          transform: translateY(-1px);
+          border-color: var(--caramel);
+          color: var(--plum);
+        }
+        .lk-back:hover svg { transform: translateX(-2px); }
+
         /* Card shell */
         .lk-card {
           background: var(--surface);
@@ -746,24 +854,6 @@ export default function LinksClient() {
           text-transform: uppercase;
           color: var(--caramel);
         }
-        .lk-active {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: oklch(92% 0.05 150);
-          color: oklch(34% 0.1 150);
-          border-radius: 100px;
-          padding: 4px 10px;
-          font-size: 0.66rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-        .lk-dot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: oklch(52% 0.15 150);
-          animation: pulse-dot 2s infinite;
-        }
         .lk-focus-title {
           font-family: var(--font-head);
           font-weight: 700;
@@ -776,6 +866,10 @@ export default function LinksClient() {
           line-height: 1.55;
           color: var(--text-mid);
           margin-bottom: 14px;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         .lk-focus-meta {
           display: flex;

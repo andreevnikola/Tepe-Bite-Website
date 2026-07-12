@@ -28,16 +28,16 @@ export default function Nav() {
   // header and language switch — the site chrome would only get in its way.
   const isLinks = pathname.startsWith("/links");
 
-  if (isStudio || isAdmin || isLinks) return null;
-
-  // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
-  const p = isHome ? "" : "/";
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (isStudio || isAdmin || isLinks) return null;
+
+  // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
+  const p = isHome ? "" : "/";
 
   const setLangCookie = (value: Lang) => {
     if (typeof document === "undefined") return;

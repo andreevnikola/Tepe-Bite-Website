@@ -178,6 +178,19 @@ export async function getPublicOverviewData(): Promise<OverviewData> {
   }
 }
 
+/**
+ * Just the single spotlighted initiative — a light read for surfaces that only
+ * need the featured card (e.g. the /links hub), without computing the full
+ * overview (stats + partner carousel). Pages should set ISR revalidate.
+ */
+export async function getFeaturedInitiative(): Promise<InitiativeDTO | null> {
+  await getMongoose()
+  const raw = await Initiative.findOne({ isPublished: true, isFeatured: true })
+    .sort({ updatedAt: -1 })
+    .lean()
+  return raw ? serializeInitiative(raw) : null
+}
+
 export type InitiativeDetail = {
   initiative: InitiativeDTO
   /** Referenced partners (from partners[] and inflows[]) keyed by id. */

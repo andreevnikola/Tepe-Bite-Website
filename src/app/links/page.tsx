@@ -1,5 +1,10 @@
 import LinksClient from "@/components/links/LinksClient";
+import { getFeaturedInitiative } from "@/lib/public/initiatives";
+import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import type { Metadata } from "next";
+
+// ISR: cache the featured spotlight and refresh every 5 minutes.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "ТЕПЕ bite — Всички връзки",
@@ -12,6 +17,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LinksPage() {
-  return <LinksClient />;
+export default async function LinksPage() {
+  let featured: InitiativeDTO | null = null;
+  try {
+    featured = await getFeaturedInitiative();
+  } catch (err) {
+    // Never hard-fail the hub if the datastore is unreachable — just hide the card.
+    console.error("Failed to load featured initiative for /links:", err);
+  }
+
+  return <LinksClient featured={featured} />;
 }

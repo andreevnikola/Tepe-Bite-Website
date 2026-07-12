@@ -16,6 +16,7 @@ export default function Footer() {
           ["/initiatives", "Нашите инициативи"],
           ["/initiatives/all", "Всички социални инициативи"],
           ["/impact", "ТЕПЕ bite Impact"],
+          ["/links", "Всички връзки"],
           ["/#za-nas", "За нас"],
         ]
       : [
@@ -24,6 +25,7 @@ export default function Footer() {
           ["/initiatives", "Our Initiatives"],
           ["/initiatives/all", "All social initiatives"],
           ["/impact", "ТЕПЕ bite Impact"],
+          ["/links", "All our links"],
           ["/#za-nas", "About"],
         ];
 
@@ -290,11 +292,9 @@ export default function Footer() {
                 marginTop: -15,
               }}
             >
-              <a
-                href="https://tinyurl.com/tepebite"
-                target="_blank"
+              <Link
+                href="/links"
                 className="whitespace-nowrap"
-                rel="noopener noreferrer"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -319,7 +319,7 @@ export default function Footer() {
               >
                 <IconLink />
                 {lang === "bg" ? "Разгледай още от нас" : "See more from us"}
-              </a>
+              </Link>
             </div>
           </div>
         </div>

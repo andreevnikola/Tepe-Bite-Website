@@ -430,12 +430,12 @@ function HeroSection({ lang }: { lang: Lang }) {
               </div>
 
               <h1
-                className="heading-xl max-sm:text-3xl!"
+                className="heading-xl text-4xl!"
                 style={{ maxWidth: 630, marginBottom: 20 }}
               >
                 {lang === "bg"
-                  ? "От Пловдив. За Пловдив."
-                  : "From Plovdiv. For Plovdiv."}
+                  ? "От Пловдивчани. За Пловдив."
+                  : "From Plovdivchani. For Plovdiv."}
               </h1>
 
               <p
