@@ -448,8 +448,8 @@ function HeroSection({ lang }: { lang: Lang }) {
                 }}
               >
                 {lang === "bg"
-                  ? "ТЕПЕ bite е бранд, създаден от млади хора в Пловдив с една ясна идея: част от стойността, която създаваме, да се връща обратно към града — започвайки от тепетата."
-                  : "ТЕПЕ bite is a brand created by young people in Plovdiv with one clear idea: part of the value we create should return to the city — starting with the hills."}
+                  ? "ТЕПЕ bite е барчето на Пловдив. Екипът зад бранда реализира социални инициативи с видими резултати в града. Закупувайки ТЕПЕ bite, разхождайки се из града, като видиш наш проект, можеш да заявиш \"аз допринесох за това\"."
+                  : "ТЕПЕ bite is the brand of Plovdiv. Our team is working to implement social initiatives with visible results in the city. By purchasing TEPÉ bite, you can explore the city and see our project, and you can confidently state \"I contributed for this\"."}
               </p>
 
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
