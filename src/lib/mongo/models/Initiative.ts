@@ -30,6 +30,9 @@ const StepSchema = new Schema(
     done: { type: Boolean, default: false },
     // Manually set when a step is marked done (required in that case). Shown publicly.
     completedDateISO: { type: String, default: '' },
+    // What was actually accomplished in this step. Required when done. EN auto-translated. Shown publicly.
+    outcomeBg: { type: String, default: '' },
+    outcomeEn: { type: String, default: '' },
   },
   { _id: true },
 )

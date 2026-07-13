@@ -37,6 +37,8 @@ export type StepDTO = {
   detailEn: string
   done: boolean
   completedDateISO: string
+  outcomeBg: string
+  outcomeEn: string
 }
 
 export type InitiativePartnerDTO = {

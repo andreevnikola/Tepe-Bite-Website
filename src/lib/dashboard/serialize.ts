@@ -67,6 +67,8 @@ export function serializeInitiative(i: any): InitiativeDTO {
       detailEn: s.detailEn ?? '',
       done: Boolean(s.done),
       completedDateISO: s.completedDateISO ?? '',
+      outcomeBg: s.outcomeBg ?? '',
+      outcomeEn: s.outcomeEn ?? '',
     })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     partners: (i.partners ?? []).map((p: any) => ({

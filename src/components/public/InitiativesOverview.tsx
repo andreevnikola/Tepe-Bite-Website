@@ -3,10 +3,13 @@
 import { IconArrow, IconExternal, IconStar } from "@/components/icons";
 import InitiativeCard from "@/components/public/InitiativeCard";
 import PartnersCarousel from "@/components/public/PartnersCarousel";
-import { PhaseBreakdown, type PhaseTotals } from "@/components/public/PhaseBreakdown";
-import { pick, formatDate, StatusBadge } from "@/components/public/impactUi";
-import { formatMoneyBGN, formatMoneyEUR } from "@/lib/money";
+import {
+  PhaseBreakdown,
+  type PhaseTotals,
+} from "@/components/public/PhaseBreakdown";
+import { formatDate, pick, StatusBadge } from "@/components/public/impactUi";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
+import { formatMoneyBGN, formatMoneyEUR } from "@/lib/money";
 import type { OverviewData } from "@/lib/public/initiatives";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
@@ -79,7 +82,10 @@ function FillGrid({
   const span = rem === 0 ? cols : cols - rem;
 
   return (
-    <div ref={ref} style={{ display: "grid", gridTemplateColumns: GRID_COLS, gap: 24 }}>
+    <div
+      ref={ref}
+      style={{ display: "grid", gridTemplateColumns: GRID_COLS, gap: 24 }}
+    >
       {children}
       {filler && <div style={{ gridColumn: `span ${span}` }}>{filler}</div>}
     </div>
@@ -132,9 +138,18 @@ function CountPill({
 
 /* ─── background carousel layer: recently completed initiatives ──────────── */
 
-function HeroBackground({ items, idx }: { items: InitiativeDTO[]; idx: number }) {
+function HeroBackground({
+  items,
+  idx,
+}: {
+  items: InitiativeDTO[];
+  idx: number;
+}) {
   return (
-    <div aria-hidden="true" style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+    <div
+      aria-hidden="true"
+      style={{ position: "absolute", inset: 0, overflow: "hidden" }}
+    >
       {items.map((it, i) => (
         <div
           key={it.id}
@@ -301,269 +316,307 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
 
   return (
     <>
-    <section
-      className="impact-hero"
-      style={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        background: onDark
-          ? "var(--plum)"
-          : "radial-gradient(ellipse 62% 60% at 22% 15%, oklch(90% 0.05 230 / 0.5), transparent), radial-gradient(ellipse 55% 50% at 95% 90%, oklch(92% 0.06 52 / 0.4), transparent), var(--bg)",
-      }}
-    >
-      {hasCarousel && <HeroBackground items={recentlyCompleted} idx={idx} />}
-
-      {/* main content — copy + funds panel, vertically centred as a group */}
-      <div
+      <section
+        className="impact-hero"
         style={{
           position: "relative",
-          zIndex: 1,
-          flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "clamp(30px, 4vw, 48px)",
-          paddingTop: 128,
-          paddingBottom: hasCarousel ? 16 : "clamp(40px, 5vw, 64px)",
-          paddingLeft: "clamp(20px, 5vw, 80px)",
-          paddingRight: "clamp(20px, 5vw, 80px)",
+          background: onDark
+            ? "var(--plum)"
+            : "radial-gradient(ellipse 62% 60% at 22% 15%, oklch(90% 0.05 230 / 0.5), transparent), radial-gradient(ellipse 55% 50% at 95% 90%, oklch(92% 0.06 52 / 0.4), transparent), var(--bg)",
         }}
       >
-        {/* copy */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            maxWidth: 760,
-          }}
-        >
-          <div className="label-tag" style={{ color: labelColor, marginBottom: 16 }}>
-            {bg ? "Нашето въздействие" : "Our impact"}
-          </div>
+        {hasCarousel && <HeroBackground items={recentlyCompleted} idx={idx} />}
 
-          {invested > 0 ? (
-            <>
-              <p
-                className="heading-md"
-                style={{ margin: 0, color: headText, fontWeight: 600 }}
-              >
-                {bg ? "Вложихме" : "We've invested"}
-              </p>
-              <div style={{ position: "relative", display: "inline-block", margin: "4px 0 6px" }}>
-                {/* soft grounded glow behind the lower half of the number —
-                    frosts the busy carousel so the figure pops, no hard underline */}
-                <span
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    left: "-3%",
-                    right: "-3%",
-                    bottom: "9%",
-                    height: "40%",
-                    borderRadius: 999,
-                    background: onDark
-                      ? "rgba(18,10,26,0.34)"
-                      : "oklch(92% 0.06 52 / 0.7)",
-                    backdropFilter: onDark ? "blur(16px)" : undefined,
-                    WebkitBackdropFilter: onDark ? "blur(16px)" : undefined,
-                    // feather the shape's own edges so it reads as a soft glow,
-                    // not a defined rectangle
-                    filter: "blur(7px)",
-                    zIndex: 0,
-                    pointerEvents: "none",
-                  }}
-                />
-                <span
-                  style={{
-                    position: "relative",
-                    zIndex: 1,
-                    fontFamily: "var(--font-head)",
-                    fontWeight: 800,
-                    fontSize: "clamp(3.2rem, 9vw, 6rem)",
-                    lineHeight: 1.02,
-                    color: "var(--caramel)",
-                    textShadow: numberGlow,
-                    display: "inline-block",
-                  }}
-                >
-                  {formatMoneyEUR(invested)}
-                </span>
-              </div>
-              <h1
-                className="heading-md"
-                style={{ maxWidth: 640, margin: "6px 0 0", color: headText }}
-              >
-                {bg ? "в социални инициативи" : "in social initiatives"}
-              </h1>
-              <p style={{ fontSize: "1.02rem", color: mutedText, margin: "12px 0 22px" }}>
-                {formatMoneyBGN(invested)} ·{" "}
-                {bg
-                  ? "реално вложени средства за Пловдив"
-                  : "actually invested for Plovdiv"}
-              </p>
-            </>
-          ) : (
-            <>
-              <h1
-                className="heading-xl"
-                style={{ maxWidth: 780, marginBottom: 18, color: headText }}
-              >
-                {bg
-                  ? "Изграждаме видима промяна за Пловдив"
-                  : "Building visible change for Plovdiv"}
-              </h1>
-              <p style={{ fontSize: "1.05rem", color: mutedText, marginBottom: 26, maxWidth: 620 }}>
-                {bg
-                  ? "Всяко барче добавя фиксираните 0.15 € към фонда. Ето какво вече задвижихме — открито и проследимо."
-                  : "Every bar adds the fixed 0.15 € to the fund. Here's what we've already set in motion — openly and traceably."}
-              </p>
-            </>
-          )}
-
-          {pills.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12 }}>
-              {pills.map((p) => (
-                <CountPill key={p.label} value={p.value} label={p.label} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* funds by phase — inside the hero on desktop (moves below on mobile) */}
-        {hasFinance && (
-          <div
-            className="hero-funds-inline"
-            style={{ width: "100%", display: "flex", justifyContent: "center" }}
-          >
-            <FundsPanel totals={totals} lang={lang} onDark={onDark} />
-          </div>
-        )}
-      </div>
-
-      {/* recently-completed caption strip — normal flow, never overlaps */}
-      {hasCarousel && current && (
+        {/* main content — copy + funds panel, vertically centred as a group */}
         <div
           style={{
             position: "relative",
             zIndex: 1,
+            flex: 1,
             display: "flex",
             flexDirection: "column",
+            justifyContent: "center",
             alignItems: "center",
-            gap: 8,
-            textAlign: "center",
-            padding: "0 clamp(20px, 5vw, 80px) clamp(22px, 3vw, 34px)",
+            gap: "clamp(30px, 4vw, 48px)",
+            paddingTop: 128,
+            paddingBottom: hasCarousel ? 16 : "clamp(40px, 5vw, 64px)",
+            paddingLeft: "clamp(20px, 5vw, 80px)",
+            paddingRight: "clamp(20px, 5vw, 80px)",
           }}
         >
+          {/* copy */}
           <div
             style={{
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              fontSize: "0.64rem",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "oklch(86% 0.07 52)",
+              textAlign: "center",
+              maxWidth: 760,
             }}
           >
-            <span>{bg ? "Наскоро завършено" : "Recently completed"}</span>
-            {current.completionDateISO && (
+            <div
+              className="label-tag"
+              style={{ color: labelColor, marginBottom: 16 }}
+            >
+              {bg ? "Нашето въздействие" : "Our impact"}
+            </div>
+
+            {invested > 0 ? (
               <>
-                <span aria-hidden="true" style={{ opacity: 0.5 }}>
-                  ·
-                </span>
-                <span style={{ color: "rgba(255,255,255,0.6)", letterSpacing: "0.04em" }}>
-                  {formatDate(current.completionDateISO, lang)}
-                </span>
+                <p
+                  className="heading-md"
+                  style={{ margin: 0, color: headText, fontWeight: 600 }}
+                >
+                  {bg ? "Вложихме" : "We've invested"}
+                </p>
+                <div
+                  style={{
+                    position: "relative",
+                    display: "inline-block",
+                    margin: "4px 0 6px",
+                  }}
+                >
+                  {/* soft grounded glow behind the lower half of the number —
+                    frosts the busy carousel so the figure pops, no hard underline */}
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      left: "-3%",
+                      right: "-3%",
+                      bottom: "9%",
+                      height: "40%",
+                      borderRadius: 999,
+                      background: onDark
+                        ? "rgba(18,10,26,0.34)"
+                        : "oklch(92% 0.06 52 / 0.7)",
+                      backdropFilter: onDark ? "blur(16px)" : undefined,
+                      WebkitBackdropFilter: onDark ? "blur(16px)" : undefined,
+                      // feather the shape's own edges so it reads as a soft glow,
+                      // not a defined rectangle
+                      filter: "blur(7px)",
+                      zIndex: 0,
+                      pointerEvents: "none",
+                    }}
+                  />
+                  <span
+                    style={{
+                      position: "relative",
+                      zIndex: 1,
+                      fontFamily: "var(--font-head)",
+                      fontWeight: 800,
+                      fontSize: "clamp(3.2rem, 9vw, 6rem)",
+                      lineHeight: 1.02,
+                      color: "var(--caramel)",
+                      textShadow: numberGlow,
+                      display: "inline-block",
+                    }}
+                  >
+                    {formatMoneyEUR(invested)}
+                  </span>
+                </div>
+                <h1
+                  className="heading-md"
+                  style={{ maxWidth: 640, margin: "6px 0 0", color: headText }}
+                >
+                  {bg ? "в социални инициативи" : "in social initiatives"}
+                </h1>
+                <p
+                  style={{
+                    fontSize: "1.02rem",
+                    color: mutedText,
+                    margin: "12px 0 22px",
+                  }}
+                >
+                  {formatMoneyBGN(invested)} ·{" "}
+                  {bg
+                    ? "вложени във видими проекти в Пловдив"
+                    : "invested in visible projects in Plovdiv"}
+                </p>
+              </>
+            ) : (
+              <>
+                <h1
+                  className="heading-xl"
+                  style={{ maxWidth: 780, marginBottom: 18, color: headText }}
+                >
+                  {bg
+                    ? "Изграждаме видима промяна за Пловдив"
+                    : "Building visible change for Plovdiv"}
+                </h1>
+                <p
+                  style={{
+                    fontSize: "1.05rem",
+                    color: mutedText,
+                    marginBottom: 26,
+                    maxWidth: 620,
+                  }}
+                >
+                  {bg
+                    ? "Всяко барче добавя фиксираните 0.15 € към фонда. Ето какво вече задвижихме — открито и проследимо."
+                    : "Every bar adds the fixed 0.15 € to the fund. Here's what we've already set in motion — openly and traceably."}
+                </p>
               </>
             )}
+
+            {pills.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: 12,
+                }}
+              >
+                {pills.map((p) => (
+                  <CountPill key={p.label} value={p.value} label={p.label} />
+                ))}
+              </div>
+            )}
           </div>
-          <Link
-            href={`/initiatives/${current.slug}`}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 11,
-              textDecoration: "none",
-              color: "white",
-            }}
-          >
-            <strong
+
+          {/* funds by phase — inside the hero on desktop (moves below on mobile) */}
+          {hasFinance && (
+            <div
+              className="hero-funds-inline"
               style={{
-                fontFamily: "var(--font-head)",
-                fontSize: "1.2rem",
-                fontWeight: 700,
-                lineHeight: 1.25,
-              }}
-            >
-              {pick(lang, current.titleBg, current.titleEn)}
-            </strong>
-            <span
-              aria-hidden="true"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
+                width: "100%",
+                display: "flex",
                 justifyContent: "center",
-                width: 27,
-                height: 27,
-                borderRadius: "50%",
-                background: "var(--caramel)",
-                color: "white",
-                flexShrink: 0,
-                boxShadow: "0 2px 12px rgba(0,0,0,0.28)",
               }}
             >
-              <IconExternal size={13} />
-            </span>
-          </Link>
-          {pick(lang, current.descriptionBg, current.descriptionEn) && (
-            <p
-              style={{
-                fontSize: "0.9rem",
-                lineHeight: 1.5,
-                color: "rgba(255,255,255,0.72)",
-                margin: 0,
-                maxWidth: 520,
-                display: "-webkit-box",
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
-              {pick(lang, current.descriptionBg, current.descriptionEn)}
-            </p>
-          )}
-          {recentlyCompleted.length > 1 && (
-            <div style={{ display: "flex", gap: 7, marginTop: 6 }}>
-              {recentlyCompleted.map((it, i) => (
-                <button
-                  key={it.id}
-                  type="button"
-                  aria-label={pick(lang, it.titleBg, it.titleEn)}
-                  onClick={() => setIdx(i)}
-                  style={{
-                    width: i === idx ? 22 : 7,
-                    height: 7,
-                    borderRadius: 10,
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    background:
-                      i === idx ? "var(--caramel)" : "rgba(255,255,255,0.45)",
-                    transition: "all 0.3s ease",
-                  }}
-                />
-              ))}
+              <FundsPanel totals={totals} lang={lang} onDark={onDark} />
             </div>
           )}
         </div>
-      )}
-    </section>
+
+        {/* recently-completed caption strip — normal flow, never overlaps */}
+        {hasCarousel && current && (
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              textAlign: "center",
+              padding: "0 clamp(20px, 5vw, 80px) clamp(22px, 3vw, 34px)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                fontSize: "0.64rem",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "oklch(86% 0.07 52)",
+              }}
+            >
+              <span>{bg ? "Наскоро завършено" : "Recently completed"}</span>
+              {current.completionDateISO && (
+                <>
+                  <span aria-hidden="true" style={{ opacity: 0.5 }}>
+                    ·
+                  </span>
+                  <span
+                    style={{
+                      color: "rgba(255,255,255,0.6)",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {formatDate(current.completionDateISO, lang)}
+                  </span>
+                </>
+              )}
+            </div>
+            <Link
+              href={`/initiatives/${current.slug}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 11,
+                textDecoration: "none",
+                color: "white",
+              }}
+            >
+              <strong
+                style={{
+                  fontFamily: "var(--font-head)",
+                  fontSize: "1.2rem",
+                  fontWeight: 700,
+                  lineHeight: 1.25,
+                }}
+              >
+                {pick(lang, current.titleBg, current.titleEn)}
+              </strong>
+              <span
+                aria-hidden="true"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 27,
+                  height: 27,
+                  borderRadius: "50%",
+                  background: "var(--caramel)",
+                  color: "white",
+                  flexShrink: 0,
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.28)",
+                }}
+              >
+                <IconExternal size={13} />
+              </span>
+            </Link>
+            {pick(lang, current.descriptionBg, current.descriptionEn) && (
+              <p
+                style={{
+                  fontSize: "0.9rem",
+                  lineHeight: 1.5,
+                  color: "rgba(255,255,255,0.72)",
+                  margin: 0,
+                  maxWidth: 520,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {pick(lang, current.descriptionBg, current.descriptionEn)}
+              </p>
+            )}
+            {recentlyCompleted.length > 1 && (
+              <div style={{ display: "flex", gap: 7, marginTop: 6 }}>
+                {recentlyCompleted.map((it, i) => (
+                  <button
+                    key={it.id}
+                    type="button"
+                    aria-label={pick(lang, it.titleBg, it.titleEn)}
+                    onClick={() => setIdx(i)}
+                    style={{
+                      width: i === idx ? 22 : 7,
+                      height: 7,
+                      borderRadius: 10,
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      background:
+                        i === idx ? "var(--caramel)" : "rgba(255,255,255,0.45)",
+                      transition: "all 0.3s ease",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
 
       {/* funds by phase — standalone element below the hero on mobile, so the
           carousel image stays short and un-stretched */}
@@ -620,7 +673,10 @@ function Spotlight({
       }}
     >
       {/* decorative backdrop: soft colour blobs + a hill silhouette */}
-      <div aria-hidden="true" style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+      <div
+        aria-hidden="true"
+        style={{ position: "absolute", inset: 0, overflow: "hidden" }}
+      >
         <div
           style={{
             position: "absolute",
@@ -648,7 +704,14 @@ function Spotlight({
         <svg
           viewBox="0 0 1200 200"
           preserveAspectRatio="none"
-          style={{ position: "absolute", bottom: -2, left: 0, width: "100%", height: 140, opacity: 0.55 }}
+          style={{
+            position: "absolute",
+            bottom: -2,
+            left: 0,
+            width: "100%",
+            height: 140,
+            opacity: 0.55,
+          }}
         >
           <path
             d="M0 200 L0 130 Q220 60 420 110 Q650 165 880 90 Q1050 40 1200 100 L1200 200 Z"
@@ -657,7 +720,10 @@ function Spotlight({
         </svg>
       </div>
 
-      <div className="section-inner" style={{ position: "relative", zIndex: 1 }}>
+      <div
+        className="section-inner"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         <div
           className="spotlight-grid"
           style={{
@@ -726,7 +792,9 @@ function Spotlight({
                   textTransform: "uppercase",
                 }}
               >
-                <span style={{ color: "var(--caramel)", display: "inline-flex" }}>
+                <span
+                  style={{ color: "var(--caramel)", display: "inline-flex" }}
+                >
                   <IconStar />
                 </span>
                 {bg ? "На фокус" : "In focus"}
@@ -752,23 +820,26 @@ function Spotlight({
               {desc}
             </p>
 
-            {f.steps.length > 0 && f.status !== "frozen" && f.status !== "planned" && (
-              <div>
-                <div
-                  className="progress-track"
-                  style={{ marginBottom: 6 }}
-                >
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${(doneSteps / f.steps.length) * 100}%` }}
-                  />
+            {f.steps.length > 0 &&
+              f.status !== "frozen" &&
+              f.status !== "planned" && (
+                <div>
+                  <div className="progress-track" style={{ marginBottom: 6 }}>
+                    <div
+                      className="progress-fill"
+                      style={{
+                        width: `${(doneSteps / f.steps.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <span
+                    style={{ fontSize: "0.82rem", color: "var(--text-soft)" }}
+                  >
+                    {doneSteps}/{f.steps.length}{" "}
+                    {bg ? "стъпки завършени" : "steps completed"}
+                  </span>
                 </div>
-                <span style={{ fontSize: "0.82rem", color: "var(--text-soft)" }}>
-                  {doneSteps}/{f.steps.length}{" "}
-                  {bg ? "стъпки завършени" : "steps completed"}
-                </span>
-              </div>
-            )}
+              )}
 
             <Link
               href={`/initiatives/${f.slug}`}
@@ -1099,7 +1170,14 @@ export default function InitiativesOverview({ data }: { data: OverviewData }) {
     bgs.push(alt ? "var(--bg)" : "var(--surface)");
     if (shown) alt = !alt;
   }
-  const [bgSpotlight, bgPartners, bgInProgress, bgFinished, bgFrozen, bgDeveloping] = bgs;
+  const [
+    bgSpotlight,
+    bgPartners,
+    bgInProgress,
+    bgFinished,
+    bgFrozen,
+    bgDeveloping,
+  ] = bgs;
 
   return (
     <main>
@@ -1107,8 +1185,16 @@ export default function InitiativesOverview({ data }: { data: OverviewData }) {
       {data.hasAnyInitiative ? (
         <>
           <Spotlight data={data} lang={lang} background={bgSpotlight} />
-          <PartnersCarousel items={data.partners} lang={lang} background={bgPartners} />
-          <InProgressSection data={data} lang={lang} background={bgInProgress} />
+          <PartnersCarousel
+            items={data.partners}
+            lang={lang}
+            background={bgPartners}
+          />
+          <InProgressSection
+            data={data}
+            lang={lang}
+            background={bgInProgress}
+          />
           <FinishedSection data={data} lang={lang} background={bgFinished} />
           <FrozenSection data={data} lang={lang} background={bgFrozen} />
           {sparse && <DevelopingNote lang={lang} background={bgDeveloping} />}

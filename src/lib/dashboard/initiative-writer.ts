@@ -33,6 +33,8 @@ export async function composeInitiativeFields(data: InitiativeInput) {
   data.steps.forEach((s, i) => {
     if (need(s.labelEn, s.labelBg)) toTranslate[`step_${i}_label`] = s.labelBg
     if (need(s.detailEn, s.detailBg ?? '')) toTranslate[`step_${i}_detail`] = s.detailBg ?? ''
+    if (s.done && need(s.outcomeEn, s.outcomeBg ?? ''))
+      toTranslate[`step_${i}_outcome`] = s.outcomeBg ?? ''
   })
   data.partners.forEach((p, i) => {
     if (need(p.contributionEn, p.contributionBg ?? ''))
@@ -57,6 +59,9 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     done: s.done,
     // Completion date only kept for done steps.
     completedDateISO: s.done ? (s.completedDateISO ?? '') : '',
+    // Completion outcome only kept for done steps.
+    outcomeBg: s.done ? (s.outcomeBg ?? '') : '',
+    outcomeEn: s.done ? en(`step_${i}_outcome`, s.outcomeEn, s.outcomeBg) : '',
   }))
 
   const partners = data.partners.map((p, i) => ({

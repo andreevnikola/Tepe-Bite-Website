@@ -46,6 +46,8 @@ export const StepInputSchema = z.object({
   detailEn: z.string().max(2000).optional(),
   done: z.boolean().default(false),
   completedDateISO: z.string().default(''),
+  outcomeBg: z.string().max(2000).default(''),
+  outcomeEn: z.string().max(2000).optional(),
 })
 
 export const InitiativePartnerInputSchema = z.object({
@@ -107,6 +109,13 @@ export const InitiativeCreateSchema = InitiativeCreateBase.superRefine((data, ct
         code: z.ZodIssueCode.custom,
         path: ['steps', i, 'completedDateISO'],
         message: 'Дата на завършване е задължителна за завършена стъпка.',
+      })
+    }
+    if (s.done && !s.outcomeBg.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['steps', i, 'outcomeBg'],
+        message: 'Описание на завършеното е задължително за завършена стъпка.',
       })
     }
   })

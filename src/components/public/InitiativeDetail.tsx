@@ -476,6 +476,51 @@ function LightboxNav({
   );
 }
 
+/* Completion note shown under a done step — what was actually accomplished.
+   Minimal: thin accent rule, no label; collapses past 20 words with an inline toggle. */
+function StepOutcome({ text, lang }: { text: string; lang: Lang }) {
+  const bg = lang === "bg";
+  const [expanded, setExpanded] = useState(false);
+  const words = text.trim().split(/\s+/);
+  const isLong = words.length > 20;
+  const shown = isLong && !expanded ? words.slice(0, 20).join(" ") + "…" : text;
+
+  return (
+    <p
+      style={{
+        marginTop: 6,
+        paddingLeft: 12,
+        borderLeft: "2px solid var(--caramel)",
+        fontSize: "0.84rem",
+        color: "var(--text-mid)",
+        lineHeight: 1.55,
+      }}
+    >
+      {shown}
+      {isLong && (
+        <>
+          {" "}
+          <button
+            type="button"
+            onClick={() => setExpanded((e) => !e)}
+            style={{
+              border: "none",
+              background: "none",
+              padding: 0,
+              font: "inherit",
+              fontWeight: 700,
+              color: "var(--caramel)",
+              cursor: "pointer",
+            }}
+          >
+            {expanded ? (bg ? "по-малко" : "less") : (bg ? "още" : "more")}
+          </button>
+        </>
+      )}
+    </p>
+  );
+}
+
 /* ═══ MILESTONE TIMELINE ═══ */
 function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   const bg = lang === "bg";
@@ -513,6 +558,7 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
               const isCurrent = i === currentIdx && !s.done;
               const label = pick(lang, s.labelBg, s.labelEn);
               const detailText = pick(lang, s.detailBg, s.detailEn);
+              const outcomeText = s.done ? pick(lang, s.outcomeBg, s.outcomeEn) : "";
               return (
                 <div key={s.id} style={{ display: "flex", gap: 18 }}>
                   <div
@@ -623,6 +669,7 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                         {detailText}
                       </p>
                     )}
+                    {outcomeText && <StepOutcome text={outcomeText} lang={lang} />}
                   </div>
                 </div>
               );
@@ -633,6 +680,7 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
           <div
             className="progress-cta"
             style={{
+              position: "relative",
               background:
                 "linear-gradient(150deg, var(--plum) 0%, var(--plum-mid) 70%, oklch(52% 0.13 40) 100%)",
               borderRadius: "var(--r-lg)",
@@ -705,7 +753,6 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
       <style>{`
         @media (max-width: 860px) {
           .progress-cta-grid { grid-template-columns: 1fr !important; }
-          .progress-cta { position: static !important; }
         }
       `}</style>
     </section>
@@ -933,6 +980,121 @@ const financeSubHeading: React.CSSProperties = {
   marginBottom: 16,
 };
 
+/* Open, transparent ask shown when a live initiative is still short of its
+   budget — invites companies / individuals to help close the gap by email. */
+function FundingGapInvite({
+  gapCents,
+  title,
+  lang,
+}: {
+  gapCents: number;
+  title: string;
+  lang: Lang;
+}) {
+  const bg = lang === "bg";
+  const gap = formatMoneyEUR(gapCents);
+  const email = "impact@tepebite.eu";
+  const subject = encodeURIComponent(
+    bg ? `Подкрепа за инициатива: ${title}` : `Support for initiative: ${title}`,
+  );
+  const body = encodeURIComponent(
+    bg
+      ? `Здравейте,\n\nБихме искали да подкрепим инициативата „${title}“ и да помогнем за нейната реализация.\n\n`
+      : `Hello,\n\nWe'd like to support the "${title}" initiative and help make it happen.\n\n`,
+  );
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: "var(--r-lg)",
+        padding: "clamp(22px, 3vw, 32px)",
+        background:
+          "linear-gradient(135deg, var(--caramel-lt) 0%, var(--surface) 68%)",
+        border: "1px solid var(--border)",
+        boxShadow: "var(--shadow)",
+      }}
+    >
+      <div className="label-tag" style={{ marginBottom: 10 }}>
+        {bg ? "Отворена покана" : "Open invitation"}
+      </div>
+      <h3
+        style={{
+          fontFamily: "var(--font-head)",
+          fontSize: "clamp(1.2rem, 2.4vw, 1.55rem)",
+          fontWeight: 700,
+          color: "var(--plum)",
+          lineHeight: 1.2,
+          margin: "0 0 10px",
+          maxWidth: "24ch",
+        }}
+      >
+        {bg ? (
+          <>
+            Търсим още <span style={{ color: "var(--caramel)" }}>{gap}</span>, за да
+            завършим тази инициатива
+          </>
+        ) : (
+          <>
+            We're <span style={{ color: "var(--caramel)" }}>{gap}</span> short of
+            completing this initiative
+          </>
+        )}
+      </h3>
+      <p
+        style={{
+          fontSize: "0.9rem",
+          color: "var(--text-mid)",
+          lineHeight: 1.6,
+          margin: "0 0 20px",
+          maxWidth: "58ch",
+        }}
+      >
+        {bg
+          ? "Нищо не крием — това е разликата до пълния бюджет. Ако сте фирма или човек, който иска да помогне тя да се случи, ще се радваме да се включите."
+          : "We're hiding nothing — this is the gap to the full budget. If you're a company or a person who wants to help make it real, we'd love to have you on board."}
+      </p>
+      <a
+        href={`mailto:${email}?subject=${subject}&body=${body}`}
+        className="btn btn-primary"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          maxWidth: "100%",
+        }}
+      >
+        <IconArrow />
+        {bg ? "Пишете ни" : "Email us"}
+      </a>
+      <p
+        style={{
+          fontSize: "0.82rem",
+          color: "var(--text-soft)",
+          lineHeight: 1.55,
+          margin: "14px 0 0",
+        }}
+      >
+        {bg ? "Изпратете имейл на " : "Send an email to "}
+        <a
+          href={`mailto:${email}?subject=${subject}&body=${body}`}
+          style={{
+            color: "var(--caramel)",
+            fontWeight: 700,
+            wordBreak: "break-all",
+          }}
+        >
+          {email}
+        </a>
+        {bg
+          ? " с името на инициативата и че искате да я подкрепите."
+          : " with the initiative's name and that you'd like to support it."}
+      </p>
+    </div>
+  );
+}
+
 function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   const bg = lang === "bg";
   const i = detail.initiative;
@@ -970,7 +1132,7 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                 gap: 16,
               }}
             >
-              {i.expectedCostCents > 0 && (
+              {i.expectedCostCents > 0 && i.status !== "done" && (
                 <PhaseStat
                   label={bg ? "Очаквана цена" : "Expected cost"}
                   value={formatMoneyEUR(i.expectedCostCents)}
@@ -987,6 +1149,15 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                 />
               )}
             </div>
+          )}
+
+          {i.status !== "done" && i.status !== "frozen" &&
+            i.expectedCostCents > 0 && pt.total < i.expectedCostCents && (
+            <FundingGapInvite
+              gapCents={i.expectedCostCents - pt.total}
+              title={pick(lang, i.titleBg, i.titleEn)}
+              lang={lang}
+            />
           )}
 
           {pt.total > 0 && (

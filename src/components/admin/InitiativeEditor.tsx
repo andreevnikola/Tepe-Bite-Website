@@ -44,6 +44,8 @@ type EditStep = {
   detailEn: string
   done: boolean
   completedDateISO: string
+  outcomeBg: string
+  outcomeEn: string
 }
 type EditPartner = {
   key: string
@@ -104,6 +106,8 @@ export default function InitiativeEditor({
       detailEn: s.detailEn,
       done: s.done,
       completedDateISO: s.completedDateISO ? s.completedDateISO.slice(0, 10) : '',
+      outcomeBg: s.outcomeBg,
+      outcomeEn: s.outcomeEn,
     })),
   )
   const [currentStepIndex, setCurrentStepIndex] = useState(initial?.currentStepIndex ?? 0)
@@ -173,6 +177,12 @@ export default function InitiativeEditor({
       setTab('Стъпки')
       return
     }
+    // Every completed step must describe what was accomplished.
+    if (steps.some((s) => s.done && !s.outcomeBg.trim())) {
+      setError('Всяка завършена стъпка изисква описание на завършеното.')
+      setTab('Стъпки')
+      return
+    }
     if (status === 'done' && !completionDateISO) {
       setError('Изберете дата на завършване на инициативата.')
       setTab('Детайли')
@@ -202,6 +212,8 @@ export default function InitiativeEditor({
         detailEn: s.detailEn,
         done: s.done,
         completedDateISO: s.done ? s.completedDateISO : '',
+        outcomeBg: s.done ? s.outcomeBg : '',
+        outcomeEn: s.outcomeEn,
       })),
       partners: partners
         .filter((p) => p.partnerId)
@@ -527,6 +539,28 @@ export default function InitiativeEditor({
                         Изберете дата на завършване, за да запазите.
                       </p>
                     )}
+                    <Field
+                      label="Какво беше направено (BG)"
+                      hint="Показва се публично под стъпката; преведено автоматично на EN."
+                    >
+                      <TextArea
+                        value={s.outcomeBg}
+                        onChange={(e) =>
+                          setSteps((prev) =>
+                            prev.map((x, i) =>
+                              i === idx ? { ...x, outcomeBg: e.target.value } : x,
+                            ),
+                          )
+                        }
+                        className="min-h-20"
+                        placeholder="Опишете какво постигнахме в тази стъпка"
+                      />
+                    </Field>
+                    {!s.outcomeBg.trim() && (
+                      <p className="mt-1 text-xs text-red-600">
+                        Опишете какво беше направено, за да запазите.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -544,6 +578,8 @@ export default function InitiativeEditor({
                     detailEn: '',
                     done: false,
                     completedDateISO: '',
+                    outcomeBg: '',
+                    outcomeEn: '',
                   },
                 ])
               }

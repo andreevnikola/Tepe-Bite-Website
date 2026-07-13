@@ -44,6 +44,12 @@
 
   html {
     scroll-behavior: smooth;
+    /* Contain horizontal overflow at the root too. `body { overflow-x: hidden }`
+       alone leaks on iOS Safari (the root scrolls), letting the fixed nav — which
+       spans the full viewport incl. the scrollbar gutter — cause a sideways scroll.
+       `clip` contains it without creating a scroll container, so `position: sticky`
+       still works. */
+    overflow-x: clip;
   }
 
   body {
