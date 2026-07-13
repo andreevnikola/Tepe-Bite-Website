@@ -1,100 +1,92 @@
-@AGENTS.md
+# TEPE bite Website
 
-# ТЕПЕ bite Website
+## **IMPORTANT — Core rules**
 
-## Overview
+### UI work
 
-Single-page marketing website for **ТЕПЕ bite** — a salted caramel snack bar from Plovdiv, Bulgaria. Built with Next.js 15 App Router, React 19, TailwindCSS 4, and Jotai for state management.
+For any change to UI, layout, styling, animation, responsiveness, or public-facing content:
 
-## Tech Stack
+* Invoke `/frontend-design` **before planning or coding**.
+* **YOU MUST READ AND FOLLOW `STYLE_GUIDE.md` FOR ALL DESIGN DECISIONS.**
+* Inspect the result in the browser at approximately **390 px, 768 px, and 1440 px**.
+* Fix issues within the current task. Only report unrelated problems.
 
-- **Framework**: Next.js 15 (App Router, `src/` layout)
-- **UI**: React 19
-- **Styling**: TailwindCSS 4 with custom CSS variables in `src/app/globals.css`
-- **State**: Jotai — language atom at `src/store/lang.ts`
-- **Fonts**: Playfair Display (headings, with Cyrillic subset) + DM Sans (body), loaded via `next/font/google`
-- **Images**: `next/image` with assets in `public/`
+Check that:
+
+* nothing overflows, overlaps, clips, or breaks in either language;
+* images, spacing, typography, colours, buttons, and sections stay consistent;
+* mobile is intentionally designed, not merely compressed desktop;
+* a first-time visitor can quickly understand the product, Plovdiv connection, impact model, and next action;
+* the page tells one clear, visually coherent story.
+
+**Code compilation does not verify design work.**
+
+### Orchestration
+
+Act as an **orchestrator** of the implementation.
+
+* Identify independent workstreams before implementation.
+* Delegate independent work to subagents **simultaneously, not sequentially (whenever possible)**.
+* Give subagents clear goals and non-overlapping file ownership.
+* Keep integration, final decisions, and verification in the main agent.
+* Skip subagents only if the task requires too much context, is vastly compex, or requires tightly coupled work.
+
+### Assumptions
+
+**Do not make material assumptions.** You must always prefer to ask if something has not been specified. When you ask you should suggest approaches.
+
+## Product context
+
+TEPE bite is **„Барчето на Пловдив“**: a Plovdiv-based, mission-driven brand whose first product is a salted-caramel snack bar.
+
+Communication order:
+
+**Plovdiv identity → product → measurable impact → action**
+
+For every sold bar, **€0.15 goes to TEPE bite Impact**. Its value is multiplied through sponsors, donated materials, expertise, institutional support, partnerships, and volunteers.
+
+The brand should feel **local, premium, warm, credible, human, and distinctive**—never corporate, generic, or AI-generated.
+
+Bulgarian is primary. Every public-facing content change must also include natural English.
+
+**Never invent product facts, nutrition or health claims, prices, results, donations, partners, approvals, legal claims, or initiative progress. Verify them or ask the user.**
+
+## Tech stack
+
+* **Framework:** Next.js 15, App Router, `src/`
+* **UI:** React 19
+* **Styling:** Tailwind CSS 4; shared styles in `src/app/globals.css`
+* **State:** Jotai; language atom in `src/store/lang.ts`
+* **Fonts:** Playfair Display and DM Sans via `next/font/google`
+* **Images:** `next/image`; assets in `public/`
 
 ## Commands
 
 ```bash
-npm run dev     # start dev server at http://localhost:3000
-npm run build   # production build
-npm run lint    # ESLint check
+npm run dev
+npm run build
+npm run lint
 ```
 
-## Design System
+## Implementation
 
-All design tokens are CSS custom properties in `src/app/globals.css`:
+Before creating anything, search for an existing component, token, utility, asset, hook, helper, or abstraction.
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--plum` | `oklch(32% 0.09 315)` | Primary brand colour (dark purple) |
-| `--caramel` | `oklch(66% 0.16 52)` | Accent colour (warm orange) |
-| `--bg` | `oklch(97% 0.015 80)` | Page background |
-| `--surface` | `oklch(99% 0.008 75)` | Card/section background |
-| `--font-head` | Playfair Display | Headings |
-| `--font-body` | DM Sans | Body text |
+Use this order:
 
-### Utility classes
+**Reuse → refactor for reuse → create**
 
-- `.heading-xl`, `.heading-lg`, `.heading-md` — typographic scale
-- `.label-tag` — uppercase caramel eyebrow labels
-- `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-caramel`, `.btn-ghost` — button variants
-- `.card`, `.card-hover` — card shell + hover lift effect
-- `.section-spacing`, `.section-inner` — section padding + max-width container
-- `.section-divider` — caramel decorative divider line
-- `.animate-float`, `.animate-pulse-dot` — product float + active badge pulse
+Do not duplicate existing functionality. Refactor only when safe and relevant to the current task.
 
-## Project Structure
+**Keep scope strict.** Do not redesign, refactor, or fix unrelated areas. Do not add dependencies for functionality the project already supports.
 
-```
-src/
-  app/
-    layout.tsx         # Root layout — fonts, metadata
-    page.tsx           # Home page — composes all sections
-    globals.css        # Design tokens, base styles, utility classes
-  components/
-    Providers.tsx      # Jotai Provider wrapper
-    Nav.tsx            # Fixed top navigation with lang switcher + mobile menu
-    Hero.tsx           # Full-height hero with product image + stat badges
-    WhySection.tsx     # Mission section + manufacturing photo + pillar cards
-    ProductSection.tsx # Product detail — image, nutrition table, highlights
-    InitiativesPromo.tsx # Dark plum CTA section for initiatives
-    FirstInitiative.tsx  # Active initiative detail + progress card
-    HowItHelps.tsx     # 3-step "how it works" flow
-    TrustSection.tsx   # Quality & trust cards
-    OrderCTA.tsx       # Order call-to-action section
-    Community.tsx      # Social media links
-    Footer.tsx         # Full footer with navigation, legal, contact
-    icons/
-      index.tsx        # All SVG icon components
-  store/
-    lang.ts            # Jotai atom — 'bg' | 'en' language state
-public/
-  bar-product.png      # Product bar photo
-  logo-nav.png         # Small logo (nav + faded hero backdrop)
-  logo-full.png        # Full logo (footer)
-  manufacturing.jpg    # Production facility photo (WhySection strip)
-```
+## Completion
 
-## Bilingual Support
+Before declaring completion:
 
-Language is `'bg'` (Bulgarian, default) or `'en'` (English), stored in `langAtom` from `src/store/lang.ts`. Every component reads this atom with `useAtomValue(langAtom)`. The Nav component has a language toggle that writes to it with `useAtom`.
+* inspect the final diff;
+* test the changed behaviour;
+* inspect UI changes in the browser at all three widths;
+* report failed or skipped checks.
 
-Content strings are defined as plain objects keyed by `lang` inside each component — no i18n library.
-
-## Responsive Breakpoints
-
-- `< 768px` — mobile: hamburger nav, single-column layouts, full-bleed manufacturing photo
-- `< 900px` — tablet: hero/product/initiative grids collapse to single column
-- `≥ 900px` — desktop: multi-column grids, visible desktop nav links
-
-## Assets
-
-| File | Description |
-|------|-------------|
-| `public/bar-product.png` | Hero + product section bar image |
-| `public/logo-nav.png` | Nav logo + faded hero backdrop |
-| `public/logo-full.png` | Footer logo (inverted white) |
-| `public/manufacturing.jpg` | WhySection atmospheric strip |
+Keep responses concise: state what changed, what was verified, and any relevant unresolved issue.
