@@ -5,12 +5,12 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1176 nodes · 2510 edges · 96 communities (57 shown, 39 thin omitted)
+- 1176 nodes · 2287 edges · 99 communities (57 shown, 42 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e0a5df3e`
+- Built from commit: `d3d17f44`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -106,19 +106,21 @@
 - langAtom
 - constants.ts
 - bcryptjs
+- page.tsx
+- jotai
 - FirstInitiative.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `langAtom` - 54 edges
-2. `getMongoose()` - 45 edges
-3. `formatMoneyEUR()` - 31 edges
-4. `Partner` - 30 edges
-5. `pick()` - 29 edges
-6. `Initiative` - 25 edges
-7. `serializePartner()` - 21 edges
-8. `Order` - 21 edges
-9. `formatDualMoney()` - 20 edges
-10. `POST()` - 19 edges
+1. `getMongoose()` - 45 edges
+2. `langAtom` - 41 edges
+3. `Partner` - 30 edges
+4. `Initiative` - 25 edges
+5. `serializePartner()` - 21 edges
+6. `Order` - 21 edges
+7. `POST()` - 19 edges
+8. `serializeInitiative()` - 18 edges
+9. `formatMoneyEUR()` - 18 edges
+10. `compilerOptions` - 18 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `loadImage()` --indirect_call--> `img()`  [INFERRED]
@@ -135,103 +137,103 @@
 ## Import Cycles
 - None detected.
 
-## Communities (96 total, 39 thin omitted)
+## Communities (99 total, 42 thin omitted)
 
 ### Community 0 - "InitiativeEditor.tsx"
 Cohesion: 0.09
 Nodes (24): ARRANGED_TYPES, INFLOW_PHASES, INFLOW_SOURCES, INITIATIVE_CATEGORIES, INITIATIVE_STATUSES, PARTNERSHIP_TYPES, ExpenseInputSchema, GalleryItemInputSchema (+16 more)
 
 ### Community 1 - "session.ts"
-Cohesion: 0.09
-Nodes (26): main(), main(), DashboardLayout(), getIp(), LoginSchema, POST(), POST(), GET() (+18 more)
+Cohesion: 0.07
+Nodes (29): main(), main(), DashboardLayout(), getIp(), LoginSchema, POST(), POST(), GET() (+21 more)
 
 ### Community 2 - "route.ts"
-Cohesion: 0.15
-Nodes (26): CartItemSchema, DeliverySchema, getIp(), normalizeDelivery(), OrderCreateSchema, POST(), validateDelivery(), getIp() (+18 more)
+Cohesion: 0.12
+Nodes (33): CartItemSchema, DeliverySchema, getIp(), normalizeDelivery(), OrderCreateSchema, POST(), validateDelivery(), getIp() (+25 more)
 
 ### Community 3 - "scripts"
 Cohesion: 0.05
 Nodes (37): eslint, eslint-config-next, devDependencies, eslint, eslint-config-next, prettier, tailwindcss, @tailwindcss/postcss (+29 more)
 
 ### Community 4 - "route.ts"
-Cohesion: 0.06
-Nodes (85): main(), slugify(), uniqueSlug(), euro(), img(), main(), PARTNERS, PartnerSpec (+77 more)
+Cohesion: 0.07
+Nodes (78): main(), slugify(), uniqueSlug(), euro(), img(), main(), PARTNERS, PartnerSpec (+70 more)
 
 ### Community 5 - "Footer.tsx"
 Cohesion: 0.13
-Nodes (15): sections, sections, sections, sections, sections, sections, sections, bodyText (+7 more)
+Nodes (15): sections, sections, cards, sections, sections, sections, sections, bodyText (+7 more)
 
 ### Community 6 - "index.ts"
-Cohesion: 0.07
-Nodes (30): AdminAuditLog, Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, AdminInviteToken (+22 more)
+Cohesion: 0.11
+Nodes (20): AdminAuditLog, Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, AdminInviteToken (+12 more)
 
 ### Community 7 - "Initiative.ts"
-Cohesion: 0.15
-Nodes (12): StarBadge(), expenseTotalCents(), Finances(), financeSubHeading, FundingGapInvite(), Intro(), Partners(), partnerTotals() (+4 more)
+Cohesion: 0.12
+Nodes (8): expenseTotalCents(), Finances(), financeSubHeading, Intro(), Partners(), partnerTotals(), PHASE_ACCENT, SOURCE_ACCENT
 
 ### Community 8 - "types.ts"
-Cohesion: 0.15
-Nodes (11): LocationCard(), pinIcon, PLOVDIV, LocationsMap, LocationsMapSection(), copy, StoreRow(), Location (+3 more)
+Cohesion: 0.12
+Nodes (15): metadata, LocationCard(), formatDate(), LocationDetail(), LocationMiniMap, ptComponents, LocationsMap, LocationsMapSection() (+7 more)
 
 ### Community 9 - "compilerOptions"
 Cohesion: 0.06
 Nodes (32): dom, dom.iterable, esnext, **/*.mts, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts, ./src/* (+24 more)
 
 ### Community 10 - "OrderInventoryAllocation"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (26): InventoryBatch, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, InventoryMovement, InventoryMovementType (+18 more)
 
 ### Community 11 - "impactUi.tsx"
-Cohesion: 0.16
-Nodes (12): CategoryChip(), CompletedDateBadge(), FreezeNote(), STATUS_STYLE, StatusBadge(), StepsProgress(), ARRANGED_TYPE_LABELS, INFLOW_SOURCE_LABELS (+4 more)
+Cohesion: 0.11
+Nodes (20): IconInfo(), CompactSteps(), FocusDeepDive(), Gallery(), CategoryChip(), CompletedDateBadge(), formatDate(), FreezeNote() (+12 more)
 
 ### Community 12 - "getMongoose"
 Cohesion: 0.17
 Nodes (11): Assumptions, Commands, Completion, graphify, Implementation, **IMPORTANT — Core rules**, Orchestration, Product context (+3 more)
 
 ### Community 13 - "lang.ts"
-Cohesion: 0.24
-Nodes (3): InMemoryRateLimiter, RateLimiter, WindowEntry
+Cohesion: 0.16
+Nodes (11): CartToast(), addToCartAtom, cartItemCountAtom, cartStorageAtom, cartSubtotalCentsAtom, cartToastAtom, CartToastState, clearCartAtom (+3 more)
 
 ### Community 14 - "manual.provider.ts"
 Cohesion: 0.16
-Nodes (15): GET(), VALID_TYPES, ALL_PLOVDIV_POINTS, PLOVDIV_SPEEDY_LOCKERS, PLOVDIV_SPEEDY_OFFICES, CourierProviderName, getCourierProvider(), ManualCourierProvider (+7 more)
+Nodes (16): GET(), VALID_TYPES, ALL_PLOVDIV_POINTS, PLOVDIV_SPEEDY_LOCKERS, PLOVDIV_SPEEDY_OFFICES, CourierProviderName, getCourierProvider(), ManualCourierProvider (+8 more)
 
 ### Community 15 - "page.tsx"
-Cohesion: 0.13
-Nodes (21): CartPage(), T, CheckoutPage(), CheckoutStatus, generateCheckoutId(), T, T, addToCartAtom (+13 more)
+Cohesion: 0.18
+Nodes (13): CartPage(), T, CheckoutPage(), CheckoutStatus, generateCheckoutId(), T, Props, T (+5 more)
 
 ### Community 16 - "create.ts"
-Cohesion: 0.08
-Nodes (34): DeliveryMethod, Order, OrderStatus, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn (+26 more)
+Cohesion: 0.11
+Nodes (23): DeliveryMethod, Order, OrderStatus, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn (+15 more)
 
 ### Community 17 - "ImpactPageContent.tsx"
 Cohesion: 0.06
-Nodes (7): FiscalSection(), HERO_EYEBROW, ImpactPageContent(), orderedInitiatives(), IMPACT, ImpactConfig, ImpactDonor
+Nodes (3): HERO_EYEBROW, ImpactPageContent(), orderedInitiatives()
 
 ### Community 20 - "InitiativeDetail.tsx"
-Cohesion: 0.19
-Nodes (13): HeroFocusCard(), CompactSteps(), FocusDeepDive(), Gallery(), formatDate(), pick(), InitiativeCard(), ExpenseRow() (+5 more)
+Cohesion: 0.15
+Nodes (13): OrderItem, Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, ProductPlan (+5 more)
 
 ### Community 21 - "PartnerDetail.tsx"
 Cohesion: 0.12
-Nodes (13): IconInfo(), YouthBadge(), PartnersCarousel(), FundingSplitBar(), ORDER, PHASE_COLOR, PHASE_INFO, PhaseBarMini() (+5 more)
+Nodes (12): YouthBadge(), PartnersCarousel(), FundingSplitBar(), ORDER, PHASE_COLOR, PHASE_INFO, PhaseBarMini(), PhaseBreakdown() (+4 more)
 
 ### Community 22 - "InitiativesClient.tsx"
-Cohesion: 0.16
-Nodes (17): generateMetadata(), PackDetailPage(), Props, OrderPage(), available(), PackCard(), Props, PackDetailClient() (+9 more)
+Cohesion: 0.19
+Nodes (17): Props, StickyOrderSummary(), SummaryItem, available(), PackCard(), Props, PackDetailClient(), Props (+9 more)
 
 ### Community 23 - "LinksClient.tsx"
 Cohesion: 0.18
 Nodes (5): BackTarget, Copy, LinksClient(), ROUTE_NAMES, routeName()
 
 ### Community 24 - "index.tsx"
-Cohesion: 0.15
-Nodes (12): CartNavIcon(), IconCart(), IconClose(), IconHeart(), IconLeaf(), IconMap(), IconMenu(), IconShop() (+4 more)
+Cohesion: 0.09
+Nodes (19): CartNavIcon(), socials, IconArrow(), IconCart(), IconCheck(), IconFb(), IconHeart(), IconInsta() (+11 more)
 
 ### Community 25 - "formatDualMoney"
-Cohesion: 0.20
-Nodes (15): Props, StickyOrderSummary(), SummaryItem, TopBand(), PartnerDetail(), buildConfirmationEmail(), ConfirmationEmailData, deliveryFeeRow() (+7 more)
+Cohesion: 0.25
+Nodes (4): caveat, dmSans, metadata, playfair
 
 ### Community 27 - "ProductPageContent.tsx"
 Cohesion: 0.11
@@ -242,44 +244,40 @@ Cohesion: 0.22
 Nodes (7): CURRENCY, DeliveryPricingConfig, parseCentsEnv(), ParseErr, ParseOk, ParseResult, PricingConfig
 
 ### Community 29 - "typeorm.config.ts"
-Cohesion: 0.29
-Nodes (6): NewsletterSubscriber, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn
+Cohesion: 0.14
+Nodes (9): NewsletterSubscriber, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, InitialSchema1747008000001, SeedProductPlans1747008000002 (+1 more)
 
 ### Community 30 - "product-plans.ts"
-Cohesion: 0.11
-Nodes (8): metadata, metadata, PartneringLocationsPage(), CartToast(), T, StoresSection(), getAllLocations(), useCartToast()
+Cohesion: 0.19
+Nodes (10): generateMetadata(), PackDetailPage(), Props, metadata, OrderPage(), T, getAllProductPlans(), getProductPlanBySlug() (+2 more)
 
 ### Community 31 - "SystemLog"
 Cohesion: 0.18
 Nodes (13): SystemLogOptions, LogSeverity, SystemLog, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn (+5 more)
 
 ### Community 32 - "EmailLog"
-Cohesion: 0.13
-Nodes (17): DeliveryStatus, EmailLog, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, TelegramNotificationLog (+9 more)
+Cohesion: 0.15
+Nodes (13): DeliveryStatus, EmailLog, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, TelegramNotificationLog (+5 more)
 
 ### Community 33 - "lang.ts"
-Cohesion: 0.10
-Nodes (13): caveat, dmSans, metadata, playfair, RootLayout(), cards, metadata, NotFound() (+5 more)
+Cohesion: 0.12
+Nodes (6): metadata, NotFound(), steps, Props, isLang(), normalizeLang()
 
 ### Community 34 - "cart.ts"
-Cohesion: 0.33
-Nodes (4): badges, HERO_HEADLINE_BG, HERO_HEADLINE_EN, IconArrow()
+Cohesion: 0.40
+Nodes (3): badges, HERO_HEADLINE_BG, HERO_HEADLINE_EN
 
 ### Community 35 - "StepReview.tsx"
-Cohesion: 0.11
-Nodes (16): HoneypotField(), Props, PickupPoint, Props, SpeedyMap, T, DeliveryFields, Props (+8 more)
+Cohesion: 0.18
+Nodes (10): HoneypotField(), Props, DeliveryFields, Props, T, deliveryDescription(), Props, StepReview() (+2 more)
 
 ### Community 36 - "FirstInitiative.tsx"
-Cohesion: 0.25
-Nodes (12): ArticlePage(), generateMetadata(), generateStaticParams(), generateMetadata(), generateStaticParams(), LocationPage(), ArticleBody(), getAllLocationSlugs() (+4 more)
+Cohesion: 0.21
+Nodes (14): metadata, NewsPage(), Home(), PartneringLocationsPage(), generateMetadata(), generateStaticParams(), LocationPage(), StoresSection() (+6 more)
 
 ### Community 37 - "ProofUploader.tsx"
-Cohesion: 0.19
-Nodes (10): { GET, POST }, extract(), ImageUploader(), UploadResult, ImageDTO, UploadButton, UploadDropzone, { useUploadThing } (+2 more)
-
-### Community 38 - "ImpactPledge.tsx"
-Cohesion: 0.21
-Nodes (7): socials, IconFb(), IconInsta(), IconLink(), IconTiktok(), LINK_META, PartnerDetail
+Cohesion: 0.18
+Nodes (11): { GET, POST }, extract(), ProofUploader(), UploadResult, compressToBW(), loadImage(), UploadButton, UploadDropzone (+3 more)
 
 ### Community 39 - "ТЕПЕ bite — Style Guide"
 Cohesion: 0.13
@@ -295,27 +293,27 @@ Nodes (9): ./tsconfig.json, compilerOptions, isolatedModules, module, moduleReso
 
 ### Community 42 - "dependencies"
 Cohesion: 0.22
-Nodes (9): jotai, dependencies, jotai, reflect-metadata, remark-gfm, @uploadthing/react, reflect-metadata, remark-gfm (+1 more)
+Nodes (9): dependencies, reflect-metadata, remark-gfm, resend, @uploadthing/react, reflect-metadata, remark-gfm, resend (+1 more)
 
 ### Community 43 - "queries.ts"
-Cohesion: 0.48
-Nodes (5): extract(), ProofUploader(), UploadResult, compressToBW(), loadImage()
+Cohesion: 0.29
+Nodes (7): OrderAdminNote, Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn
 
 ### Community 44 - "StepCustomerInfo.tsx"
 Cohesion: 0.28
 Nodes (8): CustomerInfoFields, FieldErrors, Props, StepCustomerInfo(), T, Touched, validate(), validatePhone()
 
 ### Community 45 - "InitiativeEditor.tsx"
-Cohesion: 0.19
-Nodes (12): centsToStr(), EditExpense, EditGallery, EditInflow, EditPartner, EditStep, eur(), FIN_SUBTABS (+4 more)
+Cohesion: 0.10
+Nodes (24): extract(), ImageUploader(), UploadResult, centsToStr(), EditExpense, EditGallery, EditInflow, EditPartner (+16 more)
 
 ### Community 46 - "PartnerForm.tsx"
-Cohesion: 0.21
-Nodes (8): LINK_LABELS, Card(), Field(), Select(), TextArea(), TextInput(), PARTNER_LINK_TYPES, PartnerLinkType
+Cohesion: 0.33
+Nodes (4): PickupPoint, Props, SpeedyMap, T
 
 ### Community 47 - "pricing.ts"
-Cohesion: 0.47
-Nodes (4): metadata, NewsPage(), Home(), getAllNewsPosts()
+Cohesion: 0.50
+Nodes (4): EMPTY_OVERVIEW, ImpactPage(), metadata, pickHeroInitiative()
 
 ### Community 48 - "proxy.ts"
 Cohesion: 0.48
@@ -329,6 +327,10 @@ Nodes (4): Point, Props, RecenterProps, selectedIcon
 Cohesion: 0.50
 Nodes (4): ALLOWED_PROVIDERS, CourierConfigResult, CourierProvider, validateCourierConfig()
 
+### Community 73 - "sanity"
+Cohesion: 0.50
+Nodes (3): IMPACT, ImpactConfig, ImpactDonor
+
 ### Community 76 - "@sanity/vision"
 Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
@@ -338,36 +340,32 @@ Cohesion: 0.20
 Nodes (4): fmt(), ImpactPledge(), PledgeHeart(), Variant
 
 ### Community 92 - "langAtom"
-Cohesion: 0.14
-Nodes (14): formatDate(), LocationDetail(), LocationMiniMap, ptComponents, FeaturedPost(), PostCard(), NewsStrip(), sanityClient (+6 more)
+Cohesion: 0.16
+Nodes (14): ArticlePage(), generateMetadata(), generateStaticParams(), ArticleBody(), FeaturedPost(), PostCard(), NewsStrip(), sanityClient (+6 more)
 
 ### Community 93 - "constants.ts"
-Cohesion: 0.26
-Nodes (10): AdminRole, ArrangedType, EXPENSE_LABELS, InflowPhase, InflowSource, InitiativeCategory, InitiativeStatus, PartnershipType (+2 more)
-
-### Community 98 - "FirstInitiative.tsx"
-Cohesion: 0.17
-Nodes (5): milestones, PCT, IconCheck(), highlights, nutr
+Cohesion: 0.23
+Nodes (11): AdminRole, ArrangedType, EXPENSE_LABELS, InflowPhase, InflowSource, InitiativeCategory, InitiativeStatus, PartnershipType (+3 more)
 
 ## Knowledge Gaps
-- **311 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+306 more)
+- **316 isolated node(s):** `nextConfig`, `metadata`, `EMPTY_OVERVIEW`, `metadata`, `EMPTY_OVERVIEW` (+311 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **39 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **42 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `langAtom` connect `Footer.tsx` to `lang.ts`, `FirstInitiative.tsx`, `cart.ts`, `FirstInitiative.tsx`, `ImpactPledge.tsx`, `Initiative.ts`, `types.ts`, `ProductPageContent.tsx`, `page.tsx`, `ImpactPageContent.tsx`, `InitiativesOverview.tsx`, `InitiativesClient.tsx`, `LinksClient.tsx`, `index.tsx`, `formatDualMoney`, `Hero.tsx`, `langAtom`, `product-plans.ts`?**
-  _High betweenness centrality (0.087) - this node is a cross-community bridge._
-- **Why does `formatMoneyEUR()` connect `formatDualMoney` to `StepReview.tsx`, `ImpactPledge.tsx`, `Initiative.ts`, `page.tsx`, `ImpactPageContent.tsx`, `InitiativesOverview.tsx`, `PartnerDetail.tsx`, `InitiativesClient.tsx`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Why does `getMongoose()` connect `route.ts` to `session.ts`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
-- **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
-  _311 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
+- **Why does `RateLimiter` connect `session.ts` to `route.ts`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+- **Why does `langAtom` connect `Footer.tsx` to `lang.ts`, `types.ts`, `impactUi.tsx`, `lang.ts`, `page.tsx`, `SpeedyLocationSelector.tsx`, `InitiativesClient.tsx`, `index.tsx`, `langAtom`, `product-plans.ts`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **What connects `nextConfig`, `metadata`, `EMPTY_OVERVIEW` to the rest of the system?**
+  _316 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `InitiativeEditor.tsx` be split into smaller, more focused modules?**
   _Cohesion score 0.09230769230769231 - nodes in this community are weakly interconnected._
 - **Should `session.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.09446693657219973 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.070578231292517 - nodes in this community are weakly interconnected._
 - **Should `route.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.14717741935483872 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11538461538461539 - nodes in this community are weakly interconnected._

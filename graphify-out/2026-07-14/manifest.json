@@ -175,9 +175,9 @@
     "semantic_hash": "f32171e557a5a34a543b7b6071e509aa"
   },
   "src/app/layout.tsx": {
-    "mtime": 1778269109.5761356,
-    "ast_hash": "81aa7927f38a0606d540e79d7c27dd99",
-    "semantic_hash": "81aa7927f38a0606d540e79d7c27dd99"
+    "mtime": 1784038541.8133337,
+    "ast_hash": "5ccbe2645a4bffd65d7a64bc905c0f78",
+    "semantic_hash": ""
   },
   "src/app/legal/cookies/page.tsx": {
     "mtime": 1778328927.8010309,
@@ -320,8 +320,8 @@
     "semantic_hash": "f3e881b4d70b8cbf0ee958315d7f5fa7"
   },
   "src/components/ImpactPledge.tsx": {
-    "mtime": 1784033703.2956624,
-    "ast_hash": "0c5756b35978ec4458156bfa5c832f99",
+    "mtime": 1784037204.2382534,
+    "ast_hash": "644a84b1b7300df5f471d41d11964c37",
     "semantic_hash": ""
   },
   "src/components/InitiativesPromo.tsx": {
@@ -330,8 +330,8 @@
     "semantic_hash": ""
   },
   "src/components/Nav.tsx": {
-    "mtime": 1784033536.8154836,
-    "ast_hash": "ada895073fb7469964577b3ba902c43f",
+    "mtime": 1784038567.2045004,
+    "ast_hash": "ab773279365210333869b09c9f83508d",
     "semantic_hash": ""
   },
   "src/components/NewsStrip.tsx": {
@@ -345,8 +345,8 @@
     "semantic_hash": "e68c4eed341b535fa9e3ece8eb52c9c3"
   },
   "src/components/ProductPageContent.tsx": {
-    "mtime": 1784033614.139024,
-    "ast_hash": "4f6b6d2f3a4523edef3556a8b32fa661",
+    "mtime": 1784035164.560856,
+    "ast_hash": "ec3ab4938c4451c1134c7f8a44d620a7",
     "semantic_hash": ""
   },
   "src/components/ProductSection.tsx": {
@@ -425,8 +425,8 @@
     "semantic_hash": "7b8dd68731c8c12692d2efb12dd31a21"
   },
   "src/components/checkout/EmailRetryPanel.tsx": {
-    "mtime": 1784029250.7239187,
-    "ast_hash": "dbbfcf811807665d79adf449e08dfc32",
+    "mtime": 1784034930.9133,
+    "ast_hash": "f636152cce4571dd1b9381db42712646",
     "semantic_hash": ""
   },
   "src/components/checkout/HoneypotField.tsx": {
@@ -455,8 +455,8 @@
     "semantic_hash": "6c363e057c1356835f517a0f1e5d0ac2"
   },
   "src/components/checkout/StepDelivery.tsx": {
-    "mtime": 1784029250.7241583,
-    "ast_hash": "fbd8fa380ee414d33086c0d442162310",
+    "mtime": 1784034971.0357494,
+    "ast_hash": "b99f9a64229a835122a45fe5f589c1f7",
     "semantic_hash": ""
   },
   "src/components/checkout/StepReview.tsx": {
@@ -470,8 +470,8 @@
     "semantic_hash": "f213ec53944cb2bbbb4e2a94b4fb64e6"
   },
   "src/components/impact/ImpactPageContent.tsx": {
-    "mtime": 1784034238.718709,
-    "ast_hash": "2d813b2b82c11d2eedfe164fe5c8cd03",
+    "mtime": 1784038773.4188004,
+    "ast_hash": "238cbda8091d3a17f3e17c9306c58450",
     "semantic_hash": ""
   },
   "src/components/legal/LegalPageLayout.tsx": {
@@ -480,8 +480,8 @@
     "semantic_hash": "9125d19df3a5efb0a092614014ddeae0"
   },
   "src/components/links/LinksClient.tsx": {
-    "mtime": 1784029250.7244627,
-    "ast_hash": "f0de39d2ce1dfe9e3826a0cfa9ce0211",
+    "mtime": 1784035114.5228612,
+    "ast_hash": "d7a19875483d93d945268092ef298400",
     "semantic_hash": ""
   },
   "src/components/locations/LocationCard.tsx": {
