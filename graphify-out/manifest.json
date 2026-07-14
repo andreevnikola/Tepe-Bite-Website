@@ -315,9 +315,9 @@
     "semantic_hash": "4b8662b9983b96ad13cf5466a1bd9cb2"
   },
   "src/components/Hero.tsx": {
-    "mtime": 1783189767.7306685,
-    "ast_hash": "23c6def0eea2f31fa78e07e683167cdd",
-    "semantic_hash": "23c6def0eea2f31fa78e07e683167cdd"
+    "mtime": 1784028763.187549,
+    "ast_hash": "0d1e2e1b41a7f7cf98f95d7b5c46840d",
+    "semantic_hash": ""
   },
   "src/components/HowItHelps.tsx": {
     "mtime": 1783189767.7312617,
@@ -360,9 +360,9 @@
     "semantic_hash": "e68c4eed341b535fa9e3ece8eb52c9c3"
   },
   "src/components/ProductPageContent.tsx": {
-    "mtime": 1778328927.8064594,
-    "ast_hash": "a02533c3437a0667bcf668ae1f8feecb",
-    "semantic_hash": "a02533c3437a0667bcf668ae1f8feecb"
+    "mtime": 1784028763.1876724,
+    "ast_hash": "820d87a5c549b4bf251927464326f7a4",
+    "semantic_hash": ""
   },
   "src/components/ProductSection.tsx": {
     "mtime": 1783189767.7346578,
@@ -440,9 +440,9 @@
     "semantic_hash": "7b8dd68731c8c12692d2efb12dd31a21"
   },
   "src/components/checkout/EmailRetryPanel.tsx": {
-    "mtime": 1778760968.7705545,
-    "ast_hash": "a4bc2d2bedb4ac5148de7ce7a84e01f8",
-    "semantic_hash": "a4bc2d2bedb4ac5148de7ce7a84e01f8"
+    "mtime": 1784028763.1875482,
+    "ast_hash": "dbbfcf811807665d79adf449e08dfc32",
+    "semantic_hash": ""
   },
   "src/components/checkout/HoneypotField.tsx": {
     "mtime": 1778760968.7708457,
@@ -470,9 +470,9 @@
     "semantic_hash": "6c363e057c1356835f517a0f1e5d0ac2"
   },
   "src/components/checkout/StepDelivery.tsx": {
-    "mtime": 1778760968.773403,
-    "ast_hash": "8bdca712d9fb8023f587bc0dfa2e1fa0",
-    "semantic_hash": "8bdca712d9fb8023f587bc0dfa2e1fa0"
+    "mtime": 1784028763.1874905,
+    "ast_hash": "fbd8fa380ee414d33086c0d442162310",
+    "semantic_hash": ""
   },
   "src/components/checkout/StepReview.tsx": {
     "mtime": 1783189767.7360291,
@@ -495,9 +495,9 @@
     "semantic_hash": "9125d19df3a5efb0a092614014ddeae0"
   },
   "src/components/links/LinksClient.tsx": {
-    "mtime": 1783868228.953353,
-    "ast_hash": "042130c63fc48b229829403a83660a5a",
-    "semantic_hash": "042130c63fc48b229829403a83660a5a"
+    "mtime": 1784028841.7164938,
+    "ast_hash": "f0de39d2ce1dfe9e3826a0cfa9ce0211",
+    "semantic_hash": ""
   },
   "src/components/locations/LocationCard.tsx": {
     "mtime": 1780469144.5462403,

@@ -8,6 +8,7 @@ import { LANG_COOKIE, langAtom, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Link } from "sanity/router";
 
 /* ── Small link-hub-only icons (kept local so the hub stays self-contained) ── */
 
@@ -396,7 +397,7 @@ export default function LinksClient({
           style={{ justifyContent: back ? "space-between" : "flex-end" }}
         >
           {back && (
-            <a className="lk-back" href={back.href}>
+            <Link className="lk-back" href={back.href}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -412,7 +413,7 @@ export default function LinksClient({
               <span className="lk-back-label">
                 {t.backTo} <strong>{back.name[lang === "bg" ? 0 : 1]}</strong>
               </span>
-            </a>
+            </>
           )}
           <div className="lk-langswitch" role="group" aria-label="Език / Language">
             {(["bg", "en"] as Lang[]).map((l) => (
@@ -460,7 +461,7 @@ export default function LinksClient({
           <p className="lk-intro">{t.intro}</p>
 
           {/* Fixed-pledge lockup — the 0.15 € promise */}
-          <a href="/impact" className="lk-pledge">
+          <Link href="/impact" className="lk-pledge">
             <PledgeHeart size={44} />
             <span className="lk-pledge-copy">
               <span className="lk-pledge-top">{t.pledgeTop}</span>
@@ -469,7 +470,7 @@ export default function LinksClient({
                 <Arrow />
               </span>
             </span>
-          </a>
+          </>
         </header>
 
         {/* Initiative in focus — the featured initiative from the API */}
@@ -609,10 +610,10 @@ export default function LinksClient({
           <div className="lk-divider" />
 
           <div className="lk-section-title center">{t.contactTitle}</div>
-          <a className="lk-contact" href="mailto:tepe@mail.bg">
+          <Link className="lk-contact" href="mailto:tepe@mail.bg">
             <IconMail />
             tepe@mail.bg
-          </a>
+          </>
         </section>
 
         <footer className="lk-footer">

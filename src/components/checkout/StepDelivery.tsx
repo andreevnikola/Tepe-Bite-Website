@@ -3,6 +3,7 @@
 import { PRICING } from '@/lib/config/pricing'
 import { formatMoneyEUR } from '@/lib/money'
 import SpeedyLocationSelector from './SpeedyLocationSelector'
+import { Link } from 'sanity/router'
 
 export type DeliveryFields =
   | {
@@ -192,7 +193,7 @@ export default function StepDelivery({
             {freeBase
               ? (lang === 'bg' ? 'Безплатна доставка до Speedy автомат включена!' : 'Free locker delivery included!')
               : <>{t.deliveryPolicy} {formatMoneyEUR(threshold)}. {' '}
-                  <a href="/legal/delivery-payment" style={{ color: 'var(--caramel)', textDecoration: 'underline' }}>{t.deliveryPolicyLink}</a>
+                  <Link href="/legal/delivery-payment" style={{ color: 'var(--caramel)', textDecoration: 'underline' }}>{t.deliveryPolicyLink}</>
                 </>
             }
           </span>

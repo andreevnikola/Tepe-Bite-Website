@@ -1,6 +1,7 @@
 'use client'
 
 import { Fragment, useState } from 'react'
+import { Link } from 'sanity/router'
 
 type Props = {
   lang: 'bg' | 'en'
@@ -147,9 +148,9 @@ export default function EmailRetryPanel({ lang, publicOrderNumber, customerEmail
         )}
 
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16, textAlign: 'center' }}>
-          <a href="/" style={{ fontSize: '0.82rem', color: 'var(--text-soft)', textDecoration: 'underline' }}>
+          <Link href="/" style={{ fontSize: '0.82rem', color: 'var(--text-soft)', textDecoration: 'underline' }}>
             ← {t.backToHome}
-          </a>
+          </>
         </div>
       </div>
     </div>

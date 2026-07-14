@@ -168,10 +168,10 @@ function ProductHero({ lang }: { lang: Lang }) {
                 marginBottom: 48,
               }}
             >
-              <a href="/order" className="btn btn-primary">
+              <Link href="/order" className="btn btn-primary">
                 <IconShop />
                 {lang === "bg" ? "Поръчай сега" : "Order Now"}
-              </a>
+              </>
               <a
                 href="#nutrition"
                 className="btn btn-secondary max-lg:grow justify-center"
