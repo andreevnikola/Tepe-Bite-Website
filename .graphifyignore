@@ -25,3 +25,5 @@ public/**/*.svg
 public/**/*.mp4
 
 .git/
+
+graphify-out/
