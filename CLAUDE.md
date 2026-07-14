@@ -63,7 +63,7 @@ Bulgarian is primary. Every public-facing content change must also include natur
 ## Commands
 
 ```bash
-npm run dev
+npm run dev:fresh
 npm run build
 npm run lint
 ```
