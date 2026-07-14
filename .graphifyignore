@@ -1,0 +1,25 @@
+# Graphify itself
+graphify-out/
+.claude/
+
+# Generated output
+.next/
+node_modules/
+coverage/
+dist/
+out/
+*.log
+
+# Large dependency lockfiles
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Visual assets that do not help code navigation
+public/**/*.png
+public/**/*.jpg
+public/**/*.jpeg
+public/**/*.webp
+public/**/*.gif
+public/**/*.svg
+public/**/*.mp4

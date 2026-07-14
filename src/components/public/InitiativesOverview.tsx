@@ -238,7 +238,7 @@ function FundsPanel({
             color: "var(--text-soft)",
           }}
         >
-          {bg ? "Средства по фази" : "Funds by phase"}
+          {bg ? "Осигорено финансиране" : "Aquired funding"}
         </span>
         <span
           style={{

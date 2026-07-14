@@ -1,6 +1,12 @@
 "use client";
 
-import { IconArrow, IconCheck, IconLink, IconMap, IconShop } from "@/components/icons";
+import {
+  IconArrow,
+  IconCheck,
+  IconLink,
+  IconMap,
+  IconShop,
+} from "@/components/icons";
 import {
   CategoryChip,
   FreezeNote,
@@ -101,7 +107,14 @@ function Hero({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
         }}
       >
         <div className="section-inner">
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              marginBottom: 14,
+            }}
+          >
             <StatusBadge status={i.status} lang={lang} />
             {i.category && <CategoryChip category={i.category} lang={lang} />}
             {i.status === "done" && (
@@ -144,13 +157,22 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
 
   const facts: [string, string][] = [];
   if (i.locationBg || i.locationEn)
-    facts.push([bg ? "Локация" : "Location", pick(lang, i.locationBg, i.locationEn)]);
+    facts.push([
+      bg ? "Локация" : "Location",
+      pick(lang, i.locationBg, i.locationEn),
+    ]);
   if (isDone) {
     if (i.spentCents > 0)
-      facts.push([bg ? "Похарчени средства" : "Amount spent", formatMoneyEUR(i.spentCents)]);
+      facts.push([
+        bg ? "Похарчени средства" : "Amount spent",
+        formatMoneyEUR(i.spentCents),
+      ]);
   } else {
     if (i.expectedCostCents > 0)
-      facts.push([bg ? "Очаквана цена" : "Expected cost", formatMoneyEUR(i.expectedCostCents)]);
+      facts.push([
+        bg ? "Очаквана цена" : "Expected cost",
+        formatMoneyEUR(i.expectedCostCents),
+      ]);
     if (i.status === "in_progress") {
       const available = inflowPhaseTotals(i.inflows).available;
       facts.push([
@@ -206,13 +228,19 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
             alignItems: "center",
           }}
         >
-          <div style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "var(--text-mid)", whiteSpace: "pre-line" }}>
+          <div
+            style={{
+              fontSize: "1.05rem",
+              lineHeight: 1.8,
+              color: "var(--text-mid)",
+              whiteSpace: "pre-line",
+            }}
+          >
             {desc}
           </div>
 
           {facts.length > 0 && (
             <div className="card" style={{ padding: "22px 24px" }}>
-
               <div
                 style={{
                   fontSize: "0.72rem",
@@ -234,10 +262,16 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
                     gap: 14,
                     padding: "9px 0",
                     borderBottom:
-                      idx < facts.length - 1 ? "1px solid var(--border)" : "none",
+                      idx < facts.length - 1
+                        ? "1px solid var(--border)"
+                        : "none",
                   }}
                 >
-                  <span style={{ color: "var(--text-soft)", fontSize: "0.85rem" }}>{k}</span>
+                  <span
+                    style={{ color: "var(--text-soft)", fontSize: "0.85rem" }}
+                  >
+                    {k}
+                  </span>
                   <span
                     style={{
                       fontWeight: 600,
@@ -264,11 +298,20 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
 }
 
 /* ═══ GALLERY ═══ */
-function GallerySection({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
+function GallerySection({
+  detail,
+  lang,
+}: {
+  detail: InitiativeDetailData;
+  lang: Lang;
+}) {
   const bg = lang === "bg";
   if (detail.initiative.gallery.length === 0) return null;
   return (
-    <section className="section-spacing" style={{ background: "var(--surface)" }}>
+    <section
+      className="section-spacing"
+      style={{ background: "var(--surface)" }}
+    >
       <div className="section-inner">
         <Gallery
           items={detail.initiative.gallery}
@@ -318,7 +361,7 @@ function StepOutcome({ text, lang }: { text: string; lang: Lang }) {
               cursor: "pointer",
             }}
           >
-            {expanded ? (bg ? "по-малко" : "less") : (bg ? "още" : "more")}
+            {expanded ? (bg ? "по-малко" : "less") : bg ? "още" : "more"}
           </button>
         </>
       )}
@@ -327,7 +370,13 @@ function StepOutcome({ text, lang }: { text: string; lang: Lang }) {
 }
 
 /* ═══ MILESTONE TIMELINE ═══ */
-function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
+function Progress({
+  detail,
+  lang,
+}: {
+  detail: InitiativeDetailData;
+  lang: Lang;
+}) {
   const bg = lang === "bg";
   const steps = detail.initiative.steps;
   if (steps.length === 0) return null;
@@ -344,8 +393,15 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
         <h2 className="heading-lg" style={{ marginBottom: 8 }}>
           {bg ? "Докъде сме стигнали" : "Where we are now"}
         </h2>
-        <p style={{ fontSize: "0.9rem", color: "var(--text-soft)", marginBottom: 40 }}>
-          {doneCount}/{steps.length} {bg ? "стъпки завършени" : "steps completed"}
+        <p
+          style={{
+            fontSize: "0.9rem",
+            color: "var(--text-soft)",
+            marginBottom: 40,
+          }}
+        >
+          {doneCount}/{steps.length}{" "}
+          {bg ? "стъпки завършени" : "steps completed"}
         </p>
 
         <div
@@ -363,7 +419,9 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
               const isCurrent = i === currentIdx && !s.done;
               const label = pick(lang, s.labelBg, s.labelEn);
               const detailText = pick(lang, s.detailBg, s.detailEn);
-              const outcomeText = s.done ? pick(lang, s.outcomeBg, s.outcomeEn) : "";
+              const outcomeText = s.done
+                ? pick(lang, s.outcomeBg, s.outcomeEn)
+                : "";
               return (
                 <div key={s.id} style={{ display: "flex", gap: 18 }}>
                   <div
@@ -386,11 +444,15 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                           : isCurrent
                             ? "var(--plum)"
                             : "var(--surface2)",
-                        border: s.done || isCurrent ? "none" : "2px solid var(--plum-mid)",
+                        border:
+                          s.done || isCurrent
+                            ? "none"
+                            : "2px solid var(--plum-mid)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: s.done || isCurrent ? "white" : "var(--plum-mid)",
+                        color:
+                          s.done || isCurrent ? "white" : "var(--plum-mid)",
                       }}
                     >
                       {s.done ? <IconCheck /> : <IconClock />}
@@ -401,13 +463,20 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                           width: 2,
                           flex: 1,
                           minHeight: 22,
-                          background: s.done ? "oklch(76% 0.10 52)" : "var(--border)",
+                          background: s.done
+                            ? "oklch(76% 0.10 52)"
+                            : "var(--border)",
                           margin: "3px 0",
                         }}
                       />
                     )}
                   </div>
-                  <div style={{ paddingBottom: i < steps.length - 1 ? 24 : 0, flex: 1 }}>
+                  <div
+                    style={{
+                      paddingBottom: i < steps.length - 1 ? 24 : 0,
+                      flex: 1,
+                    }}
+                  >
                     <div
                       style={{
                         display: "flex",
@@ -422,7 +491,10 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                         style={{
                           fontWeight: 700,
                           fontSize: "0.95rem",
-                          color: s.done || isCurrent ? "var(--text)" : "var(--plum-mid)",
+                          color:
+                            s.done || isCurrent
+                              ? "var(--text)"
+                              : "var(--plum-mid)",
                         }}
                       >
                         {label}
@@ -466,7 +538,9 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                       <p
                         style={{
                           fontSize: "0.87rem",
-                          color: s.done ? "var(--text-mid)" : "var(--text-soft)",
+                          color: s.done
+                            ? "var(--text-mid)"
+                            : "var(--text-soft)",
                           margin: 0,
                           lineHeight: 1.6,
                         }}
@@ -474,7 +548,9 @@ function Progress({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                         {detailText}
                       </p>
                     )}
-                    {outcomeText && <StepOutcome text={outcomeText} lang={lang} />}
+                    {outcomeText && (
+                      <StepOutcome text={outcomeText} lang={lang} />
+                    )}
                   </div>
                 </div>
               );
@@ -571,10 +647,19 @@ function partnerTotals(inflows: InflowDTO[], partnerId: string) {
   );
 }
 
-function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
+function Partners({
+  detail,
+  lang,
+}: {
+  detail: InitiativeDetailData;
+  lang: Lang;
+}) {
   const bg = lang === "bg";
   const list = detail.initiative.partners
-    .map((p) => ({ link: p, partner: detail.partnersById[p.partnerId] as PartnerDTO | undefined }))
+    .map((p) => ({
+      link: p,
+      partner: detail.partnersById[p.partnerId] as PartnerDTO | undefined,
+    }))
     .filter((x) => x.partner)
     .sort((a, b) => {
       if (a.partner!.isStarPartner !== b.partner!.isStarPartner)
@@ -585,7 +670,10 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
   if (list.length === 0) return null;
 
   return (
-    <section className="section-spacing" style={{ background: "var(--surface)" }}>
+    <section
+      className="section-spacing"
+      style={{ background: "var(--surface)" }}
+    >
       <div className="section-inner">
         <div className="label-tag" style={{ marginBottom: 12 }}>
           {bg ? "Заедно" : "Together"}
@@ -602,16 +690,35 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
         >
           {list.map(({ link, partner }) => {
             const name = pick(lang, partner!.nameBg, partner!.nameEn);
-            const contribution = pick(lang, link.contributionBg, link.contributionEn);
-            const financial = partnerTotals(detail.initiative.inflows, partner!.id);
+            const contribution = pick(
+              lang,
+              link.contributionBg,
+              link.contributionEn,
+            );
+            const financial = partnerTotals(
+              detail.initiative.inflows,
+              partner!.id,
+            );
             const typeLabel = PARTNERSHIP_TYPE_LABELS[link.partnershipType];
             return (
               <div
                 key={link.id}
                 className="card"
-                style={{ padding: "22px 24px", display: "flex", flexDirection: "column", height: "100%" }}
+                style={{
+                  padding: "22px 24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    marginBottom: 14,
+                  }}
+                >
                   <span
                     style={{
                       position: "relative",
@@ -627,20 +734,50 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                     }}
                   >
                     {partner!.image ? (
-                      <Image src={partner!.image.url} alt={name} fill sizes="48px" style={{ objectFit: "cover" }} />
+                      <Image
+                        src={partner!.image.url}
+                        alt={name}
+                        fill
+                        sizes="48px"
+                        style={{ objectFit: "cover" }}
+                      />
                     ) : (
-                      <span style={{ fontFamily: "var(--font-head)", fontWeight: 700, color: "var(--plum)" }}>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-head)",
+                          fontWeight: 700,
+                          color: "var(--plum)",
+                        }}
+                      >
                         {name.slice(0, 1)}
                       </span>
                     )}
                   </span>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ fontFamily: "var(--font-head)", fontWeight: 700, color: "var(--plum)", fontSize: "1.02rem" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-head)",
+                          fontWeight: 700,
+                          color: "var(--plum)",
+                          fontSize: "1.02rem",
+                        }}
+                      >
                         {name}
                       </span>
-                      {partner!.isStarPartner && <StarBadge lang={lang} compact />}
-                      {partner!.isYouthLed && <YouthBadge lang={lang} compact />}
+                      {partner!.isStarPartner && (
+                        <StarBadge lang={lang} compact />
+                      )}
+                      {partner!.isYouthLed && (
+                        <YouthBadge lang={lang} compact />
+                      )}
                     </div>
                     <span
                       style={{
@@ -662,7 +799,14 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                 </div>
 
                 {contribution && (
-                  <p style={{ fontSize: "0.9rem", lineHeight: 1.6, color: "var(--text-mid)", margin: "0 0 12px" }}>
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      lineHeight: 1.6,
+                      color: "var(--text-mid)",
+                      margin: "0 0 12px",
+                    }}
+                  >
                     {contribution}
                   </p>
                 )}
@@ -688,38 +832,38 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                       borderTop: "1px solid var(--border)",
                     }}
                   >
-                  <Link
-                    href={`/initiatives/partners/${partner!.slug}`}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 5,
-                      color: "var(--plum)",
-                      fontWeight: 600,
-                      fontSize: "0.85rem",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {bg ? "Профил" : "Profile"} <IconArrow />
-                  </Link>
-                  {partner!.links.website && (
-                    <a
-                      href={partner!.links.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href={`/initiatives/partners/${partner!.slug}`}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 5,
-                        color: "var(--text-mid)",
+                        color: "var(--plum)",
                         fontWeight: 600,
                         fontSize: "0.85rem",
                         textDecoration: "none",
                       }}
                     >
-                      <IconLink /> {bg ? "Уебсайт" : "Website"}
-                    </a>
-                  )}
+                      {bg ? "Профил" : "Profile"} <IconArrow />
+                    </Link>
+                    {partner!.links.website && (
+                      <a
+                        href={partner!.links.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 5,
+                          color: "var(--text-mid)",
+                          fontWeight: 600,
+                          fontSize: "0.85rem",
+                          textDecoration: "none",
+                        }}
+                      >
+                        <IconLink /> {bg ? "Уебсайт" : "Website"}
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
@@ -748,26 +892,44 @@ function InflowSourceName({
   detail: InitiativeDetailData;
   lang: Lang;
 }) {
-  const nameStyle: React.CSSProperties = { fontWeight: 700, color: "var(--plum)", fontSize: "0.95rem" };
+  const nameStyle: React.CSSProperties = {
+    fontWeight: 700,
+    color: "var(--plum)",
+    fontSize: "0.95rem",
+  };
   if (f.source === "partner") {
     const p = f.partnerId ? detail.partnersById[f.partnerId] : undefined;
     if (p)
       return (
         <Link
           href={`/initiatives/partners/${p.slug}`}
-          style={{ ...nameStyle, textDecoration: "underline", textDecorationColor: "var(--border)", textUnderlineOffset: 3 }}
+          style={{
+            ...nameStyle,
+            textDecoration: "underline",
+            textDecorationColor: "var(--border)",
+            textUnderlineOffset: 3,
+          }}
         >
           {pick(lang, p.nameBg, p.nameEn)}
         </Link>
       );
-    return <span style={nameStyle}>{INFLOW_SOURCE_LABELS.partner[lang === "en" ? "en" : "bg"]}</span>;
+    return (
+      <span style={nameStyle}>
+        {INFLOW_SOURCE_LABELS.partner[lang === "en" ? "en" : "bg"]}
+      </span>
+    );
   }
   if (f.source === "impact_fund")
-    return <span style={nameStyle}>{INFLOW_SOURCE_LABELS.impact_fund[lang === "en" ? "en" : "bg"]}</span>;
+    return (
+      <span style={nameStyle}>
+        {INFLOW_SOURCE_LABELS.impact_fund[lang === "en" ? "en" : "bg"]}
+      </span>
+    );
   const custom = pick(lang, f.sourceLabelBg, f.sourceLabelEn);
   return (
     <span style={nameStyle}>
-      {custom || INFLOW_SOURCE_LABELS.external_other[lang === "en" ? "en" : "bg"]}
+      {custom ||
+        INFLOW_SOURCE_LABELS.external_other[lang === "en" ? "en" : "bg"]}
     </span>
   );
 }
@@ -801,7 +963,9 @@ function FundingGapInvite({
   const gap = formatMoneyEUR(gapCents);
   const email = "impact@tepebite.eu";
   const subject = encodeURIComponent(
-    bg ? `Подкрепа за инициатива: ${title}` : `Support for initiative: ${title}`,
+    bg
+      ? `Подкрепа за инициатива: ${title}`
+      : `Support for initiative: ${title}`,
   );
   const body = encodeURIComponent(
     bg
@@ -838,13 +1002,13 @@ function FundingGapInvite({
       >
         {bg ? (
           <>
-            Търсим още <span style={{ color: "var(--caramel)" }}>{gap}</span>, за да
-            завършим тази инициатива
+            Търсим още <span style={{ color: "var(--caramel)" }}>{gap}</span>,
+            за да завършим тази инициатива
           </>
         ) : (
           <>
-            We&apos;re <span style={{ color: "var(--caramel)" }}>{gap}</span> short of
-            completing this initiative
+            We&apos;re <span style={{ color: "var(--caramel)" }}>{gap}</span>{" "}
+            short of completing this initiative
           </>
         )}
       </h3>
@@ -901,7 +1065,13 @@ function FundingGapInvite({
   );
 }
 
-function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
+function Finances({
+  detail,
+  lang,
+}: {
+  detail: InitiativeDetailData;
+  lang: Lang;
+}) {
   const bg = lang === "bg";
   const i = detail.initiative;
   const inflows = i.inflows;
@@ -929,7 +1099,14 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
         </h2>
 
         {/* summary: expected/spent + phase breakdown + funding split */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 30, marginBottom: 40 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 30,
+            marginBottom: 40,
+          }}
+        >
           {(i.expectedCostCents > 0 || (isDone && i.spentCents > 0)) && (
             <div
               style={{
@@ -957,19 +1134,21 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
             </div>
           )}
 
-          {i.status !== "done" && i.status !== "frozen" &&
-            i.expectedCostCents > 0 && pt.total < i.expectedCostCents && (
-            <FundingGapInvite
-              gapCents={i.expectedCostCents - pt.total}
-              title={pick(lang, i.titleBg, i.titleEn)}
-              lang={lang}
-            />
-          )}
+          {i.status !== "done" &&
+            i.status !== "frozen" &&
+            i.expectedCostCents > 0 &&
+            pt.total < i.expectedCostCents && (
+              <FundingGapInvite
+                gapCents={i.expectedCostCents - pt.total}
+                title={pick(lang, i.titleBg, i.titleEn)}
+                lang={lang}
+              />
+            )}
 
           {pt.total > 0 && (
             <div>
               <h3 style={financeSubHeading}>
-                {bg ? "Средства по фази" : "Funds by phase"}
+                {bg ? "Осигорено финансиранe" : "Aquired funding"}
               </h3>
               <PhaseBreakdown
                 totals={pt}
@@ -986,7 +1165,9 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
           {impactCents + partnersCents > 0 && (
             <div>
               <h3 style={financeSubHeading}>
-                {bg ? "Откъде идва финансирането" : "Where the funding comes from"}
+                {bg
+                  ? "Откъде идва финансирането"
+                  : "Where the funding comes from"}
               </h3>
               <FundingSplitBar
                 impactCents={impactCents}
@@ -1013,7 +1194,8 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {inflows.map((f) => {
-                const phaseLabel = INFLOW_PHASE_LABELS[f.phase][bg ? "bg" : "en"];
+                const phaseLabel =
+                  INFLOW_PHASE_LABELS[f.phase][bg ? "bg" : "en"];
                 const arranged =
                   f.phase === "arranged" && f.arrangedType
                     ? ARRANGED_TYPE_LABELS[f.arrangedType][bg ? "bg" : "en"]
@@ -1033,7 +1215,15 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                     }}
                   >
                     <div style={{ minWidth: 0, flex: "1 1 240px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
+                          marginBottom: 4,
+                        }}
+                      >
                         <InflowSourceName f={f} detail={detail} lang={lang} />
                         <span
                           style={{
@@ -1067,12 +1257,24 @@ function Finances({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                             color: PHASE_ACCENT[f.phase],
                           }}
                         >
-                          <span style={{ width: 6, height: 6, borderRadius: "50%", background: PHASE_ACCENT[f.phase] }} />
+                          <span
+                            style={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: "50%",
+                              background: PHASE_ACCENT[f.phase],
+                            }}
+                          />
                           {phaseLabel}
                           {arranged ? ` · ${arranged}` : ""}
                         </span>
                       </div>
-                      <div style={{ fontSize: "0.8rem", color: "var(--text-soft)" }}>
+                      <div
+                        style={{
+                          fontSize: "0.8rem",
+                          color: "var(--text-soft)",
+                        }}
+                      >
                         {formatDate(f.dateISO, lang)}
                         {note ? ` · ${note}` : ""}
                       </div>
@@ -1111,10 +1313,20 @@ function PhaseStat({
   accent: string;
 }) {
   return (
-    <div className="card" style={{ padding: "20px 22px", position: "relative", overflow: "hidden" }}>
+    <div
+      className="card"
+      style={{ padding: "20px 22px", position: "relative", overflow: "hidden" }}
+    >
       <div
         aria-hidden="true"
-        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 4, background: accent }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: 4,
+          background: accent,
+        }}
       />
       <div
         style={{
@@ -1128,16 +1340,31 @@ function PhaseStat({
       >
         {label}
       </div>
-      <div style={{ fontFamily: "var(--font-head)", fontSize: "1.5rem", fontWeight: 700, color: "var(--plum)" }}>
+      <div
+        style={{
+          fontFamily: "var(--font-head)",
+          fontSize: "1.5rem",
+          fontWeight: 700,
+          color: "var(--plum)",
+        }}
+      >
         {value}
       </div>
-      <div style={{ fontSize: "0.78rem", color: "var(--text-mid)", marginTop: 4 }}>{hint}</div>
+      <div
+        style={{ fontSize: "0.78rem", color: "var(--text-mid)", marginTop: 4 }}
+      >
+        {hint}
+      </div>
     </div>
   );
 }
 
 /* ═══ PAGE ═══ */
-export default function InitiativeDetail({ detail }: { detail: InitiativeDetailData }) {
+export default function InitiativeDetail({
+  detail,
+}: {
+  detail: InitiativeDetailData;
+}) {
   const lang = useAtomValue(langAtom);
   return (
     <main>
