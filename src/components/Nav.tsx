@@ -30,11 +30,27 @@ export default function Nav() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+    // Read the current scroll position on mount so a refresh that restores
+    // the page mid-scroll gets the solid background immediately, instead of
+    // waiting for the first scroll event.
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   if (isStudio || isAdmin || isLinks) return null;
+
+  // The header gets a solid frosted background when scrolled, on pages whose
+  // hero requires it, or whenever the mobile menu is open — an open menu over a
+  // transparent header (e.g. at the top of the page) would otherwise float with
+  // no backdrop behind the logo/lang/cart row.
+  const solid =
+    scrolled ||
+    isLegal ||
+    isLocationDetail ||
+    isNewsDetail ||
+    isInitiativesData ||
+    mobileOpen;
 
   // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
   const p = isHome ? "" : "/";
@@ -88,38 +104,10 @@ export default function Nav() {
         right: 0,
         zIndex: 1100,
         viewTransitionName: "site-header",
-        background:
-          scrolled ||
-          isLegal ||
-          isLocationDetail ||
-          isNewsDetail ||
-          isInitiativesData
-            ? "oklch(99% 0.008 75 / 0.96)"
-            : "transparent",
-        backdropFilter:
-          scrolled ||
-          isLegal ||
-          isLocationDetail ||
-          isNewsDetail ||
-          isInitiativesData
-            ? "blur(16px)"
-            : "none",
-        WebkitBackdropFilter:
-          scrolled ||
-          isLegal ||
-          isLocationDetail ||
-          isNewsDetail ||
-          isInitiativesData
-            ? "blur(16px)"
-            : "none",
-        boxShadow:
-          scrolled ||
-          isLegal ||
-          isLocationDetail ||
-          isNewsDetail ||
-          isInitiativesData
-            ? "0 1px 0 oklch(90% 0.02 80)"
-            : "none",
+        background: solid ? "oklch(99% 0.008 75 / 0.96)" : "transparent",
+        backdropFilter: solid ? "blur(16px)" : "none",
+        WebkitBackdropFilter: solid ? "blur(16px)" : "none",
+        boxShadow: solid ? "0 1px 0 oklch(90% 0.02 80)" : "none",
         transition: "all 0.3s ease",
       }}
     >
