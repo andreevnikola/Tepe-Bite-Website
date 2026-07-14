@@ -129,6 +129,59 @@ export function StarBadge({ lang, compact = false }: { lang: Lang; compact?: boo
   );
 }
 
+/* youth-led organisation emblem (small, matches icon style) */
+function IconYouth() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+/* ─── youth-led organisation badge ────────────────────────────────────────── */
+export function YouthBadge({ lang, compact = false }: { lang: Lang; compact?: boolean }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        background: "var(--plum-lt)",
+        color: "var(--plum)",
+        borderRadius: 100,
+        padding: compact ? "3px 9px" : "5px 13px",
+        fontSize: compact ? "0.64rem" : "0.72rem",
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+      }}
+    >
+      <span style={{ display: "inline-flex" }}>
+        <IconYouth />
+      </span>
+      {compact
+        ? lang === "en"
+          ? "Youth"
+          : "Младежка"
+        : lang === "en"
+          ? "Youth-led"
+          : "Младежка организация"}
+    </span>
+  );
+}
+
 /* ─── progress bar from steps ─────────────────────────────────────────────── */
 export function StepsProgress({
   done,
@@ -178,19 +231,26 @@ export function StepsProgress({
 export function CompletedDateBadge({
   dateISO,
   lang,
+  tone = "caramel",
 }: {
   dateISO: string;
   lang: Lang;
+  /** "green" reads as a success/done state (used where it stands in for the status badge). */
+  tone?: "caramel" | "green";
 }) {
   if (!dateISO) return null;
+  const palette =
+    tone === "green"
+      ? { bg: "oklch(93% 0.04 150)", color: "oklch(34% 0.1 150)" }
+      : { bg: "var(--caramel-lt)", color: "oklch(44% 0.13 55)" };
   return (
     <span
       style={{
         display: "inline-flex",
         alignItems: "center",
         gap: 6,
-        background: "var(--caramel-lt)",
-        color: "oklch(44% 0.13 55)",
+        background: palette.bg,
+        color: palette.color,
         borderRadius: 100,
         padding: "4px 12px",
         fontSize: "0.68rem",

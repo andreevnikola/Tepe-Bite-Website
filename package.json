@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node node_modules/next/dist/bin/next dev",
-    "build": "node node_modules/next/dist/bin/next build",
-    "start": "node node_modules/next/dist/bin/next start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint",
     "hash": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/hash.ts",
     "admin:create": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/admin-create.ts",
@@ -57,7 +57,11 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.5",
+    "prettier": "^3.9.5",
     "tailwindcss": "^4",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

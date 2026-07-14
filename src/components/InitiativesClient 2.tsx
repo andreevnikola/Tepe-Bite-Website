@@ -9,16 +9,14 @@ import {
   CategoryChip,
   CompletedDateBadge,
   StatusBadge,
-  YouthBadge,
   pick,
-  PARTNERSHIP_TYPE_LABELS,
 } from "@/components/public/impactUi";
+import { FundingSplitBar } from "@/components/public/PhaseBreakdown";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import { formatMoneyEUR } from "@/lib/money";
 import type { InitiativeDetail, OverviewData } from "@/lib/public/initiatives";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
 import Link from "next/link";
 
 const IMPACT_EMAIL = "impact@tepebite.eu";
@@ -44,6 +42,13 @@ const IconUsers = () => (
     <circle cx="9" cy="7" r="4" />
     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
+const IconEye = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
   </svg>
 );
 
@@ -222,7 +227,7 @@ function HeroSection({ lang, heroPick }: { lang: Lang; heroPick: InitiativeDTO |
 
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <a href="#focus" className="btn btn-primary max-sm:text-[0.72rem]! max-sm:px-8!">
-                  {bg ? "Виж инициативите ни" : "Explore an initiative"} <IconArrow />
+                  {bg ? "Разгледай инициатива" : "Explore an initiative"} <IconArrow />
                 </a>
                 <a href="#impact" className="btn btn-secondary max-sm:text-[0.72rem]! max-sm:px-4! flex justify-center max-sm:grow grow-0">
                   {bg ? "Как работи фондът?" : "How the fund works"}
@@ -255,6 +260,7 @@ function HeroFocusCard({ initiative, lang }: { initiative: InitiativeDTO; lang: 
   const eyebrow = HERO_EYEBROW[initiative.status];
   const title = pick(lang, initiative.titleBg, initiative.titleEn);
   const desc = pick(lang, initiative.descriptionBg, initiative.descriptionEn);
+  const location = pick(lang, initiative.locationBg, initiative.locationEn);
 
   return (
     <div className="flex max-[1200px]:w-full justify-center w-fit">
@@ -328,13 +334,12 @@ function HeroFocusCard({ initiative, lang }: { initiative: InitiativeDTO; lang: 
           </p>
         )}
 
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-          {initiative.status === "done" ? (
-            <CompletedDateBadge dateISO={initiative.completionDateISO} lang={lang} tone="green" />
-          ) : (
-            <StatusBadge status={initiative.status} lang={lang} />
-          )}
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: location ? 14 : 0 }}>
+          <StatusBadge status={initiative.status} lang={lang} />
           {initiative.category && <CategoryChip category={initiative.category} lang={lang} />}
+          {initiative.status === "done" && (
+            <CompletedDateBadge dateISO={initiative.completionDateISO} lang={lang} />
+          )}
         </div>
 
         <span
@@ -375,22 +380,20 @@ function VisibleInitiativesSection({
   ];
 
   return (
-    <section
-      className="section-spacing"
-      style={{ background: "linear-gradient(180deg, var(--plum-lt) 0%, var(--surface) 100%)" }}
-    >
+    <section className="section-spacing" style={{ background: "var(--surface)" }}>
       <div className="section-inner">
         <div
           className="visible-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: reconnect ? "minmax(0, 1.05fr) minmax(0, 0.95fr)" : "1fr",
+            gridTemplateColumns: reconnect ? "minmax(0, 1fr) minmax(0, 1fr)" : "1fr",
             gap: "clamp(32px, 5vw, 64px)",
             alignItems: "center",
           }}
         >
           {/* Copy */}
           <div>
+            <div className="section-divider" style={{ marginBottom: 18 }} />
             <div className="label-tag" style={{ marginBottom: 12 }}>
               {bg ? "Какви инициативи избираме" : "The initiatives we choose"}
             </div>
@@ -399,13 +402,13 @@ function VisibleInitiativesSection({
             </h2>
             <p style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "var(--text-mid)", marginBottom: 18 }}>
               {bg
-                ? "Нашите инициативи са проекти за градско обновяване — намеси, които хората в Пловдив реално виждат, ползват и разпознават като свои."
-                : "Our initiatives are urban-renewal projects — interventions people in Plovdiv can genuinely see, use, and recognise as their own."}
+                ? "Избираме инициативи с видимо въздействие в Пловдив — места и промени, които хората забелязват и с които се идентифицират."
+                : "We choose initiatives with visible impact in Plovdiv — places and changes people notice and identify with."}
             </p>
             <p style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "var(--text-mid)", margin: 0 }}>
               {bg
-                ? "Първата ни такава инициатива обнови силно натоварено обществено пространство, пълно с майки и деца. Беше сиво и безлично — добавихме визуална концепция върху бетона на земята, включително детски игри, за да имат децата какво по-смислено да правят."
-                : "Our first such initiative renewed a heavily-used public space full of mothers and children. It was grey and lifeless — so we added a visual concept onto the concrete on the ground, including children's games, giving the kids something more meaningful to do."}
+                ? "Затова, когато купуваш барче, ставаш част от нещо реално: минаваш покрай наш проект в града и можеш да кажеш „аз допринесох за това“."
+                : "So when you buy a bar, you become part of something real: you walk past one of our projects in the city and can say “I helped make this.”"}
             </p>
 
             <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
@@ -429,20 +432,12 @@ function VisibleInitiativesSection({
             </div>
           </div>
 
-          {/* Proof: the first initiative, tied to the copy */}
+          {/* Proof: a real initiative card */}
           {reconnect ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <div
-                className="label-tag"
-                style={{ color: "var(--plum-mid)", display: "flex", alignItems: "center", gap: 8 }}
-              >
-                <span
-                  aria-hidden="true"
-                  style={{ width: 22, height: 2, background: "var(--caramel)", borderRadius: 2 }}
-                />
-                {bg ? "Нашата първа инициатива" : "Our first initiative"}
+            <div>
+              <div style={{ maxWidth: 420 }}>
+                <InitiativeCard initiative={reconnect.initiative} lang={lang} />
               </div>
-              <InitiativeCard initiative={reconnect.initiative} lang={lang} />
               {showRepeat && <RepeatNote lang={lang} />}
             </div>
           ) : null}
@@ -464,9 +459,6 @@ function ImpactVehicleSection({ lang, stats }: { lang: Lang; stats: OverviewData
   const bg = lang === "bg";
   const hasFunds = stats.investedTotalCents > 0;
 
-  const total = stats.investedImpactCents + stats.investedExternalCents;
-  const impactPct = total > 0 ? Math.round((stats.investedImpactCents / total) * 100) : 0;
-
   return (
     <section
       id="impact"
@@ -475,159 +467,104 @@ function ImpactVehicleSection({ lang, stats }: { lang: Lang; stats: OverviewData
     >
       <HillSVG opacity={0.05} fill="var(--sky-dk)" />
       <div className="section-inner" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 660, marginBottom: 40 }}>
+        <div style={{ maxWidth: 640, marginBottom: 40 }}>
+          <div className="section-divider" style={{ marginBottom: 18, background: "var(--sky-mid)" }} />
           <div className="label-tag" style={{ marginBottom: 12, color: "var(--sky-dk)" }}>
             {bg ? "Инструментът" : "The vehicle"}
           </div>
           <h2 className="heading-lg" style={{ marginBottom: 16 }}>
-            {bg ? "Всеки цент, умножен" : "Every cent, multiplied"}
+            {bg ? "ТЕПЕ bite Impact захранва всичко това" : "ТЕПЕ bite Impact powers all of it"}
           </h2>
           <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "var(--text-mid)" }}>
             {bg
-              ? "От всяка продажба заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact. Целта ни е проста: да умножим стойността на всеки даден цент чрез партньори, дарени материали и външна подкрепа."
-              : "From every sale we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund. Our goal is simple: to multiply the value of every cent given — through partners, donated materials, and outside support."}
+              ? "ТЕПЕ bite Impact е фондът зад инициативите: фиксираните 0.15 € от всяко барче се събират в общ пул и се умножават чрез партньори, дарени материали и външна подкрепа."
+              : "ТЕПЕ bite Impact is the fund behind the initiatives: the fixed 0.15 € from every bar pools together and is multiplied through partners, donated materials, and outside support."}
           </p>
         </div>
 
-        <div
-          className="card"
-          style={{ padding: "clamp(28px, 4vw, 44px)", background: "var(--surface)" }}
-        >
+        <div className="card" style={{ padding: "clamp(24px, 4vw, 40px)", background: "var(--surface)" }}>
           {hasFunds ? (
-            <>
-              {/* Hero number + prominent CTA */}
-              <div
-                className="impact-hero-row"
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                  gap: 28,
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: "0.72rem",
-                      fontWeight: 700,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      color: "var(--text-soft)",
-                      marginBottom: 10,
-                    }}
-                  >
-                    {bg ? "Вложени във всички инициативи" : "Invested across all initiatives"}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-head)",
-                      fontSize: "clamp(2.8rem, 7vw, 4.2rem)",
-                      fontWeight: 800,
-                      color: "var(--plum)",
-                      lineHeight: 0.95,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {formatMoneyEUR(stats.investedTotalCents)}
-                  </div>
-                </div>
-                <Link href="/impact" className="btn btn-sky" style={{ flexShrink: 0 }}>
-                  {bg ? "Влез във фонда" : "Open the fund"}
-                  <IconArrow />
-                </Link>
-              </div>
-
-              {/* Minimalist end-breakdown */}
-              <div
-                style={{
-                  marginTop: 32,
-                  paddingTop: 24,
-                  borderTop: "1px solid var(--border)",
-                }}
-              >
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              <div>
                 <div
                   style={{
                     fontSize: "0.72rem",
                     fontWeight: 700,
-                    letterSpacing: "0.06em",
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color: "var(--sky-dk)",
-                    marginBottom: 14,
+                    color: "var(--text-soft)",
+                    marginBottom: 8,
                   }}
                 >
-                  {bg
-                    ? "Осигуряваме външно финансиране, за да умножим ефекта"
-                    : "We secure outside funding to multiply our impact"}
+                  {bg ? "Реализирани средства по всички инициативи" : "Realised funds across all initiatives"}
                 </div>
-                <ImpactMiniSplit
+                <div
+                  style={{
+                    fontFamily: "var(--font-head)",
+                    fontSize: "clamp(2.4rem, 6vw, 3.4rem)",
+                    fontWeight: 800,
+                    color: "var(--plum)",
+                    lineHeight: 1,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {formatMoneyEUR(stats.investedTotalCents)}
+                </div>
+              </div>
+
+              <div>
+                <div
+                  style={{
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "var(--text-soft)",
+                    marginBottom: 12,
+                  }}
+                >
+                  {bg ? "Откъде идва финансирането" : "Where the funding comes from"}
+                </div>
+                <FundingSplitBar
                   impactCents={stats.investedImpactCents}
-                  externalCents={stats.investedExternalCents}
-                  impactPct={impactPct}
+                  partnersCents={stats.investedExternalCents}
                   lang={lang}
                 />
               </div>
-            </>
-          ) : (
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
-              <p style={{ fontSize: "1rem", color: "var(--text-mid)", lineHeight: 1.7, margin: 0, maxWidth: 520 }}>
+
+              <p style={{ fontSize: "0.9rem", color: "var(--text-mid)", lineHeight: 1.6, margin: 0 }}>
                 {bg
-                  ? "Фондът тепърва се пълни. Щом първите средства бъдат вложени в инициатива, ще ги видиш тук — открито и с точна разбивка."
-                  : "The fund is just starting to fill. As soon as the first money is invested in an initiative, you'll see it here — openly and broken down."}
+                  ? "Всяка сума е реално преведена и вложена — не обещание. Пълната разбивка по фази и по всяко постъпление е публикувана."
+                  : "Every amount here has actually been transferred and spent — not a promise. The full breakdown by phase and by inflow is published."}
               </p>
-              <Link href="/impact" className="btn btn-sky" style={{ flexShrink: 0 }}>
-                {bg ? "Влез във фонда" : "Open the fund"}
-                <IconArrow />
-              </Link>
             </div>
+          ) : (
+            <p style={{ fontSize: "1rem", color: "var(--text-mid)", lineHeight: 1.7, margin: 0 }}>
+              {bg
+                ? "Фондът тепърва се пълни. Щом първите средства бъдат вложени в инициатива, ще ги видиш тук — открито и с точна разбивка."
+                : "The fund is just starting to fill. As soon as the first money is invested in an initiative, you'll see it here — openly and broken down."}
+            </p>
           )}
+
+          <div style={{ marginTop: 24 }}>
+            <Link
+              href="/impact"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                color: "var(--sky-dk)",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+              }}
+            >
+              {bg ? "Разгледай фонд ТЕПЕ bite Impact" : "Explore the ТЕПЕ bite Impact fund"} →
+            </Link>
+          </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 560px) {
-          .impact-hero-row { flex-direction: column; align-items: flex-start !important; }
-        }
-      `}</style>
     </section>
-  );
-}
-
-/* Minimalist two-source split — thinner and quieter than FundingSplitBar. */
-function ImpactMiniSplit({
-  impactCents,
-  externalCents,
-  impactPct,
-  lang,
-}: {
-  impactCents: number;
-  externalCents: number;
-  impactPct: number;
-  lang: Lang;
-}) {
-  const bg = lang === "bg";
-  const rows: { label: string; value: number; color: string }[] = [
-    { label: bg ? "Фонд ТЕПЕ bite Impact" : "ТЕПЕ bite Impact fund", value: impactCents, color: "var(--sky-mid)" },
-    { label: bg ? "Партньори и външни" : "Partners & external", value: externalCents, color: "var(--caramel)" },
-  ];
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <div style={{ display: "flex", height: 8, borderRadius: 10, overflow: "hidden", background: "var(--border)" }}>
-        <div style={{ width: `${impactPct}%`, background: "var(--sky-mid)" }} />
-        <div style={{ flex: 1, background: "var(--caramel)" }} />
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 28px" }}>
-        {rows.map((r) => (
-          <div key={r.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 9, height: 9, borderRadius: "50%", background: r.color, flexShrink: 0 }} />
-            <span style={{ fontSize: "0.85rem", color: "var(--text-mid)" }}>{r.label}</span>
-            <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--plum)" }}>
-              {formatMoneyEUR(r.value)}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -639,42 +576,43 @@ function TransparencySection({ lang }: { lang: Lang }) {
   const bg = lang === "bg";
   const points = [
     {
-      icon: <IconCoins />,
-      title: bg ? "Източниците на средствата" : "Where the money comes from",
-      text: bg
-        ? "Показваме откъде идва всяко евро, което влагаме — от фонда, от партньор или от външно дарение."
-        : "We show where every euro we invest comes from — the fund, a partner, or an outside donation.",
-    },
-    {
       icon: <IconList />,
-      title: bg ? "Постъпления и разходи" : "Inflows & outflows",
+      title: bg ? "Всяка стъпка" : "Every step",
       text: bg
-        ? "Проследяваме какво влиза и какво излиза от фонд ТЕПЕ bite Impact за всяка инициатива."
-        : "We track what goes into and out of the ТЕПЕ bite Impact fund for each initiative.",
+        ? "Публикуваме напредъка на всяка инициатива — какво е готово и какво предстои."
+        : "We publish each initiative's progress — what's done and what's next.",
     },
     {
-      icon: <IconHandshake />,
-      title: bg ? "Как умножаваме ефекта" : "How we multiply impact",
+      icon: <IconCoins />,
+      title: bg ? "Всяко евро" : "Every euro",
       text: bg
-        ? "Партньори, дарени материали и собствено действие превръщат всеки цент в повече от цент."
-        : "Partners, donated materials, and our own work turn every cent into more than a cent.",
+        ? "Показваме всяко постъпление поотделно — откъде идва и в коя фаза е."
+        : "We show every inflow individually — where it comes from and which phase it's in.",
+    },
+    {
+      icon: <IconEye />,
+      title: bg ? "Без скрити числа" : "Nothing hidden",
+      text: bg
+        ? "Разделяме налични, осигурени и планирани средства, за да не подвеждаме."
+        : "We separate available, arranged, and planned funds so nothing misleads.",
     },
   ];
 
   return (
     <section className="section-spacing" style={{ background: "var(--bg)" }}>
       <div className="section-inner">
-        <div style={{ maxWidth: 620, marginBottom: 40 }}>
+        <div style={{ maxWidth: 640, marginBottom: 40 }}>
+          <div className="section-divider" style={{ marginBottom: 18 }} />
           <div className="label-tag" style={{ marginBottom: 12 }}>
             {bg ? "Прозрачност" : "Transparency"}
           </div>
-          <h2 className="heading-lg" style={{ marginBottom: 16, textWrap: "balance" } as React.CSSProperties}>
-            {bg ? "Показваме всичко" : "We show everything"}
+          <h2 className="heading-lg" style={{ marginBottom: 16 }}>
+            {bg ? "Публикуваме всичко" : "We publish everything"}
           </h2>
           <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "var(--text-mid)" }}>
             {bg
-              ? "Нищо не остава скрито: показваме откъде идват средствата, които влагаме, какво постига фонд ТЕПЕ bite Impact и как умножаваме неговия ефект."
-              : "Nothing stays hidden: we show where the money we invest comes from, what the ТЕПЕ bite Impact fund achieves, and how we multiply its effect."}
+              ? "За всяка инициатива отваряме стъпките, партньорите и всяко евро — за да можеш сам да провериш, а не просто да ни вярваш."
+              : "For every initiative we open the steps, the partners, and every euro — so you can check for yourself instead of taking our word for it."}
           </p>
         </div>
 
@@ -744,35 +682,46 @@ function FirmsInviteSection({ lang }: { lang: Lang }) {
     <section className="section-spacing" style={{ background: "var(--bg)" }}>
       <div className="section-inner">
         <div
-          className="firms-band"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "clamp(20px, 4vw, 48px)",
-            flexWrap: "wrap",
-            borderTop: "1px solid var(--border)",
-            borderBottom: "1px solid var(--border)",
-            padding: "clamp(28px, 4vw, 40px) 0",
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: "var(--r-lg)",
+            padding: "clamp(28px, 4vw, 48px)",
+            background: "linear-gradient(135deg, var(--caramel-lt) 0%, var(--surface) 70%)",
+            border: "1px solid var(--border)",
+            boxShadow: "var(--shadow)",
           }}
         >
-          <div style={{ maxWidth: 560 }}>
+          <div
+            aria-hidden="true"
+            style={{ position: "absolute", top: -60, right: -50, width: 240, height: 240, borderRadius: "50%", background: "oklch(89% 0.09 52 / 0.4)", filter: "blur(60px)", pointerEvents: "none" }}
+          />
+          <div style={{ position: "relative", zIndex: 1, maxWidth: 640 }}>
+            <div style={{ width: 46, height: 46, borderRadius: 14, background: "var(--plum)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>
+              <IconHandshake />
+            </div>
             <div className="label-tag" style={{ marginBottom: 12 }}>
               {bg ? "За фирми" : "For companies"}
             </div>
-            <h2
-              className="heading-lg"
-              style={{ margin: 0, fontSize: "clamp(1.5rem, 3vw, 2.1rem)" } as React.CSSProperties}
-            >
-              {bg
-                ? "Фирма? Да създадем видима промяна в Пловдив — заедно."
-                : "A company? Let's create visible change in Plovdiv — together."}
+            <h2 className="heading-lg" style={{ marginBottom: 16 }}>
+              {bg ? "Партньорите умножават фонда" : "Partners multiply the fund"}
             </h2>
+            <p style={{ fontSize: "1.02rem", lineHeight: 1.75, color: "var(--text-mid)", marginBottom: 24 }}>
+              {bg
+                ? "Всеки партньор добавя доверие и ресурс — материали, експертиза, институционална подкрепа или финансиране. Ако сте фирма, която иска да подкрепи конкретна инициатива, пишете ни."
+                : "Every partner adds trust and resource — materials, expertise, institutional backing, or funding. If you're a company that wants to support a specific initiative, get in touch."}
+            </p>
+            <a href={mailto} className="btn btn-primary">
+              <IconArrow />
+              {bg ? "Станете партньор" : "Become a partner"}
+            </a>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-soft)", marginTop: 16, marginBottom: 0 }}>
+              {bg ? "Или пишете директно на " : "Or email us directly at "}
+              <a href={mailto} style={{ color: "var(--caramel)", fontWeight: 700, wordBreak: "break-all" }}>
+                {IMPACT_EMAIL}
+              </a>
+            </p>
           </div>
-          <a href={mailto} className="btn btn-primary" style={{ flexShrink: 0 }}>
-            {bg ? "Станете партньор" : "Become a partner"}
-            <IconArrow />
-          </a>
         </div>
       </div>
     </section>
@@ -795,29 +744,48 @@ function IdeasInviteSection({ lang }: { lang: Lang }) {
 
   return (
     <section className="section-spacing" style={{ background: "var(--surface)" }}>
-      <div
-        className="section-inner"
-        style={{ maxWidth: 640, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}
-      >
-        <span
-          style={{ color: "var(--caramel)", display: "inline-flex", marginBottom: 16 }}
-          aria-hidden="true"
+      <div className="section-inner">
+        <div
+          className="ideas-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "auto 1fr",
+            gap: "clamp(20px, 4vw, 40px)",
+            alignItems: "center",
+          }}
         >
-          <IconBulb />
-        </span>
-        <h2 className="heading-lg" style={{ marginBottom: 14 }}>
-          {bg ? "Имаш силата да предложиш промяна" : "You have the power to suggest change"}
-        </h2>
-        <p style={{ fontSize: "1.02rem", lineHeight: 1.7, color: "var(--text-mid)", margin: "0 0 24px" }}>
-          {bg
-            ? "Знаеш място в Пловдив, което заслужава внимание? Разкажи ни — следващата инициатива може да е твоя идея."
-            : "Know a place in Plovdiv that deserves attention? Tell us — the next initiative could be your idea."}
-        </p>
-        <a href={mailto} className="btn btn-caramel">
-          <IconArrow />
-          {bg ? `Пиши на ${IMPACT_EMAIL}` : `Email ${IMPACT_EMAIL}`}
-        </a>
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: "var(--caramel-lt)", color: "oklch(44% 0.14 52)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <IconBulb />
+          </div>
+          <div>
+            <div className="label-tag" style={{ marginBottom: 10 }}>
+              {bg ? "Твоята идея" : "Your idea"}
+            </div>
+            <h2 className="heading-lg" style={{ marginBottom: 14 }}>
+              {bg ? "Знаеш място, което заслужава внимание?" : "Know a place that deserves attention?"}
+            </h2>
+            <p style={{ fontSize: "1.02rem", lineHeight: 1.75, color: "var(--text-mid)", marginBottom: 22, maxWidth: 620 }}>
+              {bg
+                ? "Инициативите ни тръгват от хора, които обичат Пловдив. Ако имаш идея за инициатива — кът, тепе, училищен двор, зона, която заслужава грижа — разкажи ни."
+                : "Our initiatives start with people who love Plovdiv. If you have an idea — a corner, a hill, a schoolyard, a spot that deserves care — tell us."}
+            </p>
+            <a href={mailto} className="btn btn-caramel">
+              <IconArrow />
+              {bg ? "Изпрати идея" : "Send an idea"}
+            </a>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-soft)", marginTop: 16, marginBottom: 0 }}>
+              {bg ? "На " : "To "}
+              <a href={mailto} style={{ color: "var(--caramel)", fontWeight: 700, wordBreak: "break-all" }}>
+                {IMPACT_EMAIL}
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
+
+      <style>{`
+        @media (max-width: 560px) { .ideas-grid { grid-template-columns: 1fr !important; } }
+      `}</style>
     </section>
   );
 }
@@ -854,221 +822,30 @@ function ClosingCTASection({ lang }: { lang: Lang }) {
             aria-hidden="true"
             style={{ position: "absolute", bottom: -80, right: -50, width: 280, height: 280, borderRadius: "50%", background: "oklch(66% 0.16 52 / 0.28)", filter: "blur(60px)", pointerEvents: "none" }}
           />
-          <div
-            className="closing-grid"
-            style={{
-              position: "relative",
-              zIndex: 1,
-              display: "grid",
-              gridTemplateColumns: "4fr 3fr",
-              gap: "clamp(24px, 4vw, 56px)",
-              alignItems: "center",
-            }}
-          >
-            <div className="closing-copy">
-              <div className="label-tag" style={{ color: "oklch(88% 0.08 52)", marginBottom: 14 }}>
-                {bg ? "Стани част" : "Become part of it"}
-              </div>
-              <h2 style={{ fontFamily: "var(--font-head)", fontSize: "clamp(1.8rem, 4vw, 2.6rem)", fontWeight: 800, color: "white", lineHeight: 1.2, marginBottom: 28, letterSpacing: "-0.02em" }}>
-                {bg ? "Едно барче. Реална промяна за Пловдив." : "One bar. Real change for Plovdiv."}
-              </h2>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <Link href="/order" className="btn btn-caramel">
-                  <IconShop />
-                  {bg ? "Купи ТЕПЕ bite" : "Buy ТЕПЕ bite"}
-                </Link>
-                <Link href="/initiatives/all" className="btn btn-ghost">
-                  {bg ? "Виж всички инициативи" : "See all initiatives"} <IconArrow />
-                </Link>
-              </div>
+          <div style={{ position: "relative", zIndex: 1, maxWidth: 640 }}>
+            <div className="label-tag" style={{ color: "oklch(88% 0.08 52)", marginBottom: 14 }}>
+              {bg ? "Стани част" : "Become part of it"}
             </div>
-
-            <div
-              className="closing-photo"
-              style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}
-            >
-              <Image
-                src="/bar-product.png"
-                alt={bg ? "Барче ТЕПЕ bite" : "ТЕПЕ bite bar"}
-                fill
-                sizes="(max-width: 680px) 260px, 40vw"
-                className="animate-float"
-                style={{
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 24px 40px oklch(20% 0.05 315 / 0.5))",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        @media (max-width: 680px) {
-          .closing-grid { grid-template-columns: 1fr !important; }
-          .closing-photo { order: -1; width: 100%; max-width: 240px; margin: 0 auto; }
-        }
-      `}</style>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 6a · Partners — why & how we partner (before the carousel)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-function PartnersIntroSection({ lang }: { lang: Lang }) {
-  const bg = lang === "bg";
-  const types: { key: keyof typeof PARTNERSHIP_TYPE_LABELS; desc: string }[] = [
-    { key: "sponsor", desc: bg ? "Осигуряват финансиране за инициативата." : "Provide funding for the initiative." },
-    { key: "technical", desc: bg ? "Дават експертиза, инструменти или материали." : "Contribute expertise, tools, or materials." },
-    { key: "executional", desc: bg ? "Помагат с реалното изпълнение на терен." : "Help with hands-on delivery on the ground." },
-    { key: "institutional", desc: bg ? "Осигуряват достъп, съгласуване и легитимност." : "Provide access, approvals, and legitimacy." },
-  ];
-
-  return (
-    <section className="section-spacing" style={{ background: "var(--surface)" }}>
-      <div className="section-inner">
-        <div style={{ maxWidth: 640, marginBottom: 32 }}>
-          <div className="label-tag" style={{ marginBottom: 12 }}>
-            {bg ? "Партньори" : "Partners"}
-          </div>
-          <h2 className="heading-lg" style={{ marginBottom: 16 }}>
-            {bg ? "Заедно постигаме повече" : "Together we go further"}
-          </h2>
-          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "var(--text-mid)" }}>
-            {bg
-              ? "ТЕПЕ bite работи с партньори, за да създава въздействие с по-висока стойност — повече, отколкото един бранд може да постигне сам."
-              : "ТЕПЕ bite works with partners to create higher-value impact — more than any one brand can achieve alone."}
-          </p>
-        </div>
-
-        {/* Partnership types */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 16,
-            marginBottom: 28,
-          }}
-        >
-          {types.map(({ key, desc }) => (
-            <div key={key} className="card" style={{ padding: "20px 22px" }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-head)",
-                  fontSize: "1.02rem",
-                  fontWeight: 700,
-                  color: "var(--plum)",
-                  marginBottom: 8,
-                }}
-              >
-                {bg ? PARTNERSHIP_TYPE_LABELS[key].bg : PARTNERSHIP_TYPE_LABELS[key].en}
-              </div>
-              <p style={{ fontSize: "0.88rem", lineHeight: 1.55, color: "var(--text-mid)", margin: 0 }}>
-                {desc}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Minimalist youth-led sub-section */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "clamp(14px, 3vw, 24px)",
-            flexWrap: "wrap",
-            padding: "clamp(18px, 2.5vw, 26px) clamp(20px, 3vw, 28px)",
-            borderRadius: "var(--r-md)",
-            border: "1px solid var(--border)",
-            background: "var(--plum-lt)",
-          }}
-        >
-          <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--surface)", color: "var(--plum)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <IconUsers />
-          </div>
-          <div style={{ flex: 1, minWidth: 240 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
-              <h3 style={{ fontFamily: "var(--font-head)", fontSize: "1.1rem", fontWeight: 700, color: "var(--plum)", margin: 0 }}>
-                {bg ? "Подкрепяме младежки организации" : "We support youth-led organisations"}
-              </h3>
-              <YouthBadge lang={lang} compact />
-            </div>
-            <p style={{ fontSize: "0.92rem", lineHeight: 1.6, color: "var(--text-mid)", margin: 0 }}>
+            <h2 style={{ fontFamily: "var(--font-head)", fontSize: "clamp(1.8rem, 4vw, 2.6rem)", fontWeight: 800, color: "white", lineHeight: 1.2, marginBottom: 16, letterSpacing: "-0.02em" }}>
+              {bg ? "Едно барче. Реална промяна за Пловдив." : "One bar. Real change for Plovdiv."}
+            </h2>
+            <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: "oklch(90% 0.03 310)", marginBottom: 30 }}>
               {bg
-                ? "Насърчаваме младежката инициативност, като даваме на младежки организации възможност да участват в организирането на видими инициативи за града. Разпознайте ги по значката по-долу."
-                : "We encourage youth initiative by giving youth-led organisations a chance to help organise visible initiatives for the city. Spot them by the badge below."}
+                ? "Всяко барче добавя фиксирани 0.15 € към фонда — и те превръща в част от следващата видима инициатива в града."
+                : "Every bar adds a fixed 0.15 € to the fund — and makes you part of the next visible initiative in the city."}
             </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <Link href="/order" className="btn btn-caramel">
+                <IconShop />
+                {bg ? "Купи ТЕПЕ bite" : "Buy ТЕПЕ bite"}
+              </Link>
+              <Link href="/initiatives/all" className="btn btn-ghost">
+                {bg ? "Виж всички инициативи" : "See all initiatives"} <IconArrow />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   SECTION · More initiatives rail (chronological)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-function MoreInitiativesSection({ items, lang }: { items: InitiativeDTO[]; lang: Lang }) {
-  const bg = lang === "bg";
-  return (
-    <section className="section-spacing" style={{ background: "var(--bg)", overflow: "hidden" }}>
-      <div className="section-inner">
-        <div style={{ maxWidth: 640, marginBottom: 28 }}>
-          <div className="label-tag" style={{ marginBottom: 12 }}>
-            {bg ? "Още проекти" : "More projects"}
-          </div>
-          <h2 className="heading-lg" style={{ marginBottom: 14 }}>
-            {bg ? "Имаме и други инициативи" : "We have other initiatives too"}
-          </h2>
-          <p style={{ fontSize: "1rem", lineHeight: 1.7, color: "var(--text-mid)", margin: 0 }}>
-            {bg
-              ? "От планираните до вече завършените — ето по какво още работим за Пловдив."
-              : "From planned to already completed — here's what else we're building for Plovdiv."}
-          </p>
-        </div>
-      </div>
-
-      <div
-        className="rail-scroller"
-        style={{
-          display: "flex",
-          gap: 20,
-          overflowX: "auto",
-          scrollSnapType: "x mandatory",
-          padding: "4px clamp(20px, 5vw, 80px) 8px",
-          scrollbarWidth: "none",
-        }}
-      >
-        {items.map((it) => (
-          <div key={it.id} style={{ flex: "0 0 300px", width: 300, scrollSnapAlign: "start" }}>
-            <InitiativeCard initiative={it} lang={lang} showPlannedBadge={it.status === "planned"} />
-          </div>
-        ))}
-      </div>
-
-      <div className="section-inner" style={{ marginTop: 24 }}>
-        <Link
-          href="/initiatives/all"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            color: "var(--caramel)",
-            fontWeight: 700,
-            fontSize: "0.92rem",
-            textDecoration: "none",
-          }}
-        >
-          {bg ? "Разгледай всички инициативи" : "Explore all initiatives"} →
-        </Link>
-      </div>
-
-      <style>{`
-        .rail-scroller::-webkit-scrollbar { display: none; }
-      `}</style>
     </section>
   );
 }
@@ -1103,23 +880,30 @@ export default function InitiativesClient({
   const deepRepeat = deepId ? seen.has(deepId) : false;
   if (deepId) seen.add(deepId);
 
-  const allInitiatives = orderedInitiatives(data.byStatus);
-
   return (
     <>
       <HeroSection lang={lang} heroPick={heroPick} />
       <VisibleInitiativesSection lang={lang} reconnect={reconnect} showRepeat={card2Repeat} />
       {deepDetail && (
         <div id="focus" style={{ scrollMarginTop: 80 }}>
-          <FocusDeepDive detail={deepDetail} lang={lang} showRepeat={deepRepeat} />
+          <FocusDeepDive detail={deepDetail} lang={lang} />
+          {deepRepeat && (
+            <div
+              className="section-inner"
+              style={{
+                paddingLeft: "clamp(20px, 5vw, 80px)",
+                paddingRight: "clamp(20px, 5vw, 80px)",
+                marginTop: -24,
+                marginBottom: 8,
+              }}
+            >
+              <RepeatNote lang={lang} />
+            </div>
+          )}
         </div>
-      )}
-      {allInitiatives.length > 1 && (
-        <MoreInitiativesSection items={allInitiatives} lang={lang} />
       )}
       <ImpactVehicleSection lang={lang} stats={data.stats} />
       <TransparencySection lang={lang} />
-      <PartnersIntroSection lang={lang} />
       {data.hasAnyPartner && (
         <PartnersCarousel items={data.partners} lang={lang} background="var(--surface)" />
       )}
@@ -1128,27 +912,4 @@ export default function InitiativesClient({
       <ClosingCTASection lang={lang} />
     </>
   );
-}
-
-/**
- * Chronological order for the "more projects" rail: planned first, then
- * in-progress (by most recent completed step), then completed (by completion
- * date, newest first), with frozen appended last.
- */
-function orderedInitiatives(byStatus: OverviewData["byStatus"]): InitiativeDTO[] {
-  const latestStepDate = (i: InitiativeDTO): string =>
-    i.steps
-      .filter((s) => s.done && s.completedDateISO)
-      .map((s) => s.completedDateISO)
-      .sort()
-      .pop() ?? "";
-
-  const inProgress = [...byStatus.in_progress].sort((a, b) =>
-    latestStepDate(b).localeCompare(latestStepDate(a)),
-  );
-  const done = [...byStatus.done].sort((a, b) =>
-    (b.completionDateISO || "").localeCompare(a.completionDateISO || ""),
-  );
-
-  return [...byStatus.planned, ...inProgress, ...done, ...byStatus.frozen];
 }

@@ -11,6 +11,7 @@ import {
 import {
   PARTNERSHIP_TYPE_LABELS,
   StatusBadge,
+  YouthBadge,
   pick,
 } from "@/components/public/impactUi";
 import {
@@ -187,6 +188,12 @@ export default function PartnerDetail({
                         ? "Звезден партньор — дългосрочен ангажимент и значителен принос."
                         : "Star partner — long-term commitment and a major contribution."}
                     </span>
+                  </div>
+                )}
+
+                {partner.isYouthLed && (
+                  <div style={{ marginBottom: 18 }}>
+                    <YouthBadge lang={lang} />
                   </div>
                 )}
 

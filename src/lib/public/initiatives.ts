@@ -1,4 +1,5 @@
 import 'server-only'
+import { isValidObjectId } from 'mongoose'
 import { getMongoose } from '@/lib/mongo'
 import { Initiative } from '@/lib/mongo/models/Initiative'
 import { Partner } from '@/lib/mongo/models/Partner'
@@ -200,6 +201,36 @@ export type InitiativeDetail = {
 export async function getPublicInitiativeBySlug(slug: string): Promise<InitiativeDetail | null> {
   await getMongoose()
   const raw = await Initiative.findOne({ slug, isPublished: true }).lean()
+  if (!raw) return null
+
+  const initiative = serializeInitiative(raw)
+
+  const ids = new Set<string>()
+  for (const p of initiative.partners) if (p.partnerId) ids.add(p.partnerId)
+  for (const f of initiative.inflows) if (f.partnerId) ids.add(f.partnerId)
+
+  const partnersById: Record<string, PartnerDTO> = {}
+  if (ids.size > 0) {
+    const rawPartners = await Partner.find({ _id: { $in: [...ids] } }).lean()
+    for (const rp of rawPartners) {
+      const dto = serializePartner(rp)
+      partnersById[dto.id] = dto
+    }
+  }
+
+  return { initiative, partnersById }
+}
+
+/**
+ * Same enrichment as `getPublicInitiativeBySlug`, but resolves by immutable
+ * Mongo `_id` — used where a surface pins one specific initiative (see
+ * `RECONNECT_INITIATIVE_ID`). Guards invalid ids so a bad/removed id returns
+ * null instead of throwing a CastError.
+ */
+export async function getPublicInitiativeById(id: string): Promise<InitiativeDetail | null> {
+  if (!isValidObjectId(id)) return null
+  await getMongoose()
+  const raw = await Initiative.findOne({ _id: id, isPublished: true }).lean()
   if (!raw) return null
 
   const initiative = serializeInitiative(raw)

@@ -33,6 +33,8 @@ const PartnerSchema = new Schema(
     descriptionEn: { type: String, default: '' },
     // Brand-wide star flag — long-term commitment / major contribution.
     isStarPartner: { type: Boolean, default: false },
+    // Youth-led organisation — surfaced as a badge to highlight the cause.
+    isYouthLed: { type: Boolean, default: false },
     image: { type: ImageSchema, default: null },
     links: { type: PartnerLinksSchema, default: () => ({}) },
     needsTranslationReview: { type: Boolean, default: false },

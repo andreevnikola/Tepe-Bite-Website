@@ -21,6 +21,7 @@ export type PartnerDTO = {
   descriptionBg: string
   descriptionEn: string
   isStarPartner: boolean
+  isYouthLed: boolean
   image: ImageDTO | null
   links: { website: string; instagram: string; facebook: string; tiktok: string }
   needsTranslationReview: boolean

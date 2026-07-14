@@ -31,6 +31,7 @@ export const PartnerCreateSchema = z.object({
   descriptionBg: z.string().max(5000).default(''),
   descriptionEn: z.string().max(5000).optional(),
   isStarPartner: z.boolean().default(false),
+  isYouthLed: z.boolean().default(false),
   image: ImageInputSchema.nullable().optional(),
   links: PartnerLinksSchema.optional(),
 })

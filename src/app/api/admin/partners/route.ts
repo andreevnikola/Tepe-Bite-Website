@@ -58,6 +58,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     descriptionBg: data.descriptionBg ?? '',
     descriptionEn,
     isStarPartner: data.isStarPartner,
+    isYouthLed: data.isYouthLed,
     image: data.image ?? null,
     links: data.links ?? {},
     needsTranslationReview: !ok,

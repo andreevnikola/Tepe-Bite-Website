@@ -19,6 +19,7 @@ export function serializePartner(p: any): PartnerDTO {
     descriptionBg: p.descriptionBg ?? '',
     descriptionEn: p.descriptionEn ?? '',
     isStarPartner: Boolean(p.isStarPartner),
+    isYouthLed: Boolean(p.isYouthLed),
     image: p.image ? { url: p.image.url, key: p.image.key } : null,
     links: {
       website: p.links?.website ?? '',

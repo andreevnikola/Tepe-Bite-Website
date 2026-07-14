@@ -100,12 +100,17 @@ export default function InitiativeCard({
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-          <StatusBadge status={initiative.status} lang={lang} />
+          {initiative.status === "done" ? (
+            <CompletedDateBadge
+              dateISO={initiative.completionDateISO}
+              lang={lang}
+              tone="green"
+            />
+          ) : (
+            <StatusBadge status={initiative.status} lang={lang} />
+          )}
           {initiative.category && (
             <CategoryChip category={initiative.category} lang={lang} />
-          )}
-          {initiative.status === "done" && (
-            <CompletedDateBadge dateISO={initiative.completionDateISO} lang={lang} />
           )}
         </div>
 
@@ -184,7 +189,8 @@ export default function InitiativeCard({
 
           {initiative.steps.length > 0 &&
             initiative.status !== "frozen" &&
-            initiative.status !== "planned" && (
+            initiative.status !== "planned" &&
+            initiative.status !== "done" && (
             <StepsProgress
               done={doneSteps}
               total={initiative.steps.length}

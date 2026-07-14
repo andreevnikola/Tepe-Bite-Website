@@ -67,6 +67,7 @@ export async function PATCH(
   if (data.nameBg !== undefined) partner.nameBg = data.nameBg
   if (data.descriptionBg !== undefined) partner.descriptionBg = data.descriptionBg
   if (data.isStarPartner !== undefined) partner.isStarPartner = data.isStarPartner
+  if (data.isYouthLed !== undefined) partner.isYouthLed = data.isYouthLed
   if (data.links !== undefined) partner.set('links', { ...partner.links, ...data.links })
   if (data.image !== undefined) partner.set('image', data.image)
 

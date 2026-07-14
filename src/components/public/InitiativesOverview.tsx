@@ -906,7 +906,7 @@ function ComingSoonCard({ lang }: { lang: Lang }) {
         }}
       >
         {bg
-          ? "Тепърва започваме — очаквайте нови проекти за Пловдив съвсем скоро."
+          ? "Тепърва започваме — очаквайте нови проекти за Пловдив скоро."
           : "We've just started — expect new projects for Plovdiv very soon."}
       </p>
     </div>
@@ -1077,7 +1077,7 @@ function DevelopingNote({
             }}
           >
             {bg
-              ? "Съвсем скоро тук ще виждате повече завършени проекти, партньори и вложени средства — стъпка по стъпка, открито и проследимо. Благодарим, че сте с нас от самото начало."
+              ? "Скоро тук ще виждате повече завършени проекти, партньори и вложени средства — стъпка по стъпка, открито и проследимо. Благодарим, че сте с нас от самото начало."
               : "Very soon you'll see more completed projects, partners and invested funds here — step by step, openly and traceably. Thank you for being with us from the very start."}
           </p>
         </div>
@@ -1129,7 +1129,7 @@ function EmptyState({ lang }: { lang: Lang }) {
             }}
           >
             {bg
-              ? "Все още подготвяме първите си инициативи. Съвсем скоро тук ще споделяме конкретни проекти за Пловдив, партньорите зад тях и всяко вложено евро — открито и проследимо."
+              ? "Все още подготвяме първите си инициативи. Скоро тук ще споделяме конкретни проекти за Пловдив, партньорите зад тях и всяко вложено евро — открито и проследимо."
               : "We're still preparing our first initiatives. Very soon we'll share concrete projects for Plovdiv, the partners behind them, and every euro invested — openly and traceably."}
           </p>
           <Link href="/initiatives" className="btn btn-primary">

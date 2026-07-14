@@ -1,7 +1,7 @@
 "use client";
 
 import { IconStar } from "@/components/icons";
-import { pick } from "@/components/public/impactUi";
+import { pick, YouthBadge } from "@/components/public/impactUi";
 import { PhaseBarMini } from "@/components/public/PhaseBreakdown";
 import type { PartnerCarouselItem } from "@/lib/public/initiatives";
 import type { Lang } from "@/store/lang";
@@ -171,6 +171,12 @@ export default function PartnersCarousel({
                     </span>
                   </div>
                 </div>
+
+                {partner.isYouthLed && (
+                  <div>
+                    <YouthBadge lang={lang} compact />
+                  </div>
+                )}
 
                 {desc && (
                   <p

@@ -6,6 +6,7 @@ import {
   FreezeNote,
   StatusBadge,
   StarBadge,
+  YouthBadge,
   CompletedDateBadge,
   formatDate,
   pick,
@@ -20,6 +21,7 @@ import {
   FundingSplitBar,
   inflowPhaseTotals,
 } from "@/components/public/PhaseBreakdown";
+import Gallery from "@/components/public/Gallery";
 import type { InitiativeDetail as InitiativeDetailData } from "@/lib/public/initiatives";
 import type { InflowDTO, PartnerDTO } from "@/lib/dashboard/dto";
 import { formatDualMoney, formatMoneyEUR } from "@/lib/money";
@@ -27,7 +29,7 @@ import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 /* clock icon (upcoming milestones) */
 const IconClock = () => (
@@ -261,218 +263,21 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   );
 }
 
-/* ═══ GALLERY + LIGHTBOX ═══ */
-function Gallery({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
+/* ═══ GALLERY ═══ */
+function GallerySection({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   const bg = lang === "bg";
-  const gallery = detail.initiative.gallery;
-  const [open, setOpen] = useState<number | null>(null);
-
-  const show = useCallback(
-    (idx: number) => setOpen(((idx % gallery.length) + gallery.length) % gallery.length),
-    [gallery.length],
-  );
-
-  useEffect(() => {
-    if (open === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(null);
-      else if (e.key === "ArrowRight") show(open + 1);
-      else if (e.key === "ArrowLeft") show(open - 1);
-    };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open, show]);
-
-  if (gallery.length === 0) return null;
-  const current = open !== null ? gallery[open] : null;
-
+  if (detail.initiative.gallery.length === 0) return null;
   return (
     <section className="section-spacing" style={{ background: "var(--surface)" }}>
       <div className="section-inner">
-        <div className="label-tag" style={{ marginBottom: 12 }}>
-          {bg ? "Галерия" : "Gallery"}
-        </div>
-        <h2 className="heading-lg" style={{ marginBottom: 28 }}>
-          {bg ? "От терена" : "From the ground"}
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: 14,
-          }}
-        >
-          {gallery.map((g, idx) => (
-            <button
-              key={g.id}
-              type="button"
-              onClick={() => show(idx)}
-              className="card-hover"
-              style={{
-                position: "relative",
-                aspectRatio: "4 / 3",
-                borderRadius: "var(--r-md)",
-                overflow: "hidden",
-                border: "1px solid var(--border)",
-                cursor: "pointer",
-                padding: 0,
-                background: "var(--surface2)",
-              }}
-              aria-label={
-                pick(lang, g.captionBg, g.captionEn) ||
-                (bg ? `Снимка ${idx + 1}` : `Photo ${idx + 1}`)
-              }
-            >
-              <Image
-                src={g.url}
-                alt={pick(lang, g.captionBg, g.captionEn)}
-                fill
-                sizes="(max-width: 760px) 50vw, 240px"
-                style={{ objectFit: "cover" }}
-              />
-            </button>
-          ))}
-        </div>
+        <Gallery
+          items={detail.initiative.gallery}
+          lang={lang}
+          eyebrow={bg ? "Галерия" : "Gallery"}
+          heading={bg ? "От терена" : "From the ground"}
+        />
       </div>
-
-      {/* Lightbox */}
-      {current && (
-        <div
-          onClick={() => setOpen(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 200,
-            background: "rgba(20,12,26,0.92)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "clamp(16px, 4vw, 48px)",
-            animation: "page-fade-in 0.2s ease both",
-          }}
-          role="dialog"
-          aria-modal="true"
-        >
-          {/* close */}
-          <button
-            type="button"
-            onClick={() => setOpen(null)}
-            aria-label={bg ? "Затвори" : "Close"}
-            style={{
-              position: "absolute",
-              top: 20,
-              right: 24,
-              width: 44,
-              height: 44,
-              borderRadius: "50%",
-              border: "none",
-              background: "rgba(255,255,255,0.14)",
-              color: "white",
-              fontSize: "1.4rem",
-              cursor: "pointer",
-              lineHeight: 1,
-            }}
-          >
-            ✕
-          </button>
-
-          {gallery.length > 1 && (
-            <>
-              <LightboxNav dir="prev" onClick={(e) => { e.stopPropagation(); show(open! - 1); }} label={bg ? "Предишна" : "Previous"} />
-              <LightboxNav dir="next" onClick={(e) => { e.stopPropagation(); show(open! + 1); }} label={bg ? "Следваща" : "Next"} />
-            </>
-          )}
-
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              maxWidth: 1100,
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 14,
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "min(72vh, 760px)",
-                borderRadius: "var(--r-md)",
-                overflow: "hidden",
-                boxShadow: "var(--shadow-lg)",
-              }}
-            >
-              <Image
-                src={current.url}
-                alt={pick(lang, current.captionBg, current.captionEn)}
-                fill
-                sizes="100vw"
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-                color: "rgba(255,255,255,0.85)",
-                fontSize: "0.88rem",
-                gap: 16,
-              }}
-            >
-              <span>{pick(lang, current.captionBg, current.captionEn)}</span>
-              <span style={{ flexShrink: 0, opacity: 0.7 }}>
-                {open! + 1} / {gallery.length}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
-  );
-}
-
-function LightboxNav({
-  dir,
-  onClick,
-  label,
-}: {
-  dir: "prev" | "next";
-  onClick: (e: React.MouseEvent) => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      style={{
-        position: "absolute",
-        top: "50%",
-        transform: "translateY(-50%)",
-        [dir === "prev" ? "left" : "right"]: "clamp(8px, 2vw, 28px)",
-        width: 52,
-        height: 52,
-        borderRadius: "50%",
-        border: "none",
-        background: "rgba(255,255,255,0.14)",
-        color: "white",
-        fontSize: "1.5rem",
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      } as React.CSSProperties}
-    >
-      {dir === "prev" ? "‹" : "›"}
-    </button>
   );
 }
 
@@ -835,6 +640,7 @@ function Partners({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }
                         {name}
                       </span>
                       {partner!.isStarPartner && <StarBadge lang={lang} compact />}
+                      {partner!.isYouthLed && <YouthBadge lang={lang} compact />}
                     </div>
                     <span
                       style={{
@@ -1037,7 +843,7 @@ function FundingGapInvite({
           </>
         ) : (
           <>
-            We're <span style={{ color: "var(--caramel)" }}>{gap}</span> short of
+            We&apos;re <span style={{ color: "var(--caramel)" }}>{gap}</span> short of
             completing this initiative
           </>
         )}
@@ -1337,7 +1143,7 @@ export default function InitiativeDetail({ detail }: { detail: InitiativeDetailD
     <main>
       <Hero detail={detail} lang={lang} />
       <Intro detail={detail} lang={lang} />
-      <Gallery detail={detail} lang={lang} />
+      <GallerySection detail={detail} lang={lang} />
       <Progress detail={detail} lang={lang} />
       <Partners detail={detail} lang={lang} />
       <Finances detail={detail} lang={lang} />
