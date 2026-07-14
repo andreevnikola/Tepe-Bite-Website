@@ -1,0 +1,14 @@
+graphify-out/.graphify_labels.json
+graphify-out/.graphify_root
+graphify-out/.rebuild.lock
+graphify-out/2026-07-14/.graphify_labels.json
+graphify-out/2026-07-14/GRAPH_REPORT.md
+graphify-out/2026-07-14/graph.json
+graphify-out/2026-07-14/manifest.json
+graphify-out/GRAPH_REPORT.md
+graphify-out/cache/ast/v0.9.15/0b44daaa94766d385f056c95e8aabb30ad6e49ef3aa9c7eb9e32606055f4eaf2.json
+graphify-out/cache/ast/v0.9.15/1d8526e517224c68a37c835abc3a724c2c659cff87d93966335ddf21ed3e918b.json
+graphify-out/cache/ast/v0.9.15/88b504f7bea6ff9172ea7537094b843d503a063d1a3f7f2bf52ef0371a5cce0b.json
+graphify-out/graph.json
+src/components/admin/ProofUploader.tsx
+src/lib/image/compress.ts
