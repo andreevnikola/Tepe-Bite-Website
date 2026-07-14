@@ -89,5 +89,8 @@
   "87": "postcss.config.mjs",
   "88": "page.tsx",
   "89": "layout.tsx",
-  "90": "template.tsx"
+  "90": "template.tsx",
+  "93": "page.tsx",
+  "95": "ImpactPledge.tsx",
+  "98": "FirstInitiative.tsx"
 }

@@ -90,5 +90,13 @@
   "88": "page.tsx",
   "89": "layout.tsx",
   "90": "template.tsx",
-  "91": "resend"
+  "91": "page.tsx",
+  "92": "queries.ts",
+  "93": "page.tsx",
+  "94": "Initiative.ts",
+  "95": "ImpactPledge.tsx",
+  "96": "ProductSection.tsx",
+  "97": "ProofUploader.tsx",
+  "98": "FirstInitiative.tsx",
+  "99": "Hero.tsx"
 }

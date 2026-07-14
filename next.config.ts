@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: [
+    "typeorm",
+    "pg",
+    "mongoose",
+    "bcryptjs",
+    "reflect-metadata",
+  ],
   experimental: {
     viewTransition: true,
   },

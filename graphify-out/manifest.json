@@ -5,14 +5,9 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "next.config.ts": {
-    "mtime": 1783868186.9404383,
-    "ast_hash": "0c76f2caa002585ba3fe2023d27e940b",
-    "semantic_hash": "0c76f2caa002585ba3fe2023d27e940b"
-  },
-  "package-lock 2.json": {
-    "mtime": 1783956844.0,
-    "ast_hash": "c158ab48017e257eed1ce60495cdcc75",
-    "semantic_hash": "c158ab48017e257eed1ce60495cdcc75"
+    "mtime": 1784028460.3772378,
+    "ast_hash": "141fd5a4fb16d80ac96de7676e5df84b",
+    "semantic_hash": ""
   },
   "package.json": {
     "mtime": 1784015977.9963803,
@@ -1127,6 +1122,11 @@
   "src/lib/image/compress.ts": {
     "mtime": 1784022397.0919108,
     "ast_hash": "0599437ac03a43dc204c3af9bbe0f939",
+    "semantic_hash": ""
+  },
+  "src/instrumentation.ts": {
+    "mtime": 1784028461.8031464,
+    "ast_hash": "854ce6789b242e87f4e84800fd026ea2",
     "semantic_hash": ""
   }
 }
