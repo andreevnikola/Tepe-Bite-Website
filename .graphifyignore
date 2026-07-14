@@ -23,3 +23,5 @@ public/**/*.webp
 public/**/*.gif
 public/**/*.svg
 public/**/*.mp4
+
+.git/

@@ -389,6 +389,8 @@ export default function InitiativesPromo() {
           >
             {bg ? "Виж инициативите" : "See the initiatives"}
           </Link>
+          {/* NOTE: kept on /initiatives (registry) — copy = browse; the sky
+              button above already links to the /impact story. */}
         </div>
       </div>
 

@@ -1135,7 +1135,7 @@ function EmptyState({ lang }: { lang: Lang }) {
               ? "Все още подготвяме първите си инициативи. Скоро тук ще споделяме конкретни проекти за Пловдив, партньорите зад тях и всяко вложено евро — открито и проследимо."
               : "We're still preparing our first initiatives. Very soon we'll share concrete projects for Plovdiv, the partners behind them, and every euro invested — openly and traceably."}
           </p>
-          <Link href="/initiatives" className="btn btn-primary">
+          <Link href="/impact" className="btn btn-primary">
             {bg ? "Как работят инициативите ни" : "How our initiatives work"}{" "}
             <IconArrow />
           </Link>

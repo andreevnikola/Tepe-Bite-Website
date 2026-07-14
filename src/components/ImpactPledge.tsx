@@ -233,11 +233,9 @@ export default function ImpactPledge({
       <div
         style={{ lineHeight: 1.35 }}
         className={
-          pathname === "/initiatives"
-            ? "w-full max-[640px]:items-center max-[640px]:justify-center flex flex-col"
-            : pathname === "/impact"
-              ? "w-full max-[900px]:items-center max-[900px]:justify-center flex flex-col"
-              : ""
+          pathname === "/impact"
+            ? "w-full max-[1200px]:items-center max-[1200px]:justify-center flex flex-col"
+            : ""
         }
       >
         <span

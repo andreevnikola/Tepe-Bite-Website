@@ -75,7 +75,7 @@ export default function PartnerDetail({
       >
         <div className="section-inner" style={{ maxWidth: 1120 }}>
           <Link
-            href="/initiatives/all"
+            href="/initiatives"
             style={{
               display: "inline-flex",
               alignItems: "center",

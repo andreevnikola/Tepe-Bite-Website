@@ -19,11 +19,11 @@ export default function Nav() {
   const isAdmin = pathname.startsWith("/admin");
   const isLocationDetail = /^\/partnering-locations\/.+/.test(pathname);
   const isNewsDetail = /^\/news\/.+/.test(pathname);
-  // Data-driven initiatives pages (/initiatives/all, /initiatives/[slug],
+  // Initiatives pages (/initiatives registry, /initiatives/[slug],
   // /initiatives/partners/[slug]) have image/gradient heroes at the very top,
-  // so the nav needs a solid background even before scrolling. The hardcoded
-  // /initiatives gateway keeps its transparent-on-hero look.
-  const isInitiativesData = pathname.startsWith("/initiatives/");
+  // so the nav needs a solid background even before scrolling. /impact is a
+  // marketing page with its own hero and keeps its transparent-on-hero look.
+  const isInitiativesData = pathname.startsWith("/initiatives");
   // The /links link-hub is a standalone, mobile-first landing with its own
   // header and language switch — the site chrome would only get in its way.
   const isLinks = pathname.startsWith("/links");
@@ -56,14 +56,14 @@ export default function Nav() {
       ? [
           ["/", "Начало"],
           ["/product", "Продуктът"],
-          ["/initiatives", "Нашите инициативи"],
+          ["/impact", "IMPACT"],
           ["/partnering-locations", "Партниращи обекти"],
           ["/news", "Новини"],
         ]
       : [
           ["/", "Home"],
           ["/product", "The Product"],
-          ["/initiatives", "Our Initiatives"],
+          ["/impact", "IMPACT"],
           ["/partnering-locations", "Partnering Locations"],
           ["/news", "News"],
         ];
@@ -71,7 +71,7 @@ export default function Nav() {
   const isActive = (href: string) => {
     if (href === "/") return isHome;
     if (href === "/product") return pathname === "/product";
-    if (href === "/initiatives") return pathname === "/initiatives";
+    if (href === "/impact") return pathname === "/impact";
     if (href === "/partnering-locations")
       return pathname.startsWith("/partnering-locations");
     if (href === "/news") return pathname === "/news";
@@ -224,7 +224,21 @@ export default function Nav() {
                       : "var(--text-mid)")
                   }
                 >
-                  {label}
+                  {href === "/impact" ? (
+                    <span
+                      style={{
+                        fontFamily: "var(--font-brush)",
+                        fontSize: "1.45rem",
+                        fontWeight: 700,
+                        color: "var(--caramel)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      Impact<span>·</span>
+                    </span>
+                  ) : (
+                    label
+                  )}
                   {active && (
                     <span
                       style={{
@@ -403,7 +417,21 @@ export default function Nav() {
                       : "var(--text-mid)")
                   }
                 >
-                  {label}
+                  {href === "/impact" ? (
+                    <span
+                      style={{
+                        fontFamily: "var(--font-brush)",
+                        fontSize: "1.45rem",
+                        fontWeight: 700,
+                        color: "var(--caramel)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      Impact<span>·</span>
+                    </span>
+                  ) : (
+                    label
+                  )}
                 </Link>
               );
             })}
