@@ -10,9 +10,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1784029245.0065782,
-    "ast_hash": "72bf9bc3318f34ccb3e7edf8ce31bdb7",
-    "semantic_hash": "72bf9bc3318f34ccb3e7edf8ce31bdb7"
+    "mtime": 1784029727.0068026,
+    "ast_hash": "ba9f71581e346ff8020479a17e8df1fd",
+    "semantic_hash": ""
   },
   "postcss.config.mjs": {
     "mtime": 1778142531.8865533,
@@ -1035,8 +1035,8 @@
     "semantic_hash": "08d32a40fb2d9c359e19d0ba9c071924"
   },
   "CLAUDE.md": {
-    "mtime": 1784029242.6959217,
-    "ast_hash": "b8317584c0eb27e04ea09a13eb6f5282",
+    "mtime": 1784029930.7947795,
+    "ast_hash": "a3aba651e87c850094b2f84256e093ef",
     "semantic_hash": ""
   },
   "README.md": {
