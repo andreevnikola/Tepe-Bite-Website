@@ -462,10 +462,14 @@ function VisibleInitiativesSection({
 
 function ImpactVehicleSection({ lang, stats }: { lang: Lang; stats: OverviewData["stats"] }) {
   const bg = lang === "bg";
-  const hasFunds = stats.investedTotalCents > 0;
-
-  const total = stats.investedImpactCents + stats.investedExternalCents;
-  const impactPct = total > 0 ? Math.round((stats.investedImpactCents / total) * 100) : 0;
+  const expensesTotal = stats.accountedExpensesTotalCents;
+  const impactAll = stats.fundedImpactAllPhasesCents;
+  const externalAll = stats.fundedExternalAllPhasesCents;
+  const raisedTotal = impactAll + externalAll;
+  const impactPct = raisedTotal > 0 ? Math.round((impactAll / raisedTotal) * 100) : 0;
+  const externalPct = 100 - impactPct;
+  const hasExpenses = expensesTotal > 0;
+  const hasRaised = raisedTotal > 0;
 
   return (
     <section
@@ -489,145 +493,194 @@ function ImpactVehicleSection({ lang, stats }: { lang: Lang; stats: OverviewData
           </p>
         </div>
 
+        {/* ── Section 1: accounted expenses headline ─────────────────────── */}
         <div
           className="card"
           style={{ padding: "clamp(28px, 4vw, 44px)", background: "var(--surface)" }}
         >
-          {hasFunds ? (
-            <>
-              {/* Hero number + prominent CTA */}
+          <div
+            className="impact-hero-row"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: hasExpenses ? "flex-end" : "center",
+              justifyContent: "space-between",
+              gap: 28,
+            }}
+          >
+            {hasExpenses ? (
+              <div>
+                <div
+                  style={{
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "var(--text-soft)",
+                    marginBottom: 10,
+                  }}
+                >
+                  {bg
+                    ? "Усчетоводени разходи за инициативи"
+                    : "Accounted expenses for initiatives"}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-head)",
+                    fontSize: "clamp(2.8rem, 7vw, 4.2rem)",
+                    fontWeight: 800,
+                    color: "var(--plum)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {formatMoneyEUR(expensesTotal)}
+                </div>
+              </div>
+            ) : (
+              <p style={{ fontSize: "1rem", color: "var(--text-mid)", lineHeight: 1.7, margin: 0, maxWidth: 520 }}>
+                {bg
+                  ? "Първите средства тепърва тръгват към инициативите. Щом похарчим за проект, разходите се появяват тук — открито и с доказателство."
+                  : "The first money is only just heading to initiatives. As soon as we spend on a project, expenses show up here — openly and with proof."}
+              </p>
+            )}
+            <Link href="/initiatives/all" className="btn btn-sky" style={{ flexShrink: 0 }}>
+              {bg ? "Разгледай въздействието ни" : "Explore our impact"}
+              <IconArrow />
+            </Link>
+          </div>
+        </div>
+
+        {/* ── Section 2: outside-funding narrative + combined funding card ── */}
+        {hasRaised && (
+          <div style={{ marginTop: 28 }}>
+            <div style={{ maxWidth: 660, marginBottom: 20 }}>
+              <div className="label-tag" style={{ marginBottom: 10, color: "var(--sky-dk)" }}>
+                {bg ? "Външно финансиране" : "Outside funding"}
+              </div>
+              <p style={{ fontSize: "1.02rem", lineHeight: 1.7, color: "var(--text-mid)", margin: 0 }}>
+                {bg
+                  ? "Стремим се основната част от финансирането на инициативите да идва от външни източници — спонсори, дарения и партньори — а не само от фонда. Така всеки цент от ТЕПЕ bite Impact върши повече."
+                  : "We aim for the bulk of initiative funding to come from outside sources — sponsors, donations and partners — not the fund alone. That way every cent of ТЕПЕ bite Impact does more."}
+              </p>
+            </div>
+
+            <div className="card" style={{ padding: "clamp(24px, 3.5vw, 38px)", background: "var(--surface)" }}>
               <div
-                className="impact-hero-row"
+                className="impact-funds-grid"
                 style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                  gap: 28,
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "clamp(20px, 4vw, 44px)",
+                  marginBottom: 26,
                 }}
               >
                 <div>
                   <div
                     style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
                       fontSize: "0.72rem",
                       fontWeight: 700,
-                      letterSpacing: "0.08em",
+                      letterSpacing: "0.06em",
                       textTransform: "uppercase",
                       color: "var(--text-soft)",
                       marginBottom: 10,
                     }}
                   >
-                    {bg ? "Вложени във всички инициативи" : "Invested across all initiatives"}
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--sky-mid)", flexShrink: 0 }} />
+                    {bg ? "Фонд ТЕПЕ bite Impact" : "ТЕПЕ bite Impact fund"}
                   </div>
                   <div
                     style={{
                       fontFamily: "var(--font-head)",
-                      fontSize: "clamp(2.8rem, 7vw, 4.2rem)",
+                      fontSize: "clamp(1.9rem, 4.5vw, 2.8rem)",
                       fontWeight: 800,
                       color: "var(--plum)",
-                      lineHeight: 0.95,
+                      lineHeight: 1,
                       letterSpacing: "-0.02em",
                     }}
                   >
-                    {formatMoneyEUR(stats.investedTotalCents)}
+                    {formatMoneyEUR(impactAll)}
                   </div>
                 </div>
-                <Link href="/impact" className="btn btn-sky" style={{ flexShrink: 0 }}>
-                  {bg ? "Влез във фонда" : "Open the fund"}
-                  <IconArrow />
-                </Link>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      color: "var(--text-soft)",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--caramel)", flexShrink: 0 }} />
+                    {bg ? "Партньори и външни" : "Partners & external"}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-head)",
+                      fontSize: "clamp(1.9rem, 4.5vw, 2.8rem)",
+                      fontWeight: 800,
+                      color: "var(--plum)",
+                      lineHeight: 1,
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    {formatMoneyEUR(externalAll)}
+                  </div>
+                </div>
               </div>
 
-              {/* Minimalist end-breakdown */}
+              {/* proportion bar */}
               <div
+                style={{ display: "flex", height: 12, borderRadius: 10, overflow: "hidden", background: "var(--border)" }}
+                role="img"
+                aria-label={
+                  bg
+                    ? `Разпределение: фонд ${impactPct}%, външни ${externalPct}%`
+                    : `Split: fund ${impactPct}%, external ${externalPct}%`
+                }
+              >
+                <div style={{ width: `${impactPct}%`, background: "var(--sky-mid)" }} />
+                <div style={{ width: `${externalPct}%`, background: "var(--caramel)" }} />
+              </div>
+
+              <p
                 style={{
-                  marginTop: 32,
-                  paddingTop: 24,
-                  borderTop: "1px solid var(--border)",
+                  fontFamily: "var(--font-head)",
+                  fontSize: "1.05rem",
+                  fontWeight: 700,
+                  color: "var(--plum)",
+                  margin: "18px 0 0",
                 }}
               >
-                <div
-                  style={{
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    color: "var(--sky-dk)",
-                    marginBottom: 14,
-                  }}
-                >
-                  {bg
-                    ? "Осигуряваме външно финансиране, за да умножим ефекта"
-                    : "We secure outside funding to multiply our impact"}
-                </div>
-                <ImpactMiniSplit
-                  impactCents={stats.investedImpactCents}
-                  externalCents={stats.investedExternalCents}
-                  impactPct={impactPct}
-                  lang={lang}
-                />
-              </div>
-            </>
-          ) : (
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
-              <p style={{ fontSize: "1rem", color: "var(--text-mid)", lineHeight: 1.7, margin: 0, maxWidth: 520 }}>
                 {bg
-                  ? "Фондът тепърва се пълни. Щом първите средства бъдат вложени в инициатива, ще ги видиш тук — открито и с точна разбивка."
-                  : "The fund is just starting to fill. As soon as the first money is invested in an initiative, you'll see it here — openly and broken down."}
+                  ? `Общо набрани ${formatMoneyEUR(raisedTotal)} за социалните ни инициативи`
+                  : `${formatMoneyEUR(raisedTotal)} raised in total for our social initiatives`}
               </p>
-              <Link href="/impact" className="btn btn-sky" style={{ flexShrink: 0 }}>
-                {bg ? "Влез във фонда" : "Open the fund"}
-                <IconArrow />
-              </Link>
+              <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--text-soft)", margin: "8px 0 0" }}>
+                {bg
+                  ? "Това са всички средства — налични, осигурени и планирани — които сме привлекли или заделили за инициативите: от фонд ТЕПЕ bite Impact и от външни източници. Това е парите, които имаме или ще вложим в проекти; разликата между двете числа показва колко от подкрепата идва отвън."
+                  : "These are all the funds — available, arranged and planned — we've secured or set aside for initiatives: from the ТЕПЕ bite Impact fund and from outside sources. It's the money we have or will invest in projects; the gap between the two figures shows how much of the support comes from outside."}
+              </p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <style>{`
         @media (max-width: 560px) {
           .impact-hero-row { flex-direction: column; align-items: flex-start !important; }
+          .impact-funds-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>
-  );
-}
-
-/* Minimalist two-source split — thinner and quieter than FundingSplitBar. */
-function ImpactMiniSplit({
-  impactCents,
-  externalCents,
-  impactPct,
-  lang,
-}: {
-  impactCents: number;
-  externalCents: number;
-  impactPct: number;
-  lang: Lang;
-}) {
-  const bg = lang === "bg";
-  const rows: { label: string; value: number; color: string }[] = [
-    { label: bg ? "Фонд ТЕПЕ bite Impact" : "ТЕПЕ bite Impact fund", value: impactCents, color: "var(--sky-mid)" },
-    { label: bg ? "Партньори и външни" : "Partners & external", value: externalCents, color: "var(--caramel)" },
-  ];
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <div style={{ display: "flex", height: 8, borderRadius: 10, overflow: "hidden", background: "var(--border)" }}>
-        <div style={{ width: `${impactPct}%`, background: "var(--sky-mid)" }} />
-        <div style={{ flex: 1, background: "var(--caramel)" }} />
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 28px" }}>
-        {rows.map((r) => (
-          <div key={r.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 9, height: 9, borderRadius: "50%", background: r.color, flexShrink: 0 }} />
-            <span style={{ fontSize: "0.85rem", color: "var(--text-mid)" }}>{r.label}</span>
-            <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--plum)" }}>
-              {formatMoneyEUR(r.value)}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
 

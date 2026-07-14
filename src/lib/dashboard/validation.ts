@@ -53,7 +53,7 @@ export const StepInputSchema = z.object({
 
 export const InitiativePartnerInputSchema = z.object({
   partnerId: z.string().min(1),
-  partnershipType: z.enum(PARTNERSHIP_TYPES),
+  partnershipTypes: z.array(z.enum(PARTNERSHIP_TYPES)).min(1),
   contributionBg: z.string().max(2000).default(''),
   contributionEn: z.string().max(2000).optional(),
 })
@@ -69,6 +69,15 @@ export const InflowInputSchema = z.object({
   arrangedType: z.enum(ARRANGED_TYPES).nullable().optional(),
   noteBg: z.string().max(1000).default(''),
   noteEn: z.string().max(1000).optional(),
+})
+
+export const ExpenseInputSchema = z.object({
+  amountCents: z.number().int().min(0),
+  descriptionBg: z.string().min(1).max(1000),
+  descriptionEn: z.string().max(1000).optional(),
+  dateISO: z.string().min(1),
+  // Image proof is mandatory for every expense.
+  proof: ImageInputSchema,
 })
 
 export const GalleryItemInputSchema = z.object({
@@ -97,9 +106,9 @@ const InitiativeCreateBase = z.object({
   steps: z.array(StepInputSchema).max(50).default([]),
   currentStepIndex: z.number().int().min(0).default(0),
   expectedCostCents: z.number().int().min(0).default(0),
-  spentCents: z.number().int().min(0).default(0),
   partners: z.array(InitiativePartnerInputSchema).max(50).default([]),
   inflows: z.array(InflowInputSchema).max(200).default([]),
+  expenses: z.array(ExpenseInputSchema).max(200).default([]),
 })
 
 // A completed step must carry a completion date (enforced on both create + update).

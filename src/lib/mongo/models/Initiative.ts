@@ -41,7 +41,10 @@ const StepSchema = new Schema(
 const InitiativePartnerSchema = new Schema(
   {
     partnerId: { type: Schema.Types.ObjectId, ref: 'Partner', required: true },
-    partnershipType: { type: String, enum: PARTNERSHIP_TYPES, required: true },
+    // A partner can hold several roles on the same initiative (e.g. sponsor +
+    // institutional). Legacy docs carry a single `partnershipType`; the read
+    // layer backfills those into this array.
+    partnershipTypes: { type: [String], enum: PARTNERSHIP_TYPES, required: true },
     contributionBg: { type: String, default: '' },
     contributionEn: { type: String, default: '' },
   },
@@ -65,6 +68,23 @@ const InflowSchema = new Schema(
     arrangedType: { type: String, enum: ARRANGED_TYPES, default: null },
     noteBg: { type: String, default: '' },
     noteEn: { type: String, default: '' },
+  },
+  { _id: true },
+)
+
+/**
+ * A tracked (accounted) expense — money actually spent on this initiative.
+ * Every expense carries an image proof (bill/quote) so spending is auditable.
+ * The sum of these is the initiative's total spend (there is no scalar field).
+ */
+const ExpenseSchema = new Schema(
+  {
+    amountCents: { type: Number, required: true, min: 0 },
+    descriptionBg: { type: String, required: true },
+    descriptionEn: { type: String, default: '' },
+    dateISO: { type: String, required: true },
+    // Required image proof (bill/quote). Compressed to grayscale low-res client-side.
+    proof: { type: ImageSchema, required: true },
   },
   { _id: true },
 )
@@ -93,9 +113,9 @@ const InitiativeSchema = new Schema(
     steps: { type: [StepSchema], default: [] },
     currentStepIndex: { type: Number, default: 0 },
     expectedCostCents: { type: Number, default: 0, min: 0 },
-    spentCents: { type: Number, default: 0, min: 0 },
     partners: { type: [InitiativePartnerSchema], default: [] },
     inflows: { type: [InflowSchema], default: [] },
+    expenses: { type: [ExpenseSchema], default: [] },
     needsTranslationReview: { type: Boolean, default: false },
     createdByAdminId: { type: Schema.Types.ObjectId, ref: 'Admin', default: null },
     updatedByAdminId: { type: Schema.Types.ObjectId, ref: 'Admin', default: null },

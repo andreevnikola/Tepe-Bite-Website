@@ -372,7 +372,7 @@ export default function PartnerDetail({
               {initiatives.map(
                 ({
                   initiative,
-                  partnershipType,
+                  partnershipTypes,
                   contributionBg,
                   contributionEn,
                   financial: initFin,
@@ -387,7 +387,6 @@ export default function PartnerDetail({
                     contributionBg,
                     contributionEn,
                   );
-                  const typeLabel = PARTNERSHIP_TYPE_LABELS[partnershipType];
                   return (
                     <Link
                       key={initiative.id}
@@ -409,20 +408,26 @@ export default function PartnerDetail({
                           }}
                         >
                           <StatusBadge status={initiative.status} lang={lang} />
-                          <span
-                            style={{
-                              background: "var(--plum-lt)",
-                              color: "var(--plum)",
-                              borderRadius: 100,
-                              padding: "3px 11px",
-                              fontSize: "0.66rem",
-                              fontWeight: 700,
-                              textTransform: "uppercase",
-                              letterSpacing: "0.05em",
-                            }}
-                          >
-                            {lang === "en" ? typeLabel.en : typeLabel.bg}
-                          </span>
+                          {partnershipTypes.map((t) => {
+                            const tl = PARTNERSHIP_TYPE_LABELS[t];
+                            return (
+                              <span
+                                key={t}
+                                style={{
+                                  background: "var(--plum-lt)",
+                                  color: "var(--plum)",
+                                  borderRadius: 100,
+                                  padding: "3px 11px",
+                                  fontSize: "0.66rem",
+                                  fontWeight: 700,
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.05em",
+                                }}
+                              >
+                                {lang === "en" ? tl.en : tl.bg}
+                              </span>
+                            );
+                          })}
                         </div>
                         <h3
                           style={{

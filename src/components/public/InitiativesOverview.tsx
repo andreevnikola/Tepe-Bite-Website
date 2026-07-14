@@ -270,6 +270,7 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
   const bg = lang === "bg";
   const { stats, recentlyCompleted } = data;
   const invested = stats.investedTotalCents;
+  const expensesTotal = stats.accountedExpensesTotalCents;
   const totals = {
     available: invested,
     arranged: stats.arrangedTotalCents,
@@ -363,13 +364,13 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
               {bg ? "Нашето въздействие" : "Our impact"}
             </div>
 
-            {invested > 0 ? (
+            {expensesTotal > 0 ? (
               <>
                 <p
                   className="heading-md"
                   style={{ margin: 0, color: headText, fontWeight: 600 }}
                 >
-                  {bg ? "Вложихме" : "We've invested"}
+                  {bg ? "Досега" : "To date"}
                 </p>
                 <div
                   style={{
@@ -414,14 +415,16 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
                       display: "inline-block",
                     }}
                   >
-                    {formatMoneyEUR(invested)}
+                    {formatMoneyEUR(expensesTotal)}
                   </span>
                 </div>
                 <h1
                   className="heading-md"
                   style={{ maxWidth: 640, margin: "6px 0 0", color: headText }}
                 >
-                  {bg ? "в социални инициативи" : "in social initiatives"}
+                  {bg
+                    ? "усчетоводени разходи за социални проекти"
+                    : "in accounted expenses for social projects"}
                 </h1>
                 <p
                   style={{
@@ -430,10 +433,10 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
                     margin: "12px 0 22px",
                   }}
                 >
-                  {formatMoneyBGN(invested)} ·{" "}
+                  {formatMoneyBGN(expensesTotal)} ·{" "}
                   {bg
-                    ? "вложени във видими проекти в Пловдив"
-                    : "invested in visible projects in Plovdiv"}
+                    ? "реално похарчени по проекти в Пловдив"
+                    : "actually spent on projects in Plovdiv"}
                 </p>
               </>
             ) : (

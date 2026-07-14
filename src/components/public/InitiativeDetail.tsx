@@ -29,13 +29,18 @@ import {
 } from "@/components/public/PhaseBreakdown";
 import Gallery from "@/components/public/Gallery";
 import type { InitiativeDetail as InitiativeDetailData } from "@/lib/public/initiatives";
-import type { InflowDTO, PartnerDTO } from "@/lib/dashboard/dto";
+import type { ExpenseDTO, InflowDTO, PartnerDTO } from "@/lib/dashboard/dto";
 import { formatDualMoney, formatMoneyEUR } from "@/lib/money";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+
+/* Sum of tracked expense amounts, in cents. */
+function expenseTotalCents(expenses: ExpenseDTO[]): number {
+  return expenses.reduce((s, e) => s + e.amountCents, 0);
+}
 
 /* clock icon (upcoming milestones) */
 const IconClock = () => (
@@ -154,6 +159,7 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   const i = detail.initiative;
   const desc = pick(lang, i.descriptionBg, i.descriptionEn);
   const isDone = i.status === "done";
+  const expensesTotal = expenseTotalCents(i.expenses);
 
   const facts: [string, string][] = [];
   if (i.locationBg || i.locationEn)
@@ -162,10 +168,10 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
       pick(lang, i.locationBg, i.locationEn),
     ]);
   if (isDone) {
-    if (i.spentCents > 0)
+    if (expensesTotal > 0)
       facts.push([
-        bg ? "Похарчени средства" : "Amount spent",
-        formatMoneyEUR(i.spentCents),
+        bg ? "Усчетоводени разходи" : "Accounted expenses",
+        formatMoneyEUR(expensesTotal),
       ]);
   } else {
     if (i.expectedCostCents > 0)
@@ -699,7 +705,6 @@ function Partners({
               detail.initiative.inflows,
               partner!.id,
             );
-            const typeLabel = PARTNERSHIP_TYPE_LABELS[link.partnershipType];
             return (
               <div
                 key={link.id}
@@ -711,6 +716,51 @@ function Partners({
                   height: "100%",
                 }}
               >
+                {/* Partnership-type badges (+ star / youth) sit on top */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 8,
+                    marginBottom: 14,
+                  }}
+                >
+                  {link.partnershipTypes.map((t) => {
+                    const tl = PARTNERSHIP_TYPE_LABELS[t];
+                    return (
+                      <span
+                        key={t}
+                        style={{
+                          background: "var(--plum-lt)",
+                          color: "var(--plum)",
+                          borderRadius: 100,
+                          padding: "2px 10px",
+                          fontSize: "0.66rem",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        {lang === "en" ? tl.en : tl.bg}
+                      </span>
+                    );
+                  })}
+                  {partner!.isStarPartner && <StarBadge lang={lang} compact />}
+                  {partner!.isYouthLed && <YouthBadge lang={lang} compact />}
+                </div>
+
+                {/* almost-invisible divider between badges and the rest */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    height: 1,
+                    background: "var(--border)",
+                    opacity: 0.6,
+                    margin: "0 0 16px",
+                  }}
+                />
+
+                {/* avatar + name, with profile/website links beneath the name */}
                 <div
                   style={{
                     display: "flex",
@@ -754,47 +804,59 @@ function Partners({
                     )}
                   </span>
                   <div style={{ minWidth: 0 }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-head)",
+                        fontWeight: 700,
+                        color: "var(--plum)",
+                        fontSize: "1.02rem",
+                        display: "block",
+                      }}
+                    >
+                      {name}
+                    </span>
                     <div
                       style={{
                         display: "flex",
-                        alignItems: "center",
-                        gap: 8,
+                        gap: 14,
                         flexWrap: "wrap",
+                        alignItems: "center",
+                        marginTop: 6,
                       }}
                     >
-                      <span
+                      <Link
+                        href={`/initiatives/partners/${partner!.slug}`}
                         style={{
-                          fontFamily: "var(--font-head)",
-                          fontWeight: 700,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 5,
                           color: "var(--plum)",
-                          fontSize: "1.02rem",
+                          fontWeight: 600,
+                          fontSize: "0.85rem",
+                          textDecoration: "none",
                         }}
                       >
-                        {name}
-                      </span>
-                      {partner!.isStarPartner && (
-                        <StarBadge lang={lang} compact />
-                      )}
-                      {partner!.isYouthLed && (
-                        <YouthBadge lang={lang} compact />
+                        {bg ? "Профил" : "Profile"} <IconArrow />
+                      </Link>
+                      {partner!.links.website && (
+                        <a
+                          href={partner!.links.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 5,
+                            color: "var(--text-mid)",
+                            fontWeight: 600,
+                            fontSize: "0.85rem",
+                            textDecoration: "none",
+                          }}
+                        >
+                          <IconLink /> {bg ? "Уебсайт" : "Website"}
+                        </a>
                       )}
                     </div>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        marginTop: 4,
-                        background: "var(--plum-lt)",
-                        color: "var(--plum)",
-                        borderRadius: 100,
-                        padding: "2px 10px",
-                        fontSize: "0.66rem",
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                      }}
-                    >
-                      {lang === "en" ? typeLabel.en : typeLabel.bg}
-                    </span>
                   </div>
                 </div>
 
@@ -811,61 +873,15 @@ function Partners({
                   </p>
                 )}
 
-                <div style={{ marginTop: "auto" }}>
-                  {financial.total > 0 && (
-                    <div style={{ marginBottom: 14 }}>
-                      <PhaseBarMini
-                        totals={financial}
-                        lang={lang}
-                        label={bg ? "Финансов принос" : "Financial support"}
-                      />
-                    </div>
-                  )}
-
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 16,
-                      flexWrap: "wrap",
-                      alignItems: "center",
-                      paddingTop: 14,
-                      borderTop: "1px solid var(--border)",
-                    }}
-                  >
-                    <Link
-                      href={`/initiatives/partners/${partner!.slug}`}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 5,
-                        color: "var(--plum)",
-                        fontWeight: 600,
-                        fontSize: "0.85rem",
-                        textDecoration: "none",
-                      }}
-                    >
-                      {bg ? "Профил" : "Profile"} <IconArrow />
-                    </Link>
-                    {partner!.links.website && (
-                      <a
-                        href={partner!.links.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 5,
-                          color: "var(--text-mid)",
-                          fontWeight: 600,
-                          fontSize: "0.85rem",
-                          textDecoration: "none",
-                        }}
-                      >
-                        <IconLink /> {bg ? "Уебсайт" : "Website"}
-                      </a>
-                    )}
+                {financial.total > 0 && (
+                  <div style={{ marginTop: "auto" }}>
+                    <PhaseBarMini
+                      totals={financial}
+                      lang={lang}
+                      label={bg ? "Финансов принос" : "Financial support"}
+                    />
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
@@ -876,6 +892,11 @@ function Partners({
 }
 
 /* ═══ FINANCES ═══ */
+/* Semantic colours for the money ledger: green = money in, red = money out.
+   Green reuses the available-funds hue; red is a restrained warm OKLCH red. */
+const INFLOW_GREEN = "oklch(52% 0.13 150)";
+const EXPENSE_RED = "oklch(55% 0.19 25)";
+
 const SOURCE_ACCENT: Record<InflowDTO["source"], string> = {
   impact_fund: "var(--sky-dk)",
   partner: "var(--caramel)",
@@ -947,6 +968,195 @@ const financeSubHeading: React.CSSProperties = {
   color: "var(--plum)",
   marginBottom: 16,
 };
+
+/* One inflow row — green left accent, "+" before the amount. Keeps the source
+   and phase badges from the original design. */
+function InflowRow({
+  f,
+  detail,
+  lang,
+}: {
+  f: InflowDTO;
+  detail: InitiativeDetailData;
+  lang: Lang;
+}) {
+  const bg = lang === "bg";
+  const phaseLabel = INFLOW_PHASE_LABELS[f.phase][bg ? "bg" : "en"];
+  const arranged =
+    f.phase === "arranged" && f.arrangedType
+      ? ARRANGED_TYPE_LABELS[f.arrangedType][bg ? "bg" : "en"]
+      : null;
+  const note = pick(lang, f.noteBg, f.noteEn);
+  return (
+    <div
+      className="card"
+      style={{
+        padding: "16px 20px",
+        borderLeft: `4px solid ${INFLOW_GREEN}`,
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 12,
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <div style={{ minWidth: 0, flex: "1 1 240px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+            marginBottom: 4,
+          }}
+        >
+          <InflowSourceName f={f} detail={detail} lang={lang} />
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              background: "var(--surface2)",
+              borderRadius: 100,
+              padding: "2px 10px",
+              fontSize: "0.62rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: SOURCE_ACCENT[f.source],
+            }}
+          >
+            {INFLOW_SOURCE_LABELS[f.source][bg ? "bg" : "en"]}
+          </span>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              background: "var(--surface2)",
+              borderRadius: 100,
+              padding: "2px 10px",
+              fontSize: "0.66rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: PHASE_ACCENT[f.phase],
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: PHASE_ACCENT[f.phase],
+              }}
+            />
+            {phaseLabel}
+            {arranged ? ` · ${arranged}` : ""}
+          </span>
+        </div>
+        <div style={{ fontSize: "0.8rem", color: "var(--text-soft)" }}>
+          {formatDate(f.dateISO, lang)}
+          {note ? ` · ${note}` : ""}
+        </div>
+      </div>
+      <div
+        style={{
+          fontFamily: "var(--font-head)",
+          fontWeight: 700,
+          color: INFLOW_GREEN,
+          fontSize: "1.05rem",
+          whiteSpace: "nowrap",
+        }}
+      >
+        +{formatDualMoney(f.amountCents)}
+      </div>
+    </div>
+  );
+}
+
+/* One expense row — red left accent, "−" before the amount. Expenses carry no
+   source/phase; instead we show the description, date and a proof thumbnail. */
+function ExpenseRow({ e, lang }: { e: ExpenseDTO; lang: Lang }) {
+  const bg = lang === "bg";
+  const desc = pick(lang, e.descriptionBg, e.descriptionEn);
+  return (
+    <div
+      className="card"
+      style={{
+        padding: "16px 20px",
+        borderLeft: `4px solid ${EXPENSE_RED}`,
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 12,
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <div
+        style={{
+          minWidth: 0,
+          flex: "1 1 240px",
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        {e.proof?.url && (
+          <a
+            href={e.proof.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ flexShrink: 0, display: "inline-flex" }}
+            aria-label={bg ? "Виж доказателството" : "View proof"}
+          >
+            <Image
+              src={e.proof.url}
+              alt={bg ? "Доказателство за разход" : "Expense proof"}
+              width={44}
+              height={44}
+              style={{
+                width: 44,
+                height: 44,
+                objectFit: "cover",
+                borderRadius: "var(--r-sm)",
+                border: "1px solid var(--border)",
+                filter: "grayscale(100%)",
+              }}
+            />
+          </a>
+        )}
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontWeight: 700,
+              color: "var(--plum)",
+              fontSize: "0.95rem",
+            }}
+          >
+            {desc}
+          </div>
+          <div style={{ fontSize: "0.8rem", color: "var(--text-soft)" }}>
+            {formatDate(e.dateISO, lang)}
+            {" · "}
+            {bg ? "с доказателство" : "with proof"}
+          </div>
+        </div>
+      </div>
+      <div
+        style={{
+          fontFamily: "var(--font-head)",
+          fontWeight: 700,
+          color: EXPENSE_RED,
+          fontSize: "1.05rem",
+          whiteSpace: "nowrap",
+        }}
+      >
+        −{formatDualMoney(e.amountCents)}
+      </div>
+    </div>
+  );
+}
 
 /* Open, transparent ask shown when a live initiative is still short of its
    budget — invites companies / individuals to help close the gap by email. */
@@ -1075,10 +1285,24 @@ function Finances({
   const bg = lang === "bg";
   const i = detail.initiative;
   const inflows = i.inflows;
-  if (inflows.length === 0 && i.expectedCostCents === 0) return null;
+  const expenses = i.expenses;
+  if (inflows.length === 0 && expenses.length === 0 && i.expectedCostCents === 0)
+    return null;
 
   const pt = inflowPhaseTotals(inflows);
   const isDone = i.status === "done";
+  const expensesTotal = expenseTotalCents(expenses);
+  const availableLeft = pt.available - expensesTotal;
+
+  // Unified money ledger — inflows (money in) and expenses (money out) merged
+  // and shown newest-first, so the record list reads as one honest statement.
+  const ledger: (
+    | { kind: "inflow"; date: string; data: InflowDTO }
+    | { kind: "expense"; date: string; data: ExpenseDTO }
+  )[] = [
+    ...inflows.map((f) => ({ kind: "inflow" as const, date: f.dateISO, data: f })),
+    ...expenses.map((e) => ({ kind: "expense" as const, date: e.dateISO, data: e })),
+  ].sort((a, b) => b.date.localeCompare(a.date));
 
   // Funding source split (all phases): ТЕПЕ bite Impact vs partnering orgs + external.
   let impactCents = 0;
@@ -1107,7 +1331,7 @@ function Finances({
             marginBottom: 40,
           }}
         >
-          {(i.expectedCostCents > 0 || (isDone && i.spentCents > 0)) && (
+          {i.expectedCostCents > 0 && !isDone && (
             <div
               style={{
                 display: "grid",
@@ -1115,22 +1339,12 @@ function Finances({
                 gap: 16,
               }}
             >
-              {i.expectedCostCents > 0 && i.status !== "done" && (
-                <PhaseStat
-                  label={bg ? "Очаквана цена" : "Expected cost"}
-                  value={formatMoneyEUR(i.expectedCostCents)}
-                  hint={bg ? "обща цел за проекта" : "total project target"}
-                  accent="var(--plum-mid)"
-                />
-              )}
-              {isDone && i.spentCents > 0 && (
-                <PhaseStat
-                  label={bg ? "Похарчени средства" : "Amount spent"}
-                  value={formatMoneyEUR(i.spentCents)}
-                  hint={bg ? "вложени в проекта" : "invested in the project"}
-                  accent="oklch(52% 0.12 150)"
-                />
-              )}
+              <PhaseStat
+                label={bg ? "Очаквана цена" : "Expected cost"}
+                value={formatMoneyEUR(i.expectedCostCents)}
+                hint={bg ? "обща цел за проекта" : "total project target"}
+                accent="var(--plum-mid)"
+              />
             </div>
           )}
 
@@ -1176,10 +1390,42 @@ function Finances({
               />
             </div>
           )}
+
+          {expensesTotal > 0 && (
+            <div>
+              <h3 style={financeSubHeading}>
+                {bg ? "Усчетоводени разходи" : "Accounted expenses"}
+              </h3>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: 16,
+                }}
+              >
+                <PhaseStat
+                  label={bg ? "Усчетоводени разходи" : "Accounted expenses"}
+                  value={formatMoneyEUR(expensesTotal)}
+                  hint={bg ? "общо реално похарчено" : "total actually spent"}
+                  accent={EXPENSE_RED}
+                />
+                <PhaseStat
+                  label={bg ? "Налични средства" : "Available funds"}
+                  value={formatMoneyEUR(availableLeft)}
+                  hint={
+                    bg
+                      ? "налични (фаза 3) − усчетоводени разходи"
+                      : "available (phase 3) − accounted expenses"
+                  }
+                  accent={INFLOW_GREEN}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* per-record */}
-        {inflows.length > 0 && (
+        {/* per-record ledger: inflows (green, +) and expenses (red, −) */}
+        {ledger.length > 0 && (
           <>
             <h3
               style={{
@@ -1187,112 +1433,61 @@ function Finances({
                 fontSize: "1.15rem",
                 fontWeight: 700,
                 color: "var(--plum)",
-                marginBottom: 18,
+                marginBottom: 12,
               }}
             >
-              {bg ? "Откъде идва всяко евро" : "Where every euro comes from"}
+              {bg ? "Всяко евро, проследено" : "Every euro, traced"}
             </h3>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "6px 18px",
+                marginBottom: 18,
+                fontSize: "0.78rem",
+                color: "var(--text-soft)",
+              }}
+            >
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 3,
+                    background: INFLOW_GREEN,
+                  }}
+                />
+                {bg ? "Постъпление" : "Inflow"}
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 3,
+                    background: EXPENSE_RED,
+                  }}
+                />
+                {bg ? "Разход" : "Expense"}
+              </span>
+            </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {inflows.map((f) => {
-                const phaseLabel =
-                  INFLOW_PHASE_LABELS[f.phase][bg ? "bg" : "en"];
-                const arranged =
-                  f.phase === "arranged" && f.arrangedType
-                    ? ARRANGED_TYPE_LABELS[f.arrangedType][bg ? "bg" : "en"]
-                    : null;
-                const note = pick(lang, f.noteBg, f.noteEn);
-                return (
-                  <div
-                    key={f.id}
-                    className="card"
-                    style={{
-                      padding: "16px 20px",
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 12,
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div style={{ minWidth: 0, flex: "1 1 240px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          flexWrap: "wrap",
-                          marginBottom: 4,
-                        }}
-                      >
-                        <InflowSourceName f={f} detail={detail} lang={lang} />
-                        <span
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 5,
-                            background: "var(--surface2)",
-                            borderRadius: 100,
-                            padding: "2px 10px",
-                            fontSize: "0.62rem",
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: SOURCE_ACCENT[f.source],
-                          }}
-                        >
-                          {INFLOW_SOURCE_LABELS[f.source][bg ? "bg" : "en"]}
-                        </span>
-                        <span
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 5,
-                            background: "var(--surface2)",
-                            borderRadius: 100,
-                            padding: "2px 10px",
-                            fontSize: "0.66rem",
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: PHASE_ACCENT[f.phase],
-                          }}
-                        >
-                          <span
-                            style={{
-                              width: 6,
-                              height: 6,
-                              borderRadius: "50%",
-                              background: PHASE_ACCENT[f.phase],
-                            }}
-                          />
-                          {phaseLabel}
-                          {arranged ? ` · ${arranged}` : ""}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "0.8rem",
-                          color: "var(--text-soft)",
-                        }}
-                      >
-                        {formatDate(f.dateISO, lang)}
-                        {note ? ` · ${note}` : ""}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-head)",
-                        fontWeight: 700,
-                        color: "var(--caramel)",
-                        fontSize: "1.05rem",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {formatDualMoney(f.amountCents)}
-                    </div>
-                  </div>
-                );
-              })}
+              {ledger.map((item) =>
+                item.kind === "inflow" ? (
+                  <InflowRow
+                    key={`in_${item.data.id}`}
+                    f={item.data}
+                    detail={detail}
+                    lang={lang}
+                  />
+                ) : (
+                  <ExpenseRow
+                    key={`ex_${item.data.id}`}
+                    e={item.data}
+                    lang={lang}
+                  />
+                ),
+              )}
             </div>
           </>
         )}

@@ -45,6 +45,9 @@ export async function composeInitiativeFields(data: InitiativeInput) {
       toTranslate[`inflow_${i}_src`] = f.sourceLabelBg ?? ''
     if (need(f.noteEn, f.noteBg ?? '')) toTranslate[`inflow_${i}_note`] = f.noteBg ?? ''
   })
+  data.expenses.forEach((e, i) => {
+    if (need(e.descriptionEn, e.descriptionBg)) toTranslate[`expense_${i}_desc`] = e.descriptionBg
+  })
 
   const { result, ok } = await translateFields(toTranslate)
   const en = (key: string, override: string | undefined, fallback = '') =>
@@ -66,7 +69,7 @@ export async function composeInitiativeFields(data: InitiativeInput) {
 
   const partners = data.partners.map((p, i) => ({
     partnerId: new mongoose.Types.ObjectId(p.partnerId),
-    partnershipType: p.partnershipType,
+    partnershipTypes: p.partnershipTypes,
     contributionBg: p.contributionBg ?? '',
     contributionEn: en(`partner_${i}_contrib`, p.contributionEn),
   }))
@@ -84,6 +87,14 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     arrangedType: f.phase === 'arranged' ? (f.arrangedType ?? 'awaiting_transfer') : null,
     noteBg: f.noteBg ?? '',
     noteEn: en(`inflow_${i}_note`, f.noteEn),
+  }))
+
+  const expenses = data.expenses.map((e, i) => ({
+    amountCents: e.amountCents,
+    descriptionBg: e.descriptionBg,
+    descriptionEn: en(`expense_${i}_desc`, e.descriptionEn, e.descriptionBg),
+    dateISO: e.dateISO,
+    proof: e.proof,
   }))
 
   const currentStepIndex =
@@ -115,9 +126,9 @@ export async function composeInitiativeFields(data: InitiativeInput) {
     steps,
     currentStepIndex,
     expectedCostCents: data.expectedCostCents,
-    spentCents: data.spentCents,
     partners,
     inflows,
+    expenses,
     needsTranslationReview: !ok,
   }
 

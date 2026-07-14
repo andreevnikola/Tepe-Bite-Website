@@ -45,7 +45,7 @@ export type StepDTO = {
 export type InitiativePartnerDTO = {
   id: string
   partnerId: string
-  partnershipType: PartnershipType
+  partnershipTypes: PartnershipType[]
   contributionBg: string
   contributionEn: string
 }
@@ -62,6 +62,15 @@ export type InflowDTO = {
   arrangedType: ArrangedType | null
   noteBg: string
   noteEn: string
+}
+
+export type ExpenseDTO = {
+  id: string
+  amountCents: number
+  descriptionBg: string
+  descriptionEn: string
+  dateISO: string
+  proof: ImageDTO
 }
 
 export type InitiativeDTO = {
@@ -85,8 +94,8 @@ export type InitiativeDTO = {
   steps: StepDTO[]
   currentStepIndex: number
   expectedCostCents: number
-  spentCents: number
   partners: InitiativePartnerDTO[]
   inflows: InflowDTO[]
+  expenses: ExpenseDTO[]
   needsTranslationReview: boolean
 }

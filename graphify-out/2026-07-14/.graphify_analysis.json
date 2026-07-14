@@ -758,6 +758,13 @@
       "src_components_initiativesclient_visibleinitiativessection"
     ],
     "23": [
+      "src_components_community",
+      "src_components_community_community",
+      "src_components_community_socialchip",
+      "src_components_community_socials",
+      "src_components_icons_index_iconfb",
+      "src_components_icons_index_iconinsta",
+      "src_components_icons_index_icontiktok",
       "src_components_links_linksclient",
       "src_components_links_linksclient_arrow",
       "src_components_links_linksclient_backtarget",
@@ -773,25 +780,25 @@
       "src_components_links_linksclient_routename"
     ],
     "24": [
-      "src_components_community",
-      "src_components_community_community",
-      "src_components_community_socialchip",
-      "src_components_community_socials",
+      "src_components_cart_cartnavicon",
+      "src_components_cart_cartnavicon_cartnavicon",
       "src_components_icons_index",
-      "src_components_icons_index_iconfb",
+      "src_components_icons_index_iconcart",
+      "src_components_icons_index_iconclose",
       "src_components_icons_index_iconheart",
-      "src_components_icons_index_iconinsta",
       "src_components_icons_index_iconleaf",
-      "src_components_icons_index_iconlink",
       "src_components_icons_index_iconmap",
+      "src_components_icons_index_iconmenu",
       "src_components_icons_index_iconstar",
-      "src_components_icons_index_icontiktok",
+      "src_components_nav",
+      "src_components_nav_nav",
       "src_components_trustsection",
       "src_components_trustsection_cards",
       "src_components_trustsection_trustsection",
       "src_components_whysection",
       "src_components_whysection_pillars",
-      "src_components_whysection_whysection"
+      "src_components_whysection_whysection",
+      "src_store_cart_usecartitemcount"
     ],
     "25": [
       "src_components_cart_stickyordersummary",
@@ -1002,7 +1009,13 @@
       "src_components_firstinitiative_iconclock",
       "src_components_firstinitiative_iconpin",
       "src_components_firstinitiative_milestones",
-      "src_components_firstinitiative_pct"
+      "src_components_firstinitiative_pct",
+      "src_components_icons_index_iconcheck",
+      "src_components_icons_index_iconlink",
+      "src_components_productsection",
+      "src_components_productsection_highlights",
+      "src_components_productsection_nutr",
+      "src_components_productsection_productsection"
     ],
     "37": [
       "src_components_news_featuredpost",
@@ -1110,7 +1123,10 @@
       "src_components_hero_hero",
       "src_components_hero_hero_headline_bg",
       "src_components_hero_hero_headline_en",
-      "src_components_icons_index_iconarrow"
+      "src_components_icons_index_iconarrow",
+      "src_components_icons_index_iconshop",
+      "src_components_ordercta",
+      "src_components_ordercta_ordercta"
     ],
     "46": [
       "src_app_news_slug_page",
@@ -1326,26 +1342,6 @@
     "90": [
       "src_app_template",
       "src_app_template_template"
-    ],
-    "91": [
-      "src_components_cart_cartnavicon",
-      "src_components_cart_cartnavicon_cartnavicon",
-      "src_components_icons_index_iconcart",
-      "src_components_icons_index_iconclose",
-      "src_components_icons_index_iconmenu",
-      "src_components_nav",
-      "src_components_nav_nav",
-      "src_store_cart_usecartitemcount"
-    ],
-    "92": [
-      "src_components_icons_index_iconcheck",
-      "src_components_icons_index_iconshop",
-      "src_components_ordercta",
-      "src_components_ordercta_ordercta",
-      "src_components_productsection",
-      "src_components_productsection_highlights",
-      "src_components_productsection_nutr",
-      "src_components_productsection_productsection"
     ]
   },
   "cohesion": {
@@ -1372,8 +1368,8 @@
     "20": 0.12554112554112554,
     "21": 0.11428571428571428,
     "22": 0.1,
-    "23": 0.1794871794871795,
-    "24": 0.16374269005847952,
+    "23": 0.12105263157894737,
+    "24": 0.17543859649122806,
     "25": 0.1695906432748538,
     "26": 0.10526315789473684,
     "27": 0.1111111111111111,
@@ -1385,7 +1381,7 @@
     "33": 0.1523809523809524,
     "34": 0.16483516483516483,
     "35": 0.17582417582417584,
-    "36": 0.2857142857142857,
+    "36": 0.16666666666666666,
     "37": 0.32051282051282054,
     "38": 0.19696969696969696,
     "39": 0.2,
@@ -1394,7 +1390,7 @@
     "42": 0.2222222222222222,
     "43": 0.3888888888888889,
     "44": 0.2777777777777778,
-    "45": 0.3333333333333333,
+    "45": 0.2222222222222222,
     "46": 0.39285714285714285,
     "47": 0.25,
     "48": 0.47619047619047616,
@@ -1439,9 +1435,7 @@
     "87": 1.0,
     "88": 1.0,
     "89": 1.0,
-    "90": 1.0,
-    "91": 0.32142857142857145,
-    "92": 0.25
+    "90": 1.0
   },
   "gods": [
     {
@@ -1555,7 +1549,7 @@
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `langAtom` connect `langAtom` to `Footer.tsx`, `types.ts`, `lang.ts`, `page.tsx`, `ImpactPageContent.tsx`, `InitiativesOverview.tsx`, `queries.ts`, `InitiativeDetail.tsx`, `PartnerDetail.tsx`, `InitiativesClient.tsx`, `LinksClient.tsx`, `index.tsx`, `formatDualMoney`, `InitiativesClient 2.tsx`, `ProductPageContent.tsx`, `product-plans.ts`, `cart.ts`, `FirstInitiative.tsx`, `ImpactPledge.tsx`, `IconArrow`, `page.tsx`, `Nav.tsx`, `IconShop`?",
+      "question": "Why does `langAtom` connect `langAtom` to `Footer.tsx`, `types.ts`, `lang.ts`, `page.tsx`, `ImpactPageContent.tsx`, `InitiativesOverview.tsx`, `queries.ts`, `InitiativeDetail.tsx`, `PartnerDetail.tsx`, `InitiativesClient.tsx`, `LinksClient.tsx`, `index.tsx`, `formatDualMoney`, `InitiativesClient 2.tsx`, `ProductPageContent.tsx`, `product-plans.ts`, `cart.ts`, `FirstInitiative.tsx`, `ImpactPledge.tsx`, `IconArrow`, `page.tsx`?",
       "why": "High betweenness centrality (0.082) - this node is a cross-community bridge."
     },
     {

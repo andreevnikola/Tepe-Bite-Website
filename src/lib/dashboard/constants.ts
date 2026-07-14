@@ -88,6 +88,12 @@ export const ARRANGED_TYPE_LABELS: Record<ArrangedType, { bg: string; en: string
     },
   }
 
+/** Shared BG/EN wording for the "accounted expenses" concept. */
+export const EXPENSE_LABELS = {
+  bg: 'усчетоводени разходи',
+  en: 'Accounted expenses',
+} as const
+
 export const PARTNER_LINK_TYPES = ['website', 'instagram', 'facebook', 'tiktok'] as const
 export type PartnerLinkType = (typeof PARTNER_LINK_TYPES)[number]
 

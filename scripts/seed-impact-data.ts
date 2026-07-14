@@ -290,7 +290,6 @@ async function upsertInitiatives(pid: Record<string, mongoose.Types.ObjectId>) {
       })),
     )
     doc.expectedCostCents = s.expectedCostCents
-    doc.spentCents = s.spentCents
     doc.currentStepIndex = s.currentStepIndex
     doc.set(
       'steps',
@@ -308,7 +307,7 @@ async function upsertInitiatives(pid: Record<string, mongoose.Types.ObjectId>) {
       'partners',
       s.partners.map((p) => ({
         partnerId: pid[p.name],
-        partnershipType: p.type,
+        partnershipTypes: [p.type],
         contributionBg: p.bg,
         contributionEn: p.en,
       })),

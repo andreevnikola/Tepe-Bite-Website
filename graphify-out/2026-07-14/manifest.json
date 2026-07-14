@@ -615,14 +615,14 @@
     "semantic_hash": "9e909cd3bfb0da720f1d7e9a0b3770ae"
   },
   "src/components/public/InitiativeDetail.tsx": {
-    "mtime": 1783980221.662443,
-    "ast_hash": "5fc078aaa374a0ae61120d2f067ee5fc",
-    "semantic_hash": "5fc078aaa374a0ae61120d2f067ee5fc"
+    "mtime": 1784017633.4589028,
+    "ast_hash": "611d2799992be8f0c332e35ef3640f06",
+    "semantic_hash": ""
   },
   "src/components/public/InitiativesOverview.tsx": {
-    "mtime": 1783979993.1708636,
-    "ast_hash": "f3af2849b8ab9c50058f63040f03ea28",
-    "semantic_hash": "f3af2849b8ab9c50058f63040f03ea28"
+    "mtime": 1784017633.4588308,
+    "ast_hash": "f8a17ba01ff15754280447705be9d7b9",
+    "semantic_hash": ""
   },
   "src/components/public/PartnerDetail.tsx": {
     "mtime": 1783980265.3217068,
@@ -1038,5 +1038,85 @@
     "mtime": 1778599376.3429344,
     "ast_hash": "08d32a40fb2d9c359e19d0ba9c071924",
     "semantic_hash": "08d32a40fb2d9c359e19d0ba9c071924"
+  },
+  "CLAUDE.md": {
+    "mtime": 1784017267.1456773,
+    "ast_hash": "b8317584c0eb27e04ea09a13eb6f5282",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1778142539.7954702,
+    "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
+    "semantic_hash": ""
+  },
+  "STYLE_GUIDE.md": {
+    "mtime": 1783965517.0072365,
+    "ast_hash": "9aa2b6ee693ec095b8f56d11dcea38da",
+    "semantic_hash": ""
+  },
+  "public/TEPEbiteImpact-crop.png": {
+    "mtime": 1783868186.9414523,
+    "ast_hash": "1505b22b7deaf95e74c2bf593a84935f",
+    "semantic_hash": ""
+  },
+  "public/TEPEbiteImpact.png": {
+    "mtime": 1783189767.728534,
+    "ast_hash": "d79fccaaf5b7d799f719864c130d5a29",
+    "semantic_hash": ""
+  },
+  "public/bar-product.png": {
+    "mtime": 1778142552.7401857,
+    "ast_hash": "ba3838a4f6d190b4c2cec917a47e016e",
+    "semantic_hash": ""
+  },
+  "public/draw.png": {
+    "mtime": 1778142552.748439,
+    "ast_hash": "00ee614fd25eb7cd479d7cb654275d82",
+    "semantic_hash": ""
+  },
+  "public/file.svg": {
+    "mtime": 1778142539.7962878,
+    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
+    "semantic_hash": ""
+  },
+  "public/globe.svg": {
+    "mtime": 1778142539.7971,
+    "ast_hash": "2aaafa6a49b6563925fe440891e32717",
+    "semantic_hash": ""
+  },
+  "public/logo-full.png": {
+    "mtime": 1778142552.7327008,
+    "ast_hash": "5e222e237c94ed9957576d8270965bd5",
+    "semantic_hash": ""
+  },
+  "public/logo-nav.png": {
+    "mtime": 1778142552.7233841,
+    "ast_hash": "a4fe61ce34639e304296431fb45f5d04",
+    "semantic_hash": ""
+  },
+  "public/manufacturing.jpg": {
+    "mtime": 1778142552.7436671,
+    "ast_hash": "df417deb56ce11149363b99f20d1ad25",
+    "semantic_hash": ""
+  },
+  "public/next.svg": {
+    "mtime": 1778142539.7968597,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": ""
+  },
+  "public/pasted.png": {
+    "mtime": 1778142552.7535896,
+    "ast_hash": "ec8e6938ceae21c5e7752d77450667cb",
+    "semantic_hash": ""
+  },
+  "public/vercel.svg": {
+    "mtime": 1778142539.7966192,
+    "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
+    "semantic_hash": ""
+  },
+  "public/window.svg": {
+    "mtime": 1778142539.7973356,
+    "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": ""
   }
 }

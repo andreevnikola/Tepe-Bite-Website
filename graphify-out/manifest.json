@@ -45,9 +45,9 @@
     "semantic_hash": "1c87a2508452a956520af613081782a1"
   },
   "scripts/seed-impact-data.ts": {
-    "mtime": 1783868186.9421425,
-    "ast_hash": "27ca4c3d681fe70706bce9e705772eea",
-    "semantic_hash": "27ca4c3d681fe70706bce9e705772eea"
+    "mtime": 1784023288.7832062,
+    "ast_hash": "8aede15e7269b70c0a09f43c4537a21f",
+    "semantic_hash": ""
   },
   "src/app/admin/(dashboard)/initiatives/[id]/page.tsx": {
     "mtime": 1783442620.0220637,
@@ -340,9 +340,9 @@
     "semantic_hash": "a13580ccb79bd945cc8b07ec5d1b3e2f"
   },
   "src/components/InitiativesClient.tsx": {
-    "mtime": 1783980444.2347298,
-    "ast_hash": "d856c445e5e9479bbfa18463a865a3fd",
-    "semantic_hash": "d856c445e5e9479bbfa18463a865a3fd"
+    "mtime": 1784023143.173801,
+    "ast_hash": "89f977f9a6c9f16ec3eacff37748e958",
+    "semantic_hash": ""
   },
   "src/components/InitiativesPromo.tsx": {
     "mtime": 1783189767.7337306,
@@ -410,9 +410,9 @@
     "semantic_hash": "40c3c0ba5a655af52d208306bb7378ed"
   },
   "src/components/admin/InitiativeEditor.tsx": {
-    "mtime": 1783959620.5046914,
-    "ast_hash": "77b8fd036d61d065f487a2a474c58821",
-    "semantic_hash": "77b8fd036d61d065f487a2a474c58821"
+    "mtime": 1784022697.8234046,
+    "ast_hash": "40430a8a1120f0ea3925a6742db87b51",
+    "semantic_hash": ""
   },
   "src/components/admin/PartnerForm.tsx": {
     "mtime": 1783980163.9915419,
@@ -615,19 +615,19 @@
     "semantic_hash": "9e909cd3bfb0da720f1d7e9a0b3770ae"
   },
   "src/components/public/InitiativeDetail.tsx": {
-    "mtime": 1783980221.662443,
-    "ast_hash": "5fc078aaa374a0ae61120d2f067ee5fc",
-    "semantic_hash": "5fc078aaa374a0ae61120d2f067ee5fc"
+    "mtime": 1784022951.389991,
+    "ast_hash": "9e6890955299ef7af9082a1d1a4f5189",
+    "semantic_hash": ""
   },
   "src/components/public/InitiativesOverview.tsx": {
-    "mtime": 1783979993.1708636,
-    "ast_hash": "f3af2849b8ab9c50058f63040f03ea28",
-    "semantic_hash": "f3af2849b8ab9c50058f63040f03ea28"
+    "mtime": 1784023036.648344,
+    "ast_hash": "5379c610ed4bc947fd8a0a2e6185cebb",
+    "semantic_hash": ""
   },
   "src/components/public/PartnerDetail.tsx": {
-    "mtime": 1783980265.3217068,
-    "ast_hash": "e0fb4be7f62ead1e51d74fe56e3bd0bc",
-    "semantic_hash": "e0fb4be7f62ead1e51d74fe56e3bd0bc"
+    "mtime": 1784022984.511375,
+    "ast_hash": "6118af59460e70a6077488313e3d28c5",
+    "semantic_hash": ""
   },
   "src/components/public/PartnersCarousel.tsx": {
     "mtime": 1783980208.5232086,
@@ -745,14 +745,14 @@
     "semantic_hash": "4fa332dae169046dc5a2086c269302d1"
   },
   "src/lib/dashboard/constants.ts": {
-    "mtime": 1783442620.034272,
-    "ast_hash": "730cc767bc9b0a9f83202cd0a74c6da5",
-    "semantic_hash": "730cc767bc9b0a9f83202cd0a74c6da5"
+    "mtime": 1784022277.9421031,
+    "ast_hash": "17c4f1125cffa094a3dcc44b093db148",
+    "semantic_hash": ""
   },
   "src/lib/dashboard/dto.ts": {
-    "mtime": 1783980124.4024782,
-    "ast_hash": "ec82f86f032d028cfb2ac6caf788d039",
-    "semantic_hash": "ec82f86f032d028cfb2ac6caf788d039"
+    "mtime": 1784022306.471095,
+    "ast_hash": "98e6299c8e7ba8d0337fe564e5a21aa6",
+    "semantic_hash": ""
   },
   "src/lib/dashboard/http.ts": {
     "mtime": 1783442620.0348525,
@@ -760,9 +760,9 @@
     "semantic_hash": "71256578c768a38598b9cdf9a911ab3c"
   },
   "src/lib/dashboard/initiative-writer.ts": {
-    "mtime": 1783959570.8139615,
-    "ast_hash": "79ab69e0aa539395aaa4184563d092a3",
-    "semantic_hash": "79ab69e0aa539395aaa4184563d092a3"
+    "mtime": 1784022340.0833554,
+    "ast_hash": "6b85c423c57d21afb4eafd6050d91b05",
+    "semantic_hash": ""
   },
   "src/lib/dashboard/partner-slug.ts": {
     "mtime": 1783868186.9512897,
@@ -770,14 +770,14 @@
     "semantic_hash": "00d13915d61303641279d27d8cccc462"
   },
   "src/lib/dashboard/serialize.ts": {
-    "mtime": 1783980128.8857837,
-    "ast_hash": "55fb4ccb8fb0e1276b4db9a1738be2e6",
-    "semantic_hash": "55fb4ccb8fb0e1276b4db9a1738be2e6"
+    "mtime": 1784022319.2093658,
+    "ast_hash": "36e95fb60a4fda8e474f247e455f8be1",
+    "semantic_hash": ""
   },
   "src/lib/dashboard/validation.ts": {
-    "mtime": 1783980133.850936,
-    "ast_hash": "22a99cedd7bc4c2b960b0033d9ee7cae",
-    "semantic_hash": "22a99cedd7bc4c2b960b0033d9ee7cae"
+    "mtime": 1784022292.8438091,
+    "ast_hash": "036266e62734bfcd7a22509af2fe8cd4",
+    "semantic_hash": ""
   },
   "src/lib/db/entities/AdminAuditLog.entity.ts": {
     "mtime": 1778599376.338956,
@@ -910,9 +910,9 @@
     "semantic_hash": "b4af72765a868557fbd1290131bf1800"
   },
   "src/lib/mongo/models/Initiative.ts": {
-    "mtime": 1783959538.5207844,
-    "ast_hash": "f3f4ade81650b320eaa6f3178674b4bf",
-    "semantic_hash": "f3f4ade81650b320eaa6f3178674b4bf"
+    "mtime": 1784022272.361793,
+    "ast_hash": "da5d5cc6b4e928f6b23940bc013449b2",
+    "semantic_hash": ""
   },
   "src/lib/mongo/models/Partner.ts": {
     "mtime": 1783980119.4738076,
@@ -930,9 +930,9 @@
     "semantic_hash": "fe719f956f0660af5f5ae3cb6a5b2648"
   },
   "src/lib/public/initiatives.ts": {
-    "mtime": 1783968772.4340951,
-    "ast_hash": "775c3b18c45cbd1d955d5671b9ea1e61",
-    "semantic_hash": "775c3b18c45cbd1d955d5671b9ea1e61"
+    "mtime": 1784022373.0783875,
+    "ast_hash": "0ee3ac7a28878cfe9e70d36698124da9",
+    "semantic_hash": ""
   },
   "src/lib/rate-limit/index.ts": {
     "mtime": 1778599376.341961,
@@ -1038,5 +1038,95 @@
     "mtime": 1778599376.3429344,
     "ast_hash": "08d32a40fb2d9c359e19d0ba9c071924",
     "semantic_hash": "08d32a40fb2d9c359e19d0ba9c071924"
+  },
+  "CLAUDE.md": {
+    "mtime": 1784017267.1456773,
+    "ast_hash": "b8317584c0eb27e04ea09a13eb6f5282",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1778142539.7954702,
+    "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
+    "semantic_hash": ""
+  },
+  "STYLE_GUIDE.md": {
+    "mtime": 1783965517.0072365,
+    "ast_hash": "9aa2b6ee693ec095b8f56d11dcea38da",
+    "semantic_hash": ""
+  },
+  "public/TEPEbiteImpact-crop.png": {
+    "mtime": 1783868186.9414523,
+    "ast_hash": "1505b22b7deaf95e74c2bf593a84935f",
+    "semantic_hash": ""
+  },
+  "public/TEPEbiteImpact.png": {
+    "mtime": 1783189767.728534,
+    "ast_hash": "d79fccaaf5b7d799f719864c130d5a29",
+    "semantic_hash": ""
+  },
+  "public/bar-product.png": {
+    "mtime": 1778142552.7401857,
+    "ast_hash": "ba3838a4f6d190b4c2cec917a47e016e",
+    "semantic_hash": ""
+  },
+  "public/draw.png": {
+    "mtime": 1778142552.748439,
+    "ast_hash": "00ee614fd25eb7cd479d7cb654275d82",
+    "semantic_hash": ""
+  },
+  "public/file.svg": {
+    "mtime": 1778142539.7962878,
+    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
+    "semantic_hash": ""
+  },
+  "public/globe.svg": {
+    "mtime": 1778142539.7971,
+    "ast_hash": "2aaafa6a49b6563925fe440891e32717",
+    "semantic_hash": ""
+  },
+  "public/logo-full.png": {
+    "mtime": 1778142552.7327008,
+    "ast_hash": "5e222e237c94ed9957576d8270965bd5",
+    "semantic_hash": ""
+  },
+  "public/logo-nav.png": {
+    "mtime": 1778142552.7233841,
+    "ast_hash": "a4fe61ce34639e304296431fb45f5d04",
+    "semantic_hash": ""
+  },
+  "public/manufacturing.jpg": {
+    "mtime": 1778142552.7436671,
+    "ast_hash": "df417deb56ce11149363b99f20d1ad25",
+    "semantic_hash": ""
+  },
+  "public/next.svg": {
+    "mtime": 1778142539.7968597,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": ""
+  },
+  "public/pasted.png": {
+    "mtime": 1778142552.7535896,
+    "ast_hash": "ec8e6938ceae21c5e7752d77450667cb",
+    "semantic_hash": ""
+  },
+  "public/vercel.svg": {
+    "mtime": 1778142539.7966192,
+    "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
+    "semantic_hash": ""
+  },
+  "public/window.svg": {
+    "mtime": 1778142539.7973356,
+    "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": ""
+  },
+  "src/components/admin/ProofUploader.tsx": {
+    "mtime": 1784023253.9352999,
+    "ast_hash": "4921632593a44a20a385431bab9a2997",
+    "semantic_hash": ""
+  },
+  "src/lib/image/compress.ts": {
+    "mtime": 1784022397.0919108,
+    "ast_hash": "0599437ac03a43dc204c3af9bbe0f939",
+    "semantic_hash": ""
   }
 }

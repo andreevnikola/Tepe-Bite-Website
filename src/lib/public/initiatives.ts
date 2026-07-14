@@ -28,6 +28,12 @@ export type OverviewStats = {
   plannedTotalCents: number
   /** Sum of all arranged-phase inflows across published initiatives, in cents. */
   arrangedTotalCents: number
+  /** ТЕПЕ bite Impact fund money across ALL phases (planned+arranged+available). */
+  fundedImpactAllPhasesCents: number
+  /** Partner + external donor money across ALL phases (planned+arranged+available). */
+  fundedExternalAllPhasesCents: number
+  /** Sum of all tracked (accounted) expenses across published initiatives, in cents. */
+  accountedExpensesTotalCents: number
   /** Number of published initiatives with status 'done'. */
   realisedCount: number
   /** Distinct partners involved across published initiatives. */
@@ -120,6 +126,19 @@ export async function getPublicOverviewData(): Promise<OverviewData> {
   const plannedTotalCents = sumInflows(initiatives, (f) => f.phase === 'planned')
   const arrangedTotalCents = sumInflows(initiatives, (f) => f.phase === 'arranged')
 
+  // All-phase funding split (used by the fund section's combined card).
+  const fundedImpactAllPhasesCents = sumInflows(initiatives, (f) => f.source === 'impact_fund')
+  const fundedExternalAllPhasesCents = sumInflows(
+    initiatives,
+    (f) => f.source === 'partner' || f.source === 'external_other',
+  )
+
+  // Total tracked spending across all published initiatives.
+  let accountedExpensesTotalCents = 0
+  for (const i of initiatives) {
+    for (const e of i.expenses) accountedExpensesTotalCents += e.amountCents
+  }
+
   const involvedPartnerIds = new Set<string>()
   for (const i of initiatives) {
     for (const p of i.partners) if (p.partnerId) involvedPartnerIds.add(p.partnerId)
@@ -131,6 +150,9 @@ export async function getPublicOverviewData(): Promise<OverviewData> {
     investedTotalCents: investedImpactCents + investedExternalCents,
     plannedTotalCents,
     arrangedTotalCents,
+    fundedImpactAllPhasesCents,
+    fundedExternalAllPhasesCents,
+    accountedExpensesTotalCents,
     realisedCount: initiatives.filter((i) => i.status === 'done').length,
     partnerCount: involvedPartnerIds.size,
   }
@@ -253,7 +275,7 @@ export async function getPublicInitiativeById(id: string): Promise<InitiativeDet
 
 export type PartnerInitiativeLink = {
   initiative: InitiativeDTO
-  partnershipType: InitiativeDTO['partners'][number]['partnershipType']
+  partnershipTypes: InitiativeDTO['partners'][number]['partnershipTypes']
   contributionBg: string
   contributionEn: string
   /** This partner's money on THIS initiative, by phase. */
@@ -291,7 +313,7 @@ export async function getPublicPartnerBySlug(slug: string): Promise<PartnerDetai
     if (link) {
       initiatives.push({
         initiative: dto,
-        partnershipType: link.partnershipType,
+        partnershipTypes: link.partnershipTypes,
         contributionBg: link.contributionBg,
         contributionEn: link.contributionEn,
         financial: partnerFinancialAcross([dto], partner.id),

@@ -75,7 +75,13 @@ export function serializeInitiative(i: any): InitiativeDTO {
     partners: (i.partners ?? []).map((p: any) => ({
       id: idStr(p._id),
       partnerId: idStr(p.partnerId),
-      partnershipType: p.partnershipType,
+      // Backfill legacy single `partnershipType` into the multi-type array.
+      partnershipTypes:
+        p.partnershipTypes?.length > 0
+          ? p.partnershipTypes
+          : p.partnershipType
+            ? [p.partnershipType]
+            : [],
       contributionBg: p.contributionBg ?? '',
       contributionEn: p.contributionEn ?? '',
     })),
@@ -93,9 +99,17 @@ export function serializeInitiative(i: any): InitiativeDTO {
       noteBg: f.noteBg ?? '',
       noteEn: f.noteEn ?? '',
     })),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expenses: (i.expenses ?? []).map((e: any) => ({
+      id: idStr(e._id),
+      amountCents: e.amountCents ?? 0,
+      descriptionBg: e.descriptionBg ?? '',
+      descriptionEn: e.descriptionEn ?? '',
+      dateISO: e.dateISO ?? '',
+      proof: { url: e.proof?.url ?? '', key: e.proof?.key ?? '' },
+    })),
     currentStepIndex: i.currentStepIndex ?? 0,
     expectedCostCents: i.expectedCostCents ?? 0,
-    spentCents: i.spentCents ?? 0,
     needsTranslationReview: Boolean(i.needsTranslationReview),
   }
 }

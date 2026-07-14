@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Card, Field, TextInput, TextArea, Select } from '@/components/admin/ui'
 import ImageUploader from '@/components/admin/ImageUploader'
+import ProofUploader from '@/components/admin/ProofUploader'
 import { UploadButton } from '@/lib/uploadthing/client'
 import {
   INITIATIVE_STATUSES,
@@ -50,7 +51,7 @@ type EditStep = {
 type EditPartner = {
   key: string
   partnerId: string
-  partnershipType: PartnershipType
+  partnershipTypes: PartnershipType[]
   contributionBg: string
   contributionEn: string
 }
@@ -66,7 +67,16 @@ type EditInflow = {
   arrangedType: ArrangedType
   noteBg: string
 }
+type EditExpense = {
+  key: string
+  amount: string
+  descriptionBg: string
+  dateISO: string
+  proof: ImageDTO | null
+}
 type EditGallery = { key: string; url: string; ukey: string; captionBg: string }
+
+const FIN_SUBTABS = ['Постъпления', 'Разходи'] as const
 
 const TABS = ['Детайли', 'Стъпки', 'Партньори', 'Финанси', 'Галерия'] as const
 
@@ -95,7 +105,7 @@ export default function InitiativeEditor({
   const [locationBg, setLocationBg] = useState(initial?.locationBg ?? '')
   const [coverImage, setCoverImage] = useState<ImageDTO | null>(initial?.coverImage ?? null)
   const [expectedCost, setExpectedCost] = useState(centsToStr(initial?.expectedCostCents ?? 0))
-  const [spent, setSpent] = useState(centsToStr(initial?.spentCents ?? 0))
+  const [finSubTab, setFinSubTab] = useState<(typeof FIN_SUBTABS)[number]>('Постъпления')
 
   const [steps, setSteps] = useState<EditStep[]>(
     (initial?.steps ?? []).map((s) => ({
@@ -116,7 +126,7 @@ export default function InitiativeEditor({
     (initial?.partners ?? []).map((p) => ({
       key: uid(),
       partnerId: p.partnerId,
-      partnershipType: p.partnershipType,
+      partnershipTypes: p.partnershipTypes.length > 0 ? p.partnershipTypes : ['sponsor'],
       contributionBg: p.contributionBg,
       contributionEn: p.contributionEn,
     })),
@@ -134,6 +144,16 @@ export default function InitiativeEditor({
       phase: f.phase,
       arrangedType: f.arrangedType ?? 'awaiting_transfer',
       noteBg: f.noteBg,
+    })),
+  )
+
+  const [expenses, setExpenses] = useState<EditExpense[]>(
+    (initial?.expenses ?? []).map((e) => ({
+      key: uid(),
+      amount: centsToStr(e.amountCents),
+      descriptionBg: e.descriptionBg,
+      dateISO: e.dateISO ? e.dateISO.slice(0, 10) : '',
+      proof: e.proof,
     })),
   )
 
@@ -163,6 +183,29 @@ export default function InitiativeEditor({
   }, [inflows])
   const totalCents = phaseTotals.planned + phaseTotals.arranged + phaseTotals.available
 
+  // Funding source split across all phases (ТЕПЕ bite Impact fund vs everything else).
+  const sourceSplit = useMemo(() => {
+    let impact = 0
+    let external = 0
+    for (const f of inflows) {
+      const c = strToCents(f.amount)
+      if (f.source === 'impact_fund') impact += c
+      else external += c
+    }
+    return { impact, external }
+  }, [inflows])
+
+  const expensesTotalCents = useMemo(
+    () => expenses.reduce((sum, e) => sum + strToCents(e.amount), 0),
+    [expenses],
+  )
+  const expectedCostCents = strToCents(expectedCost)
+  const isDone = status === 'done'
+  // What is left to raise to hit the expected cost (only meaningful when not done).
+  const gapCents = Math.max(0, expectedCostCents - totalCents)
+  // Money actually on hand right now: available inflows minus tracked spending.
+  const availableLeftCents = phaseTotals.available - expensesTotalCents
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
@@ -188,6 +231,23 @@ export default function InitiativeEditor({
       setTab('Детайли')
       return
     }
+    // Each linked partner needs at least one partnership type.
+    if (partners.some((p) => p.partnerId && p.partnershipTypes.length === 0)) {
+      setError('Всеки партньор изисква поне един тип партньорство.')
+      setTab('Партньори')
+      return
+    }
+    // Every expense must carry an amount, description and image proof.
+    if (
+      expenses.some(
+        (x) => !x.proof || !x.descriptionBg.trim() || !x.dateISO || strToCents(x.amount) <= 0,
+      )
+    ) {
+      setError('Всеки разход изисква сума, описание, дата и прикачено доказателство.')
+      setTab('Финанси')
+      setFinSubTab('Разходи')
+      return
+    }
     setSaving(true)
 
     const payload = {
@@ -203,7 +263,6 @@ export default function InitiativeEditor({
       locationBg,
       coverImage,
       expectedCostCents: strToCents(expectedCost),
-      spentCents: strToCents(spent),
       currentStepIndex,
       steps: steps.map((s) => ({
         labelBg: s.labelBg,
@@ -219,7 +278,7 @@ export default function InitiativeEditor({
         .filter((p) => p.partnerId)
         .map((p) => ({
           partnerId: p.partnerId,
-          partnershipType: p.partnershipType,
+          partnershipTypes: p.partnershipTypes,
           contributionBg: p.contributionBg,
           contributionEn: p.contributionEn,
         })),
@@ -232,6 +291,12 @@ export default function InitiativeEditor({
         phase: f.phase,
         arrangedType: f.phase === 'arranged' ? f.arrangedType : null,
         noteBg: f.noteBg,
+      })),
+      expenses: expenses.map((x) => ({
+        amountCents: strToCents(x.amount),
+        descriptionBg: x.descriptionBg,
+        dateISO: x.dateISO || new Date().toISOString().slice(0, 10),
+        proof: x.proof,
       })),
       gallery: gallery.map((g) => ({ url: g.url, key: g.ukey, captionBg: g.captionBg })),
     }
@@ -299,11 +364,13 @@ export default function InitiativeEditor({
         <span>
           Налично: <strong>{eur(phaseTotals.available)}</strong>
         </span>
+        {!isDone && (
+          <span>
+            Очаквана цена: <strong>{eur(expectedCostCents)}</strong>
+          </span>
+        )}
         <span>
-          Очаквана цена: <strong>{eur(strToCents(expectedCost))}</strong>
-        </span>
-        <span>
-          Похарчени: <strong>{eur(strToCents(spent))}</strong>
+          Разходи: <strong>{eur(expensesTotalCents)}</strong>
         </span>
       </div>
 
@@ -418,29 +485,10 @@ export default function InitiativeEditor({
                 required
               />
             </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Очаквана обща цена (€)">
-                <TextInput
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={expectedCost}
-                  onChange={(e) => setExpectedCost(e.target.value)}
-                />
-              </Field>
-              <Field label="Похарчени до момента (€)">
-                <TextInput
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={spent}
-                  onChange={(e) => setSpent(e.target.value)}
-                />
-              </Field>
-            </div>
             <p className="text-xs text-[var(--text-soft)]">
-              Английските версии на описанието, локацията, стъпките и т.н. се превеждат автоматично
-              при запис.
+              Очакваната цена и разходите се управляват в раздел „Финанси“. Английските
+              версии на описанието, локацията, стъпките и т.н. се превеждат автоматично при
+              запис.
             </p>
           </div>
         </Card>
@@ -621,25 +669,35 @@ export default function InitiativeEditor({
                       ))}
                     </Select>
                   </Field>
-                  <Field label="Тип партньорство">
-                    <Select
-                      value={p.partnershipType}
-                      onChange={(e) =>
-                        setPartners((prev) =>
-                          prev.map((x, i) =>
-                            i === idx
-                              ? { ...x, partnershipType: e.target.value as PartnershipType }
-                              : x,
-                          ),
+                  <Field label="Тип партньорство (един или повече)">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 pt-1">
+                      {PARTNERSHIP_TYPES.map((t) => {
+                        const checked = p.partnershipTypes.includes(t)
+                        return (
+                          <label
+                            key={t}
+                            className="inline-flex items-center gap-2 text-sm text-[var(--text-mid)]"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={(e) =>
+                                setPartners((prev) =>
+                                  prev.map((x, i) => {
+                                    if (i !== idx) return x
+                                    const next = e.target.checked
+                                      ? [...x.partnershipTypes, t]
+                                      : x.partnershipTypes.filter((v) => v !== t)
+                                    return { ...x, partnershipTypes: next }
+                                  }),
+                                )
+                              }
+                            />
+                            {PARTNERSHIP_TYPE_LABELS[t].bg}
+                          </label>
                         )
-                      }
-                    >
-                      {PARTNERSHIP_TYPES.map((t) => (
-                        <option key={t} value={t}>
-                          {PARTNERSHIP_TYPE_LABELS[t].bg}
-                        </option>
-                      ))}
-                    </Select>
+                      })}
+                    </div>
                   </Field>
                 </div>
                 <div className="mt-3">
@@ -674,7 +732,7 @@ export default function InitiativeEditor({
                     {
                       key: uid(),
                       partnerId: '',
-                      partnershipType: 'sponsor',
+                      partnershipTypes: ['sponsor'],
                       contributionBg: '',
                       contributionEn: '',
                     },
@@ -691,19 +749,21 @@ export default function InitiativeEditor({
 
       {tab === 'Финанси' && (
         <Card>
-          {/* Financial situation of the campaign */}
+          {/* Fiscal summary — the full financial picture at a glance */}
           <div className="mb-5 rounded-[var(--r-sm)] bg-[var(--surface2)] p-4">
-            <div className="mb-4 max-w-xs">
-              <Field label="Очаквана обща цена (€)">
-                <TextInput
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={expectedCost}
-                  onChange={(e) => setExpectedCost(e.target.value)}
-                />
-              </Field>
-            </div>
+            {!isDone && (
+              <div className="mb-4 max-w-xs">
+                <Field label="Очаквана обща цена (€)">
+                  <TextInput
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={expectedCost}
+                    onChange={(e) => setExpectedCost(e.target.value)}
+                  />
+                </Field>
+              </div>
+            )}
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <PhaseStat
                 label={INFLOW_PHASE_LABELS.planned.bg}
@@ -721,11 +781,82 @@ export default function InitiativeEditor({
                 hint="Реално достъпно сега"
               />
             </div>
+
+            {totalCents > 0 && (
+              <div className="mt-4">
+                <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+                  Разпределение на финансирането
+                </div>
+                <div className="flex h-3 overflow-hidden rounded-full bg-[var(--border)]">
+                  <div
+                    style={{
+                      width: `${(sourceSplit.impact / totalCents) * 100}%`,
+                      background: 'var(--sky-mid)',
+                    }}
+                  />
+                  <div
+                    style={{
+                      width: `${(sourceSplit.external / totalCents) * 100}%`,
+                      background: 'var(--caramel)',
+                    }}
+                  />
+                </div>
+                <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--text-mid)]">
+                  <span>
+                    Фонд ТЕПЕ bite Impact: <strong>{eur(sourceSplit.impact)}</strong>
+                  </span>
+                  <span>
+                    Партньори и външни: <strong>{eur(sourceSplit.external)}</strong>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              {!isDone && expectedCostCents > 0 && (
+                <PhaseStat
+                  label="Остава да съберем"
+                  value={eur(gapCents)}
+                  hint="Очаквана цена − всички постъпления"
+                />
+              )}
+              <PhaseStat
+                label="Усчетоводени разходи"
+                value={eur(expensesTotalCents)}
+                hint="Сбор на регистрираните разходи"
+              />
+              <PhaseStat
+                label="Налични средства сега"
+                value={eur(availableLeftCents)}
+                hint="Налични (фаза 3) − разходи"
+              />
+            </div>
+
             <p className="mt-3 text-xs text-[var(--text-soft)]">
-              Общо по всички фази: <strong>{eur(totalCents)}</strong> · Похарчени:{' '}
-              <strong>{eur(strToCents(spent))}</strong>
+              Общо постъпления по всички фази: <strong>{eur(totalCents)}</strong>
             </p>
           </div>
+
+          {/* Sub-tabs: inflows vs expenses */}
+          <div className="mb-4 flex gap-2">
+            {FIN_SUBTABS.map((st) => (
+              <button
+                key={st}
+                type="button"
+                onClick={() => setFinSubTab(st)}
+                className={
+                  'rounded-full px-4 py-1.5 text-sm font-semibold ' +
+                  (finSubTab === st
+                    ? 'bg-[var(--plum)] text-white'
+                    : 'bg-[var(--surface2)] text-[var(--text-mid)]')
+                }
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+
+          {finSubTab === 'Постъпления' && (
           <div className="flex flex-col gap-3">
             {inflows.map((f, idx) => {
               const linkedPartners = partners.filter((p) => p.partnerId)
@@ -899,6 +1030,101 @@ export default function InitiativeEditor({
               + Добави постъпление
             </button>
           </div>
+          )}
+
+          {finSubTab === 'Разходи' && (
+            <div className="flex flex-col gap-3">
+              <p className="text-xs text-[var(--text-soft)]">
+                Всеки разход изисква сума, описание, дата и прикачено доказателство
+                (снимка на сметка/оферта). Доказателството се съхранява черно-бяло и в
+                ниска резолюция.
+              </p>
+              {expenses.map((x, idx) => (
+                <div
+                  key={x.key}
+                  className="rounded-[var(--r-sm)] border border-[var(--border)] p-3"
+                >
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Field label="Сума (€)">
+                      <TextInput
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={x.amount}
+                        onChange={(e) =>
+                          setExpenses((prev) =>
+                            prev.map((v, i) => (i === idx ? { ...v, amount: e.target.value } : v)),
+                          )
+                        }
+                      />
+                    </Field>
+                    <Field label="Дата">
+                      <TextInput
+                        type="date"
+                        value={x.dateISO}
+                        onChange={(e) =>
+                          setExpenses((prev) =>
+                            prev.map((v, i) => (i === idx ? { ...v, dateISO: e.target.value } : v)),
+                          )
+                        }
+                      />
+                    </Field>
+                  </div>
+                  <div className="mt-3">
+                    <Field label="Описание на разхода (BG)">
+                      <TextInput
+                        value={x.descriptionBg}
+                        onChange={(e) =>
+                          setExpenses((prev) =>
+                            prev.map((v, i) =>
+                              i === idx ? { ...v, descriptionBg: e.target.value } : v,
+                            ),
+                          )
+                        }
+                      />
+                    </Field>
+                  </div>
+                  <div className="mt-3">
+                    <Field label="Доказателство (снимка, задължително)">
+                      <ProofUploader
+                        value={x.proof}
+                        onChange={(v) =>
+                          setExpenses((prev) =>
+                            prev.map((val, i) => (i === idx ? { ...val, proof: v } : val)),
+                          )
+                        }
+                      />
+                    </Field>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-2 text-xs text-red-600"
+                    onClick={() => setExpenses((prev) => prev.filter((_, i) => i !== idx))}
+                  >
+                    Премахни
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  setExpenses((prev) => [
+                    ...prev,
+                    {
+                      key: uid(),
+                      amount: '',
+                      descriptionBg: '',
+                      dateISO: new Date().toISOString().slice(0, 10),
+                      proof: null,
+                    },
+                  ])
+                }
+                className="btn btn-secondary self-start"
+              >
+                + Добави разход
+              </button>
+            </div>
+          )}
         </Card>
       )}
 
