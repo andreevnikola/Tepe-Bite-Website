@@ -2,7 +2,7 @@ import Nav from "@/components/Nav";
 import Providers from "@/components/Providers";
 import { LANG_COOKIE, normalizeLang } from "@/store/lang";
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display } from "next/font/google";
+import { Caveat, DM_Sans, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
 
@@ -18,6 +18,14 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-dm-sans",
+  display: "swap",
+});
+
+// Brush-script face echoing the "Impact" wordmark in the ТЕПЕ bite Impact logo.
+const caveat = Caveat({
+  subsets: ["latin", "cyrillic"],
+  weight: ["500", "600", "700"],
+  variable: "--font-caveat",
   display: "swap",
 });
 
@@ -50,11 +58,12 @@ export default async function RootLayout({
   return (
     <html
       lang="bg"
-      className={`${playfair.variable} ${dmSans.variable}`}
+      className={`${playfair.variable} ${dmSans.variable} ${caveat.variable}`}
       style={
         {
           "--font-head": "var(--font-playfair), Georgia, serif",
           "--font-body": "var(--font-dm-sans), system-ui, sans-serif",
+          "--font-brush": "var(--font-caveat), cursive",
         } as React.CSSProperties
       }
     >

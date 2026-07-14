@@ -309,18 +309,25 @@ const COPY: Record<Lang, Copy> = {
 };
 
 /* Short, 1–2-word names for the "Back to …" note, keyed by route base. */
-const ROUTE_NAMES: { test: (p: string) => boolean; name: [string, string] }[] = [
-  { test: (p) => p === "/", name: ["Начало", "Home"] },
-  { test: (p) => p.startsWith("/product"), name: ["Продукт", "Product"] },
-  { test: (p) => p.startsWith("/initiatives"), name: ["Инициативи", "Initiatives"] },
-  { test: (p) => p.startsWith("/impact"), name: ["Impact", "Impact"] },
-  { test: (p) => p.startsWith("/partnering-locations"), name: ["Обекти", "Locations"] },
-  { test: (p) => p.startsWith("/news"), name: ["Новини", "News"] },
-  { test: (p) => p.startsWith("/order"), name: ["Поръчка", "Order"] },
-  { test: (p) => p.startsWith("/cart"), name: ["Количка", "Cart"] },
-  { test: (p) => p.startsWith("/checkout"), name: ["Плащане", "Checkout"] },
-  { test: (p) => p.startsWith("/legal"), name: ["Правно", "Legal"] },
-];
+const ROUTE_NAMES: { test: (p: string) => boolean; name: [string, string] }[] =
+  [
+    { test: (p) => p === "/", name: ["Начало", "Home"] },
+    { test: (p) => p.startsWith("/product"), name: ["Продукт", "Product"] },
+    {
+      test: (p) => p.startsWith("/initiatives"),
+      name: ["Инициативи", "Initiatives"],
+    },
+    { test: (p) => p.startsWith("/impact"), name: ["Impact", "Impact"] },
+    {
+      test: (p) => p.startsWith("/partnering-locations"),
+      name: ["Обекти", "Locations"],
+    },
+    { test: (p) => p.startsWith("/news"), name: ["Новини", "News"] },
+    { test: (p) => p.startsWith("/order"), name: ["Поръчка", "Order"] },
+    { test: (p) => p.startsWith("/cart"), name: ["Количка", "Cart"] },
+    { test: (p) => p.startsWith("/checkout"), name: ["Плащане", "Checkout"] },
+    { test: (p) => p.startsWith("/legal"), name: ["Правно", "Legal"] },
+  ];
 
 function routeName(pathname: string): [string, string] {
   return ROUTE_NAMES.find((r) => r.test(pathname))?.name ?? ["Сайта", "Site"];
@@ -344,8 +351,12 @@ export default function LinksClient({
       if (!document.referrer) return;
       const ref = new URL(document.referrer);
       if (ref.origin !== window.location.origin) return;
-      if (ref.pathname === "/links" || ref.pathname.startsWith("/links/")) return;
-      setBack({ href: ref.pathname + ref.search, name: routeName(ref.pathname) });
+      if (ref.pathname === "/links" || ref.pathname.startsWith("/links/"))
+        return;
+      setBack({
+        href: ref.pathname + ref.search,
+        name: routeName(ref.pathname),
+      });
     } catch {
       /* malformed referrer — no back note */
     }
@@ -361,7 +372,9 @@ export default function LinksClient({
   };
 
   // Featured initiative (real data) → focus card values.
-  const focusTitle = featured ? pick(lang, featured.titleBg, featured.titleEn) : "";
+  const focusTitle = featured
+    ? pick(lang, featured.titleBg, featured.titleEn)
+    : "";
   const focusDesc = featured
     ? pick(lang, featured.descriptionBg, featured.descriptionEn)
     : "";
@@ -413,9 +426,13 @@ export default function LinksClient({
               <span className="lk-back-label">
                 {t.backTo} <strong>{back.name[lang === "bg" ? 0 : 1]}</strong>
               </span>
-            </>
+            </Link>
           )}
-          <div className="lk-langswitch" role="group" aria-label="Език / Language">
+          <div
+            className="lk-langswitch"
+            role="group"
+            aria-label="Език / Language"
+          >
             {(["bg", "en"] as Lang[]).map((l) => (
               <button
                 key={l}
@@ -431,7 +448,10 @@ export default function LinksClient({
         </div>
 
         {/* Hero */}
-        <header className="lk-card lk-hero lk-reveal" style={{ ["--d" as string]: "0ms" }}>
+        <header
+          className="lk-card lk-hero lk-reveal"
+          style={{ ["--d" as string]: "0ms" }}
+        >
           <div className="lk-brand">
             <Image
               src="/logo-nav.png"
@@ -470,7 +490,7 @@ export default function LinksClient({
                 <Arrow />
               </span>
             </span>
-          </>
+          </Link>
         </header>
 
         {/* Initiative in focus — the featured initiative from the API */}
@@ -522,7 +542,7 @@ export default function LinksClient({
         )}
 
         {/* Primary CTA — order */}
-        <a
+        <Link
           href="/order"
           className="lk-primary lk-reveal"
           style={{ ["--d" as string]: "140ms" }}
@@ -537,7 +557,7 @@ export default function LinksClient({
           <span className="lk-primary-arrow">
             <IconArrow />
           </span>
-        </a>
+        </Link>
 
         {/* Link list */}
         <section
@@ -548,7 +568,11 @@ export default function LinksClient({
           <div className="lk-list">
             {t.links.map((link) =>
               link.soon ? (
-                <div key={link.label} className="lk-row soon" aria-disabled="true">
+                <div
+                  key={link.label}
+                  className="lk-row soon"
+                  aria-disabled="true"
+                >
                   <span className="lk-row-icon">{link.icon}</span>
                   <span className="lk-row-copy">
                     <span className="lk-row-label">{link.label}</span>
@@ -613,7 +637,7 @@ export default function LinksClient({
           <Link className="lk-contact" href="mailto:tepe@mail.bg">
             <IconMail />
             tepe@mail.bg
-          </>
+          </Link>
         </section>
 
         <footer className="lk-footer">

@@ -368,14 +368,14 @@ export default function FirstInitiative() {
 
             <div className="flex gap-2 max-[700px]:flex-col">
               <Link
-                href="/initiatives#first-initiative"
+                href="/impact"
                 className="btn btn-primary justify-center"
               >
                 {lang === "bg" ? "Виж инициативата" : "View the initiative"}{" "}
                 <IconArrow />
               </Link>
               <Link
-                href="/initiatives"
+                href="/impact"
                 className="btn btn-secondary max-[1200px]:w-full w-fit justify-center"
               >
                 {lang === "bg"

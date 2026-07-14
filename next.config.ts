@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
   },
+  async redirects() {
+    return [
+      // The full registry moved from /initiatives/all to /initiatives when the
+      // former marketing gateway was merged into /impact.
+      {
+        source: "/initiatives/all",
+        destination: "/initiatives",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

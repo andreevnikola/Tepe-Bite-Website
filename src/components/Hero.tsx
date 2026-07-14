@@ -216,9 +216,9 @@ export default function Hero() {
               <Link href="/order" className="btn btn-primary">
                 <IconShop />
                 {lang === "bg" ? "Поръчай" : "Order Now"}
-              </>
+              </Link>
               <Link
-                href="/initiatives"
+                href="/impact"
                 className="btn btn-secondary max-lg:grow justify-center"
               >
                 {lang === "bg" ? "Виж инициативите" : "See Initiatives"}

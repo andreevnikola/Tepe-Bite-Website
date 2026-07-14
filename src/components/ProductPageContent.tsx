@@ -171,7 +171,7 @@ function ProductHero({ lang }: { lang: Lang }) {
               <Link href="/order" className="btn btn-primary">
                 <IconShop />
                 {lang === "bg" ? "Поръчай сега" : "Order Now"}
-              </>
+              </Link>
               <a
                 href="#nutrition"
                 className="btn btn-secondary max-lg:grow justify-center"
@@ -1729,9 +1729,8 @@ function MissionSection({ lang }: { lang: Lang }) {
               ? "Когато избираш ТЕПЕ bite, не избираш само междинна закуска. Подкрепяш младежки инициативи, които развиваме, проследяваме и показваме прозрачно."
               : "When you choose ТЕПЕ bite, you are not just choosing a snack. You support youth initiatives that we develop, track, and share transparently."}
           </p>
-          {/* TODO: Link to /initiatives when that page is built */}
           <Link
-            href="/initiatives"
+            href="/impact"
             className="btn btn-caramel"
             style={{ fontSize: "1rem", padding: "15px 36px" }}
           >
@@ -1908,14 +1907,14 @@ function OrderSection({ lang }: { lang: Lang }) {
             flexWrap: "wrap",
           }}
         >
-          <a
+          <Link
             href="/order"
             className="btn btn-primary"
             style={{ fontSize: "1.05rem", padding: "16px 40px" }}
           >
             <IconShop />
             {lang === "bg" ? "Към поръчка" : "Place an order"}
-          </a>
+          </Link>
           <a
             href="mailto:tepe@mail.bg"
             className="btn btn-secondary"

@@ -200,7 +200,7 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
     >
       <div className="section-inner" style={{ maxWidth: 900 }}>
         <Link
-          href="/initiatives/all"
+          href="/initiatives"
           style={{
             display: "inline-flex",
             alignItems: "center",

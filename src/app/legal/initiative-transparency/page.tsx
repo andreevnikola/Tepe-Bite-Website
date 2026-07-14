@@ -59,7 +59,7 @@ export default function InitiativeTransparencyPage() {
           </p>
           <LegalTodo label="TODO — confirm whether partners, municipality or foundation must be mentioned for RE-CONNECT Бунарджика, and align wording accordingly. // TODO business owner confirmation" />
           <LegalNote>
-            <Link href="/initiatives" style={{ color: "var(--plum)", fontWeight: 600 }}>
+            <Link href="/impact" style={{ color: "var(--plum)", fontWeight: 600 }}>
               {bg ? "Вижте подробности за инициативата →" : "See initiative details →"}
             </Link>
           </LegalNote>
@@ -74,14 +74,24 @@ export default function InitiativeTransparencyPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "Засега — като малка фирма — водим средствата като ясно обособено и внимателно проследявано перо в сметката на фирмата и ги използваме точно както е обявено. С разрастването ни планираме напълно отделна сметка. Фондът може да приема и външни дарения. Публично обявяваме събраните до момента средства."
-              : "For now — as a small company — we track the funds as a clearly ring-fenced, carefully monitored line within the company's account and use them exactly as stated. As we grow, we plan a fully separate account. The fund can also accept external donations. We publicly announce the amount collected to date."}
+              ? "Засега — като малка фирма — водим средствата като ясно обособено и внимателно проследявано перо в сметката на фирмата и ги използваме точно както е обявено. С разрастването ни планираме напълно отделна сметка. Публично обявяваме събраните до момента средства."
+              : "For now — as a small company — we track the funds as a clearly ring-fenced, carefully monitored line within the company's account and use them exactly as stated. As we grow, we plan a fully separate account. We publicly announce the amount collected to date."}
+          </p>
+          <p style={bodyText}>
+            {bg
+              ? "Към момента не приемаме директни дарения — работим единствено чрез партньорства. Приемането на дарения е в плановете ни, но все още не е възможно поради правни усложнения; ще го въведем веднага щом законово можем."
+              : "For now we don't accept direct donations — we work solely through partnerships. Accepting donations is part of our plans, but is not yet possible due to legal complications; we'll introduce it the moment we legally can."}
           </p>
           <p style={bodyText}>
             {bg
               ? "Не спираме до дарение: избираме каузата, координираме партньори, търсим съфинансиране и спонсори и участваме в реализацията, за да извлечем максимума от всеки лев във фонда."
               : "We don't stop at a donation: we choose the cause, coordinate partners, seek co-funding and sponsors, and take part in delivery — to get the most out of every lev in the fund."}
           </p>
+          <LegalNote>
+            {bg
+              ? "Търговската дейност на ТЕПЕ bite и ТЕПЕ bite Impact се осъществяват в рамките на едно юридическо лице — БАИР ЕООД. Управлението на две отделни организации носи правна и административна сложност, несъразмерна с настоящия ни мащаб. В близко бъдеще планираме да регистрираме НПО."
+              : "The commercial activity of ТЕПЕ bite and ТЕПЕ bite Impact operate under one legal entity — БАИР ЕООД. Running two separate organisations carries legal and administrative complexity disproportionate to our current scale. We plan to register an NGO (НПО) in the near future."}
+          </LegalNote>
         </LegalSectionCard>
 
         {/* 4. Transparency promise */}
@@ -141,8 +151,8 @@ export default function InitiativeTransparencyPage() {
           <ul style={{ ...bodyText, paddingLeft: 22 }}>
             <li style={{ marginBottom: 8 }}>
               {bg
-                ? "0.15 € от всяко барче е обвързващо обещание. Над тази основа не гарантираме конкретна крайна сума — тя зависи от обема продажби, кампаниите и външните дарения."
-                : "The 0.15 € from every bar is a binding commitment. Above that base we don't guarantee a specific final amount — it depends on sales volume, campaigns and external donations."}
+                ? "0.15 € от всяко барче е обвързващо обещание. Над тази основа не гарантираме конкретна крайна сума — тя зависи от обема продажби, кампаниите и външното финансиране от партньори."
+                : "The 0.15 € from every bar is a binding commitment. Above that base we don't guarantee a specific final amount — it depends on sales volume, campaigns and outside funding from partners."}
             </li>
             <li style={{ marginBottom: 8 }}>
               {bg
