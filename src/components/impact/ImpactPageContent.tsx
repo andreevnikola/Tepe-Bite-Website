@@ -831,21 +831,21 @@ function HowImpactWorksSection({ lang }: { lang: Lang }) {
         {
           icon: <IconTarget />,
           title: "Избираме каузата",
-          copy: "Свързана с Пловдив, тепетата и младите хора.",
+          copy: "Инициатива с видим от Пловдивчани резултат.",
         },
         {
           icon: <IconPartners />,
           title: "Намираме партньори",
-          copy: "Организации, които реализират на терен.",
+          copy: "Общини, фирми, младежки организации...",
         },
         {
           icon: <IconCoinsSm />,
-          title: "Осигуряваме съфинансиране",
-          copy: "Спонсори и партньори, за да умножим всеки цент.",
+          title: "Съфинансиране",
+          copy: "Спонсори и партньори допринасят материално.",
         },
         {
           icon: <IconReport />,
-          title: "Отчитаме прозрачно",
+          title: "Прозрачност",
           copy: "Какво обещахме, какво направихме, какво вложихме.",
         },
       ]
@@ -853,21 +853,21 @@ function HowImpactWorksSection({ lang }: { lang: Lang }) {
         {
           icon: <IconTarget />,
           title: "We choose the cause",
-          copy: "Tied to Plovdiv, its hills and young people.",
+          copy: "Initiative with a visible result for Plovdivchani.",
         },
         {
           icon: <IconPartners />,
           title: "We find partners",
-          copy: "Organisations that get it built on the ground.",
+          copy: "Municipalities, companies, youth organisations..",
         },
         {
           icon: <IconCoinsSm />,
-          title: "We secure co-funding",
-          copy: "Sponsors and partners to multiply every cent.",
+          title: "Co-funding",
+          copy: "Sponsors and partners contribute materially.",
         },
         {
           icon: <IconReport />,
-          title: "We report openly",
+          title: "Transparency",
           copy: "What we promised, did, and put in.",
         },
       ];
@@ -979,8 +979,8 @@ function HowImpactWorksSection({ lang }: { lang: Lang }) {
             }}
           >
             {bg
-              ? "ТЕПЕ bite Impact е начинът, по който тези стотинки стигат до готови проекти. Събираме ги на едно място, добавяме партньори и външно финансиране и ги влагаме в конкретна инициатива — по четири ясни стъпки."
-              : "ТЕПЕ bite Impact is how those cents reach finished projects. We gather them in one place, add partners and outside funding, and put them into a concrete initiative — in four clear steps."}
+              ? "Под името ТЕПЕ bite Impact реализираме цялата наша социална дейност. Във отделна компонента на фирмената сметка заделяме по 15 евро цента за всяко продадено барче. Събраните средства наричаме фондът ТЕПЕ bite Impact. С тях, с външни партньори, спонсори, организации и общини организираме социални инициативи със стойност в пъти по-голяма от събраната сума."
+              : "Under the name ТЕПЕ bite Impact we run all our social activity. In a separate component of the company account we set aside 15 euro cents for every bar sold. The collected funds are called the ТЕПЕ bite Impact fund. With them, with external partners, sponsors, organisations and municipalities, we organise social initiatives with a value many times greater than the amount collected."}
           </p>
         </div>
 
@@ -1079,10 +1079,10 @@ function ResponsibilitiesSection({ lang }: { lang: Lang }) {
       color: "var(--sky-dk)",
       chip: "var(--sky-lt)",
       logo: true,
-      title: "ТЕПЕ bite Impact",
+      title: "ТЕПЕ bite",
       copy: bg
-        ? "Избира каузите, свързва спонсори, партньори и общини, организира реализацията и поддържа сайта актуален за пълна прозрачност."
-        : "Chooses the causes, connects sponsors, partners and municipalities, organises delivery, and keeps this site up to date for full transparency.",
+        ? "Избира каузите, намира спонсори, партньори и общини, организира реализацията и поддържа сайта актуален за пълна прозрачност."
+        : "Chooses the causes, finds sponsors, partners and municipalities, organises delivery, and keeps this site up to date for full transparency.",
     },
     {
       icon: <IconHandshake />,
@@ -1102,14 +1102,14 @@ function ResponsibilitiesSection({ lang }: { lang: Lang }) {
       style={{ background: "var(--surface)" }}
     >
       <div className="section-inner">
-        <div style={{ maxWidth: 640, marginBottom: 36 }}>
+        <div style={{ maxWidth: 1000, marginBottom: 36 }}>
           <div className="label-tag" style={{ marginBottom: 12 }}>
             {bg ? "Кой какво прави" : "Who does what"}
           </div>
           <h2 className="heading-lg" style={{ marginBottom: 16 }}>
             {bg
-              ? "Как е устроен ТЕПЕ bite Impact"
-              : "How ТЕПЕ bite Impact is set up"}
+              ? "Как е устроена социалната ни дейност"
+              : "How our social activity is structured"}
           </h2>
           <p
             style={{
@@ -1120,8 +1120,8 @@ function ResponsibilitiesSection({ lang }: { lang: Lang }) {
             }}
           >
             {bg
-              ? "Три роли работят заедно, за да се случи всяка инициатива — от продажбата на барчето до готовия проект на терен."
-              : "Three roles work together to make each initiative happen — from selling the bar to the finished project on the ground."}
+              ? "За социалната ни дейност, ни трябва както комерсиалната част от бизнеса, така и партньорите на бранда, така и структурата отговорна за реализацията на инициативите."
+              : "For our social activity, we need the commercial side of the business, the brand partners, and the structure responsible for implementing the initiatives."}
           </p>
         </div>
 
@@ -1155,36 +1155,31 @@ function ResponsibilitiesSection({ lang }: { lang: Lang }) {
               >
                 {p.icon}
               </div>
-              {p.logo ? (
-                <div
-                  style={{
-                    height: 30,
-                    marginBottom: 12,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Image
-                    src="/brand/TEPEbiteImpact-crop.png"
-                    alt="ТЕПЕ bite Impact"
-                    width={200}
-                    height={95}
-                    style={{ height: "100%", width: "auto" }}
-                  />
-                </div>
-              ) : (
-                <h3
-                  style={{
-                    fontFamily: "var(--font-head)",
-                    fontSize: "1.1rem",
-                    fontWeight: 700,
-                    color: "var(--plum)",
-                    marginBottom: 10,
-                  }}
-                >
-                  {p.title}
-                </h3>
-              )}
+
+              <h3
+                style={{
+                  fontFamily: "var(--font-head)",
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                  color: "var(--plum)",
+                  marginBottom: 10,
+                }}
+              >
+                {p.title}
+                {p.logo && (
+                  <span
+                    style={{
+                      fontFamily: "var(--font-brush)",
+                      fontWeight: 1000,
+                      color: "var(--caramel)",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {" "}
+                    Impact
+                  </span>
+                )}
+              </h3>
               <p
                 style={{
                   fontSize: "0.9rem",
@@ -1231,8 +1226,8 @@ function ResponsibilitiesSection({ lang }: { lang: Lang }) {
             }}
           >
             {bg
-              ? "Търговската дейност и ТЕПЕ bite Impact работят под едно юридическо лице — БАИР ЕООД. Управлението на две отделни организации носи правна и административна сложност, несъразмерна с мащаба ни днес. В близко бъдеще планираме да регистрираме НПО."
-              : "The commercial activity and ТЕПЕ bite Impact operate under one legal entity — БАИР ЕООД. Running two separate organisations carries legal and administrative complexity disproportionate to our scale today. We plan to register an NGO (НПО) in the near future."}
+              ? "Търговската дейност и ТЕПЕ bite Impact работят под едно юридическо лице — ФИВОРА ООД. Управлението на две отделни организации носи правна и административна сложност, несъразмерна с мащаба ни днес. В близко бъдеще планираме да регистрираме НПО."
+              : "The commercial activity and ТЕПЕ bite Impact operate under one legal entity — ФИВОРА ООД. Running two separate organisations carries legal and administrative complexity disproportionate to our scale today. We plan to register an NGO (НПО) in the near future."}
           </p>
         </div>
       </div>
@@ -1301,14 +1296,14 @@ function MoreInitiativesSection({
             flexWrap: "wrap",
           }}
         >
-          <div style={{ maxWidth: 640 }}>
+          <div style={{ maxWidth: 1000 }}>
             <div className="label-tag" style={{ marginBottom: 12 }}>
               {bg ? "Още проекти" : "More projects"}
             </div>
             <h2 className="heading-lg" style={{ marginBottom: 14 }}>
               {bg
-                ? "И други инициативи за Пловдив"
-                : "More initiatives for Plovdiv"}
+                ? "Още от приноса ни за Пловдив"
+                : "More of our contribution to Plovdiv"}
             </h2>
             <p
               style={{
@@ -1319,8 +1314,8 @@ function MoreInitiativesSection({
               }}
             >
               {bg
-                ? "От планираните до вече завършените — ето по какво още работим за града."
-                : "From planned to already completed — here's what else we're building for the city."}
+                ? "От планираните до вече завършените — това е нашето портфолио."
+                : "From planned to already completed — this is our portfolio."}
             </p>
           </div>
           {showArrows && (
@@ -1348,6 +1343,7 @@ function MoreInitiativesSection({
             display: "flex",
             gap: 20,
             overflowX: "auto",
+            overflowY: "visible",
             scrollSnapType: "x mandatory",
             paddingBottom: 6,
             scrollbarWidth: "none",
@@ -1381,12 +1377,18 @@ function MoreInitiativesSection({
               alignItems: "center",
               gap: 6,
               color: "var(--caramel)",
-              fontWeight: 700,
+              fontWeight: 1000,
               fontSize: "0.92rem",
               textDecoration: "none",
+              padding: "0px 8px",
+              lineHeight: 0.9,
+              borderLeft: "2px solid var(--caramel)",
             }}
           >
-            {bg ? "Разгледай всички инициативи" : "Explore all initiatives"} →
+            {bg
+              ? "Разбери повече за инициативите ни"
+              : "Learn more about our initiatives"}{" "}
+            →
           </Link>
         </div>
       </div>
@@ -1903,7 +1905,7 @@ function FAQSection({ lang }: { lang: Lang }) {
         },
         {
           q: "Регистрирана благотворителна организация ли е ТЕПЕ bite Impact?",
-          a: "Не в класическия смисъл. Търговската дейност и ТЕПЕ bite Impact работят под едно юридическо лице — БАИР ЕООД. Като малка фирма засега водим средствата на фонда като ясно обособено и внимателно проследявано перо и ги използваме точно както е обявено. С разрастването ни планираме отделна сметка и регистрация на НПО.",
+          a: "Не в класическия смисъл. Търговската дейност и ТЕПЕ bite Impact работят под едно юридическо лице — ФИВОРА ООД. Като малка фирма засега водим средствата на фонда като ясно обособено и внимателно проследявано перо и ги използваме точно както е обявено. С разрастването ни планираме отделна сметка и регистрация на НПО.",
         },
         {
           q: "Как се харчат парите?",
@@ -1925,7 +1927,7 @@ function FAQSection({ lang }: { lang: Lang }) {
         },
         {
           q: "Is ТЕПЕ bite Impact a registered charity?",
-          a: "Not in the classic sense. The commercial activity and ТЕПЕ bite Impact operate under one legal entity — БАИР ЕООД. As a small company we currently track the fund as a clearly ring-fenced, carefully monitored line and use it exactly as stated. As we grow, we plan a separate account and to register an NGO.",
+          a: "Not in the classic sense. The commercial activity and ТЕПЕ bite Impact operate under one legal entity — ФИВОРА ООД. As a small company we currently track the fund as a clearly ring-fenced, carefully monitored line and use it exactly as stated. As we grow, we plan a separate account and to register an NGO.",
         },
         {
           q: "How is the money spent?",
@@ -2436,23 +2438,21 @@ function WhereItGoesSection({ lang }: { lang: Lang }) {
             </div>
             <h2
               className="heading-lg"
-              style={{ color: "white", marginBottom: 16, maxWidth: 520 }}
+              style={{ color: "white", marginBottom: 16, maxWidth: 850 }}
             >
-              {bg
-                ? "От фонда към реални проекти"
-                : "From the fund to real projects"}
+              {bg ? "Фондът за реални проекти" : "The fund for real projects"}
             </h2>
             <p
               style={{
                 color: "oklch(92% 0.03 310)",
                 fontSize: "1.02rem",
-                maxWidth: 560,
+                maxWidth: 850,
                 marginBottom: 30,
               }}
             >
               {bg
-                ? "Всеки цент от ТЕПЕ bite Impact отива в конкретни инициативи за Пловдив — първата е RE-CONNECT БУНАРДЖИКА. Виж целия регистър: какво сме вложили и докъде сме стигнали."
-                : "Every cent from ТЕПЕ bite Impact goes into concrete initiatives for Plovdiv — the first is RE-CONNECT BUNARDZHIKA. See the full ledger: what we've invested and how far we've come."}
+                ? "Всеки цент вложен в ТЕПЕ bite Impact се уползотворява за реализацията на конкретни инициативи. Съвместно с партньори и нас (екипа зад бранда), реализираме видими инициативи съфинансирани от събраните средства."
+                : "Every cent put into ТЕПЕ bite Impact is used to deliver concrete initiatives. Together with partners and us (the team behind the brand), we deliver visible initiatives co-funded by the funds raised."}
             </p>
             <Link href="/initiatives" className="btn btn-caramel">
               {bg ? "Разгледай всички инициативи" : "Explore all initiatives"}{" "}
