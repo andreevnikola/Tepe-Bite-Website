@@ -17,7 +17,7 @@ export default function Footer() {
           ["/impact", "ТЕПЕ bite Impact"],
           ["/initiatives", "Нашите инициативи"],
           ["/links", "Всички връзки"],
-          ["/#za-nas", "За нас"],
+          ["/about", "За нас"],
         ]
       : [
           ["/", "Home"],
@@ -25,7 +25,7 @@ export default function Footer() {
           ["/impact", "ТЕПЕ bite Impact"],
           ["/initiatives", "Our Initiatives"],
           ["/links", "All our links"],
-          ["/#za-nas", "About"],
+          ["/about", "About"],
         ];
 
   const legalLinks: [string, string][] =
@@ -397,6 +397,27 @@ export default function Footer() {
               ? "Направено с любов в Пловдив"
               : "Made with love in Plovdiv"}
           </span>
+        </div>
+
+        {/* Hosting credit */}
+        <div
+          style={{
+            marginTop: 16,
+            fontSize: "0.74rem",
+            color: "oklch(55% 0.04 310)",
+          }}
+        >
+          {lang === "bg" ? "Сайтът е достъпен с подкрепата на " : "This site is served with the support of "}
+          <a
+            href="https://www.superhosting.bg/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "oklch(72% 0.04 310)", textDecoration: "none", fontWeight: 600 }}
+            onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "white")}
+            onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "oklch(72% 0.04 310)")}
+          >
+            SuperHosting.BG ↗
+          </a>
         </div>
       </div>
 

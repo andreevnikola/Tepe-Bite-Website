@@ -1,5 +1,11 @@
 "use client";
-import { IconArrow, IconFb, IconInsta, IconLink, IconTiktok } from "@/components/icons";
+import {
+  IconArrow,
+  IconFb,
+  IconInsta,
+  IconLink,
+  IconTiktok,
+} from "@/components/icons";
 import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
@@ -27,9 +33,9 @@ const socials = [
     icon: <IconFb />,
     label: "Facebook",
     handle: "ТЕПЕ bite",
-    href: "",
+    href: SITE_INFO.social.facebook,
     hoverBg: "#1877F2",
-    disabled: true,
+    disabled: false,
   },
 ];
 

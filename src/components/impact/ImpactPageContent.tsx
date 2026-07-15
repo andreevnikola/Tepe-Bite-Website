@@ -424,8 +424,8 @@ function HeroSection({
                 }}
               >
                 {bg
-                  ? "Избираме инициативи с видима промяна в Пловдив — неща, които се усещат из града. Купувайки барче, ставаш част от нещо реално: фиксираните 0.15 € от всяко влизат във фонд ТЕПЕ bite Impact, умножаваме ги с партньори и публикуваме всяко евро."
-                  : "We pick initiatives with visible change in Plovdiv — things you feel around the city. Buy a bar and you become part of something real: a fixed 0.15 € from each goes into the ТЕПЕ bite Impact fund, we multiply it through partners, and we publish every euro."}
+                  ? "Реализираме социални проекти с видим и дългосрочен резултат в Пловдив - проекти забележими от Пловдивчани. Закупувайки продукта ставаш част от нашата активност: с всяка твоя покупка допринасяш с 15 цента за фонда към ТЕПЕ bite Impact. Ние умножаваме събраните средства чрез партньорства и спонсори. Отчитаме всяко евро от фонда и държим процеса по реализация на инициативите ни прозрачен."
+                  : "We implement social projects with visible and long-term results in Plovdiv - projects that are noticeable to Plovdivchani. By purchasing the product, you become part of our activity: with every purchase, you contribute 15 cents to the ТЕПЕ bite Impact fund. We multiply the collected funds through partnerships and sponsorships. We account for every euro from the fund and keep the process of implementing our initiatives transparent."}
               </p>
 
               <div
@@ -436,13 +436,13 @@ function HeroSection({
                   alignItems: "stretch",
                 }}
               >
-                <a
-                  href="#focus"
+                <Link
+                  href="/initiatives"
                   className="btn btn-primary max-sm:text-[0.72rem]! max-sm:px-8! max-[1200px]:w-full! justify-center"
                 >
                   {bg ? "Виж инициативите ни" : "Explore an initiative"}{" "}
                   <IconArrow />
-                </a>
+                </Link>
                 <ImpactPledge
                   variant="chip"
                   href="#instrument"
@@ -678,8 +678,8 @@ function WhatWeChooseSection({
             }}
           >
             {bg
-              ? "Избираме проекти за градско обновяване — намеси, които хората в Пловдив реално виждат, ползват и разпознават като свои. Ето какво ги обединява."
-              : "We choose urban-renewal projects — interventions people in Plovdiv genuinely see, use, and recognise as their own. Here's what they share."}
+              ? "Избираме проекти за градско обновяване — намеси, които хората в Пловдив реално виждат, ползват и които клиентите ни разпознават като свои. Ето какво ги обединява."
+              : "We choose urban-renewal projects — interventions people in Plovdiv genuinely see, use, and which our customers recognise as their own. Here's what they share."}
           </p>
         </div>
 
@@ -705,50 +705,50 @@ function WhatWeChooseSection({
                 gap: 16,
               }}
             >
-            {cards.map((c) => (
-              <div
-                key={c.title}
-                className="card"
-                style={{ padding: "22px 22px" }}
-              >
+              {cards.map((c) => (
                 <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: c.chip,
-                    color: c.color,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 14,
-                  }}
+                  key={c.title}
+                  className="card"
+                  style={{ padding: "22px 22px" }}
                 >
-                  {c.icon}
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 12,
+                      background: c.chip,
+                      color: c.color,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 14,
+                    }}
+                  >
+                    {c.icon}
+                  </div>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-head)",
+                      fontSize: "1.02rem",
+                      fontWeight: 700,
+                      color: "var(--plum)",
+                      marginBottom: 8,
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {c.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "0.88rem",
+                      lineHeight: 1.55,
+                      color: "var(--text-mid)",
+                      margin: 0,
+                    }}
+                  >
+                    {c.copy}
+                  </p>
                 </div>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-head)",
-                    fontSize: "1.02rem",
-                    fontWeight: 700,
-                    color: "var(--plum)",
-                    marginBottom: 8,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {c.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.88rem",
-                    lineHeight: 1.55,
-                    color: "var(--text-mid)",
-                    margin: 0,
-                  }}
-                >
-                  {c.copy}
-                </p>
-              </div>
               ))}
             </div>
 
@@ -894,11 +894,11 @@ function HowImpactWorksSection({ lang }: { lang: Lang }) {
           width: "min(46vw, 360px)",
           aspectRatio: "2.1 / 1",
           backgroundColor: "rgb(82, 51, 95)",
-          maskImage: "url(/TEPEbiteImpact-crop.png)",
+          maskImage: "url(/brand/TEPEbiteImpact-crop.png)",
           maskSize: "contain",
           maskPosition: "left bottom",
           maskRepeat: "no-repeat",
-          WebkitMaskImage: "url(/TEPEbiteImpact-crop.png)",
+          WebkitMaskImage: "url(/brand/TEPEbiteImpact-crop.png)",
           WebkitMaskSize: "contain",
           WebkitMaskPosition: "left bottom",
           WebkitMaskRepeat: "no-repeat",
@@ -952,12 +952,21 @@ function HowImpactWorksSection({ lang }: { lang: Lang }) {
               }}
             >
               <span style={{ display: "block" }}>
-                {bg ? "0.15 € от всяко барче" : "0.15 € from every bar"}
+                {bg ? "Със всяка покупка" : "With every purchase"}
               </span>
               <span style={{ display: "block", color: "var(--caramel)" }}>
-                {bg
-                  ? "работят чрез ТЕПЕ bite Impact"
-                  : "put to work by ТЕПЕ bite Impact"}
+                {bg ? "подпомагаш за нашия" : "you support our"}
+                <span
+                  style={{
+                    fontFamily: "var(--font-brush)",
+                    fontWeight: 1000,
+                    color: "var(--caramel)",
+                    lineHeight: 1,
+                  }}
+                >
+                  {" "}
+                  Impact
+                </span>
               </span>
             </h2>
           </div>
@@ -1349,7 +1358,11 @@ function MoreInitiativesSection({
           {items.map((it) => (
             <div
               key={it.id}
-              style={{ flex: "0 0 300px", width: 300, scrollSnapAlign: "start" }}
+              style={{
+                flex: "0 0 300px",
+                width: 300,
+                scrollSnapAlign: "start",
+              }}
             >
               <InitiativeCard
                 initiative={it}

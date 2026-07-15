@@ -202,6 +202,41 @@ export async function getPublicOverviewData(): Promise<OverviewData> {
 }
 
 /**
+ * All youth-led partners in the datastore, enriched with the same per-partner
+ * stats the overview carousel uses (how many published initiatives they are
+ * linked to + their money across those initiatives, by phase). Unlike the
+ * overview's `partners`, this returns EVERY youth-led organisation — including
+ * ones not yet linked to a published initiative — because the /about "youth
+ * power" section is about the movement, not only who has already contributed.
+ * Sorted star-first, then by initiative involvement, then name. Pages should
+ * set ISR revalidate.
+ */
+export async function getYouthLedPartnersEnriched(): Promise<PartnerCarouselItem[]> {
+  await getMongoose()
+
+  const [rawInitiatives, rawPartners] = await Promise.all([
+    Initiative.find({ isPublished: true }).sort({ updatedAt: -1 }).lean(),
+    Partner.find({ isYouthLed: true }).lean(),
+  ])
+
+  const initiatives = rawInitiatives.map(serializeInitiative)
+
+  return rawPartners
+    .map(serializePartner)
+    .map((partner) => ({
+      partner,
+      initiativeCount: partnerInitiativeCount(initiatives, partner.id),
+      financial: partnerFinancialAcross(initiatives, partner.id),
+    }))
+    .sort((a, b) => {
+      if (a.partner.isStarPartner !== b.partner.isStarPartner)
+        return a.partner.isStarPartner ? -1 : 1
+      if (a.initiativeCount !== b.initiativeCount) return b.initiativeCount - a.initiativeCount
+      return a.partner.nameBg.localeCompare(b.partner.nameBg, 'bg')
+    })
+}
+
+/**
  * Just the single spotlighted initiative — a light read for surfaces that only
  * need the featured card (e.g. the /links hub), without computing the full
  * overview (stats + partner carousel). Pages should set ISR revalidate.

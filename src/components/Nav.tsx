@@ -62,6 +62,7 @@ export default function Nav() {
       ? [
           ["/", "Начало"],
           ["/product", "Продуктът"],
+          ["/about", "За нас"],
           ["/impact", "IMPACT"],
           ["/partnering-locations", "Партниращи обекти"],
           ["/news", "Новини"],
@@ -69,6 +70,7 @@ export default function Nav() {
       : [
           ["/", "Home"],
           ["/product", "The Product"],
+          ["/about", "About"],
           ["/impact", "IMPACT"],
           ["/partnering-locations", "Partnering Locations"],
           ["/news", "News"],
@@ -77,6 +79,7 @@ export default function Nav() {
   const isActive = (href: string) => {
     if (href === "/") return isHome;
     if (href === "/product") return pathname === "/product";
+    if (href === "/about") return pathname === "/about";
     if (href === "/impact") return pathname === "/impact";
     if (href === "/partnering-locations")
       return pathname.startsWith("/partnering-locations");
