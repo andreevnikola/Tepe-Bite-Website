@@ -24,7 +24,6 @@ async function uniqueSlug(baseName: string, excludeId: string): Promise<string> 
   const base = slugify(baseName)
   let slug = base
   let n = 1
-  // eslint-disable-next-line no-await-in-loop
   while (await Partner.exists({ slug, _id: { $ne: excludeId } })) {
     n += 1
     slug = `${base}-${n}`
@@ -43,9 +42,7 @@ async function main() {
     console.log('✓ All partners already have a slug — nothing to do.')
   } else {
     for (const p of partners) {
-      // eslint-disable-next-line no-await-in-loop
       p.slug = await uniqueSlug(p.nameEn || p.nameBg, p._id.toString())
-      // eslint-disable-next-line no-await-in-loop
       await p.save()
       console.log(`✓ ${p.nameBg} → ${p.slug}`)
     }

@@ -1,7 +1,7 @@
 "use client";
 import CartNavIcon from "@/components/cart/CartNavIcon";
 import { IconArrow, IconClose, IconMenu, IconShop } from "@/components/icons";
-import { LANG_COOKIE, langAtom, type Lang } from "@/store/lang";
+import { langAtom, writeLangCookie, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,19 +52,9 @@ export default function Nav() {
     isInitiativesData ||
     mobileOpen;
 
-  // Prefix for hash-anchor links: empty on home (stays on page), '/' on other pages
-  const p = isHome ? "" : "/";
-
-  const setLangCookie = (value: Lang) => {
-    if (typeof document === "undefined") return;
-    document.cookie = `${LANG_COOKIE}=${encodeURIComponent(
-      value,
-    )}; path=/; max-age=31536000; samesite=lax`;
-  };
-
   const handleLangChange = (value: Lang) => {
     setLang(value);
-    setLangCookie(value);
+    writeLangCookie(value);
   };
 
   const navLinks: [string, string][] =

@@ -13,7 +13,6 @@ export const runtime = 'nodejs'
 async function uniqueSlug(base: string): Promise<string> {
   let slug = base
   let n = 1
-  // eslint-disable-next-line no-await-in-loop
   while (await Initiative.exists({ slug })) {
     n += 1
     slug = `${base}-${n}`

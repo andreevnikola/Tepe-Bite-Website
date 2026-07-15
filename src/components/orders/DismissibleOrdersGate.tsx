@@ -3,9 +3,31 @@
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 const SESSION_KEY = 'tepe_orders_notice_dismissed'
+// Dispatched after we write the dismissal so the (same-tab) subscriber updates —
+// the native `storage` event only fires in other tabs.
+const DISMISS_EVENT = 'tepe-orders-notice-change'
+
+function subscribeDismissed(onChange: () => void) {
+  window.addEventListener(DISMISS_EVENT, onChange)
+  window.addEventListener('storage', onChange)
+  return () => {
+    window.removeEventListener(DISMISS_EVENT, onChange)
+    window.removeEventListener('storage', onChange)
+  }
+}
+
+// Reads sessionStorage on the client. The server snapshot is null so nothing
+// renders until after hydration, avoiding a hydration mismatch.
+function getDismissedSnapshot(): boolean {
+  try {
+    return sessionStorage.getItem(SESSION_KEY) === '1'
+  } catch {
+    return false
+  }
+}
 
 const T = {
   bg: {
@@ -40,16 +62,12 @@ export default function DismissibleOrdersGate() {
   const lang = useAtomValue(langAtom)
   const t = T[lang]
 
-  // null = not yet read from storage (avoid hydration mismatch)
-  const [dismissed, setDismissed] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    try {
-      setDismissed(sessionStorage.getItem(SESSION_KEY) === '1')
-    } catch {
-      setDismissed(false)
-    }
-  }, [])
+  // null = not yet read on the client (avoid hydration mismatch)
+  const dismissed = useSyncExternalStore(
+    subscribeDismissed,
+    getDismissedSnapshot,
+    () => null,
+  )
 
   if (webOrdersAvailable) return null
   if (dismissed === null) return null // wait for client hydration
@@ -60,7 +78,7 @@ export default function DismissibleOrdersGate() {
     } catch {
       // ignore
     }
-    setDismissed(true)
+    window.dispatchEvent(new Event(DISMISS_EVENT))
   }
 
   if (dismissed) {

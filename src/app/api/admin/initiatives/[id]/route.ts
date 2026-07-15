@@ -20,7 +20,6 @@ function isValidId(id: string): boolean {
 function imageKeys(doc: any): string[] {
   const keys: string[] = []
   if (doc?.coverImage?.key) keys.push(doc.coverImage.key)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const g of doc?.gallery ?? []) if (g?.key) keys.push(g.key)
   return keys
 }

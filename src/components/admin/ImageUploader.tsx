@@ -59,7 +59,6 @@ export default function ImageUploader({
         if (file) onChange(extract(file))
       }}
       onUploadError={(e) => {
-        // eslint-disable-next-line no-alert
         alert(`Грешка при качване: ${e.message}`)
       }}
       appearance={{ button: 'ut-ready:bg-[var(--plum)] text-sm' }}

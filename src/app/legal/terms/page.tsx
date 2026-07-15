@@ -5,7 +5,6 @@ import LegalPageLayout, {
   LegalSectionCard,
   LegalTodo,
   bodyText,
-  subheading,
 } from "@/components/legal/LegalPageLayout";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
@@ -50,7 +49,7 @@ export default function TermsPage() {
           </p>
           <ul style={{ ...bodyText, paddingLeft: 20, margin: 0 }}>
             <li>{bg ? "Търговска марка: " : "Brand: "}<strong>ТЕПЕ bite</strong></li>
-            <li>{bg ? "Правен субект: " : "Legal entity: "}<strong>„Баир" ЕООД</strong></li>
+            <li>{bg ? "Правен субект: " : "Legal entity: "}<strong>„Баир“ ЕООД</strong></li>
             <li>ЕИК / UIC: <LegalTodo label="TODO_EIK — потвърди ЕИК пред пускане в продукция. // TODO business owner confirmation" /></li>
             <li>{bg ? "ДДС номер: " : "VAT number: "}<LegalTodo label="TODO_VAT_NUMBER — потвърди ДДС номер. // TODO accountant review" /></li>
             <li>{bg ? "Управител: " : "Manager: "}<strong>Маргарита Стоичкова</strong></li>
@@ -303,7 +302,7 @@ export default function TermsPage() {
               : "For questions about these Terms, orders or consumer rights, please contact us:"}
           </p>
           <p style={{ ...bodyText, margin: 0 }}>
-            <strong>ТЕПЕ bite / „Баир" ЕООД</strong><br />
+            <strong>ТЕПЕ bite / „Баир“ ЕООД</strong><br />
             {bg ? "Имейл: " : "Email: "}<a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)" }}>tepe@mail.bg</a><br />
             {bg ? "Контакт за клиенти: " : "Customer contact: "}Никола Андреев
           </p>

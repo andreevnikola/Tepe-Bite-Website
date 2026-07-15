@@ -1,4 +1,5 @@
 "use client";
+import { isRecent } from "@/lib/date/recent";
 import { urlFor } from "@/sanity/image";
 import type { NewsPost } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
@@ -105,9 +106,7 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
                 lang === "bg" ? "bg-BG" : "en-GB",
                 { day: "numeric", month: "short", year: "numeric" },
               );
-              const isNew =
-                Date.now() - new Date(post.publishedAt).getTime() <
-                14 * 24 * 60 * 60 * 1000;
+              const isNew = isRecent(post.publishedAt);
 
               return (
                 <Link

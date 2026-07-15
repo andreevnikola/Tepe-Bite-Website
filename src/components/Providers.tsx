@@ -2,7 +2,7 @@
 import { Provider } from 'jotai';
 import { createStore } from 'jotai/vanilla';
 import { DEFAULT_LANG, langAtom, type Lang } from '@/store/lang';
-import { useRef } from 'react';
+import { useState } from 'react';
 
 export default function Providers({
   children,
@@ -11,14 +11,15 @@ export default function Providers({
   children: React.ReactNode;
   initialLang?: Lang;
 }) {
-  const storeRef = useRef<ReturnType<typeof createStore> | null>(null);
-  if (storeRef.current === null) {
-    const store = createStore();
-    store.set(langAtom, initialLang ?? DEFAULT_LANG);
-    storeRef.current = store;
-  }
+  // Create the store once per instance via a lazy initialiser (runs a single
+  // time), so we never read a ref during render.
+  const [store] = useState(() => {
+    const s = createStore();
+    s.set(langAtom, initialLang ?? DEFAULT_LANG);
+    return s;
+  });
 
   return (
-    <Provider store={storeRef.current}>{children}</Provider>
+    <Provider store={store}>{children}</Provider>
   );
 }

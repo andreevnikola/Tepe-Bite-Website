@@ -4,11 +4,11 @@ import { PledgeHeart } from "@/components/ImpactPledge";
 import { IconArrow, IconInsta, IconTiktok, IconFb } from "@/components/icons";
 import { StatusBadge, pick } from "@/components/public/impactUi";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
-import { LANG_COOKIE, langAtom, type Lang } from "@/store/lang";
+import { langAtom, writeLangCookie, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Link } from "sanity/router";
+import Link from "next/link";
+import { useSyncExternalStore } from "react";
 
 /* ── Small link-hub-only icons (kept local so the hub stays self-contained) ── */
 
@@ -335,6 +335,32 @@ function routeName(pathname: string): [string, string] {
 
 type BackTarget = { href: string; name: [string, string] };
 
+// The "Back to …" note depends on document.referrer, which is unknown on the
+// server and fixed for the lifetime of the page load. We read it through
+// useSyncExternalStore so the server snapshot is null (no note, no hydration
+// mismatch) and the client resolves it after hydration. The result is cached
+// because useSyncExternalStore compares snapshots by reference.
+let backSnapshot: BackTarget | null | undefined;
+function computeBackTarget(): BackTarget | null {
+  if (backSnapshot !== undefined) return backSnapshot;
+  backSnapshot = null;
+  try {
+    if (!document.referrer) return backSnapshot;
+    const ref = new URL(document.referrer);
+    if (ref.origin !== window.location.origin) return backSnapshot;
+    if (ref.pathname === "/links" || ref.pathname.startsWith("/links/"))
+      return backSnapshot;
+    backSnapshot = {
+      href: ref.pathname + ref.search,
+      name: routeName(ref.pathname),
+    };
+  } catch {
+    /* malformed referrer — no back note */
+  }
+  return backSnapshot;
+}
+const subscribeBackTarget = () => () => {};
+
 export default function LinksClient({
   featured,
 }: {
@@ -344,31 +370,17 @@ export default function LinksClient({
   const t = COPY[lang];
 
   // "Back to …" note — only when the visitor arrived from our own site.
-  // Resolved after mount (needs document.referrer), so it fades in client-side.
-  const [back, setBack] = useState<BackTarget | null>(null);
-  useEffect(() => {
-    try {
-      if (!document.referrer) return;
-      const ref = new URL(document.referrer);
-      if (ref.origin !== window.location.origin) return;
-      if (ref.pathname === "/links" || ref.pathname.startsWith("/links/"))
-        return;
-      setBack({
-        href: ref.pathname + ref.search,
-        name: routeName(ref.pathname),
-      });
-    } catch {
-      /* malformed referrer — no back note */
-    }
-  }, []);
+  // Resolved after hydration (needs document.referrer), so it fades in
+  // client-side. The server snapshot is null to avoid a hydration mismatch.
+  const back = useSyncExternalStore(
+    subscribeBackTarget,
+    computeBackTarget,
+    () => null,
+  );
 
   const setLanguage = (value: Lang) => {
     setLang(value);
-    if (typeof document !== "undefined") {
-      document.cookie = `${LANG_COOKIE}=${encodeURIComponent(
-        value,
-      )}; path=/; max-age=31536000; samesite=lax`;
-    }
+    writeLangCookie(value);
   };
 
   // Featured initiative (real data) → focus card values.

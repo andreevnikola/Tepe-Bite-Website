@@ -50,7 +50,6 @@ const T = {
 export default function EmailRetryPanel({
   lang,
   publicOrderNumber,
-  customerEmail,
   emailRetryToken: initialToken,
 }: Props) {
   const t = T[lang];

@@ -71,7 +71,7 @@ export default function WithdrawalFormPage() {
               {bg ? "До:" : "To:"}
             </div>
             <div style={{ lineHeight: 1.8, color: "var(--text-mid)", fontSize: "0.9rem" }}>
-              <strong>„Баир" ЕООД / ТЕПЕ bite</strong><br />
+              <strong>„Баир“ ЕООД / ТЕПЕ bite</strong><br />
               {bg ? "Имейл: " : "Email: "}<strong>tepe@mail.bg</strong><br />
               {bg ? "Адрес: " : "Address: "}
               <LegalTodo label="TODO_CORRESPONDENCE_ADDRESS // TODO business owner confirmation" />

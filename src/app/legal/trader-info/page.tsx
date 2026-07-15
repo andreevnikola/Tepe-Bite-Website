@@ -9,11 +9,10 @@ import LegalPageLayout, {
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
-export default function TraderInfoPage() {
-  const lang = useAtomValue(langAtom);
-  const bg = lang === "bg";
-
-  const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
+// Static presentational row — defined at module scope (it closes over nothing
+// from render) so it isn't recreated on every render.
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
     <div
       style={{
         display: "grid",
@@ -33,19 +32,24 @@ export default function TraderInfoPage() {
       </span>
     </div>
   );
+}
+
+export default function TraderInfoPage() {
+  const lang = useAtomValue(langAtom);
+  const bg = lang === "bg";
 
   return (
     <>
       <LegalPageLayout
         titleBg="Данни за търговеца"
         titleEn="Trader Information / Legal Notice"
-        subtitleBg={'Идентификационни и регистрационни данни на „Баир" ЕООД — търговска марка ТЕПЕ bite.'}
+        subtitleBg={'Идентификационни и регистрационни данни на „Баир“ ЕООД — търговска марка ТЕПЕ bite.'}
         subtitleEn="Identification and registration details of Баир ЕООД — trading as ТЕПЕ bite."
       >
         {/* Identity */}
         <LegalSectionCard title={bg ? "Идентификация на търговеца" : "Trader Identity"}>
           <Row label={bg ? "Търговска марка" : "Brand"} value={<strong>ТЕПЕ bite</strong>} />
-          <Row label={bg ? "Правен субект" : "Legal entity"} value={<strong>„Баир" ЕООД</strong>} />
+          <Row label={bg ? "Правен субект" : "Legal entity"} value={<strong>„Баир“ ЕООД</strong>} />
           <Row
             label={bg ? "ЕИК / UIC" : "EIK / UIC"}
             value={<LegalTodo label="TODO_EIK // TODO business owner confirmation" />}

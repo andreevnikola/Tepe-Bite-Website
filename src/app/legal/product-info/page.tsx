@@ -226,13 +226,13 @@ export default function ProductInfoPage() {
         <LegalSectionCard id="producer" title={bg ? "6. Производител" : "6. Producer"}>
           <p style={bodyText}>
             <strong>{bg ? "Произведено от:" : "Produced by:"}</strong> Biostyle Ltd.<br />
-            {bg ? "Адрес: " : "Address: "}ул. „Светлина" № 8, с. Брестовица 4224, България<br />
+            {bg ? "Адрес: " : "Address: "}ул. „Светлина“ № 8, с. Брестовица 4224, България<br />
             {bg ? "Тел: " : "Tel: "}+359 894 383 772<br />
             {bg ? "Имейл: " : "Email: "}
             <a href="mailto:sales@biostyle.bg" style={{ color: "var(--plum)" }}>sales@biostyle.bg</a>
           </p>
           <p style={{ ...bodyText, margin: 0 }}>
-            <strong>{bg ? "Произведено за:" : "Produced for:"}</strong> „Баир" ЕООД (ТЕПЕ bite)
+            <strong>{bg ? "Произведено за:" : "Produced for:"}</strong> „Баир“ ЕООД (ТЕПЕ bite)
           </p>
         </LegalSectionCard>
 
