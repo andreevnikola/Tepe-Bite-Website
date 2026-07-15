@@ -1,4 +1,5 @@
 "use client";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -99,7 +100,7 @@ export default function PartnerCTA() {
         </p>
 
         <a
-          href="mailto:tepe@mail.bg"
+          href={`mailto:${SITE_INFO.contact.generalEmail}`}
           className="btn"
           style={{
             background: "var(--caramel)",

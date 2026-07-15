@@ -102,7 +102,7 @@ export default function WhySection() {
           }}
         >
           <Image
-            src="/manufacturing.jpg"
+            src="/photos/manufacturing.jpg"
             alt={
               lang === "bg"
                 ? "Производство на ТЕПЕ bite в Пловдив"

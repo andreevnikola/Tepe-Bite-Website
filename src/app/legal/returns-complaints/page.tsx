@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -41,8 +42,8 @@ export default function ReturnsComplaintsPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "За упражняване на правото на отказ можете да използвате нашия стандартен формуляр или да изпратите ясно писмено съобщение на tepe@mail.bg."
-              : "To exercise the right of withdrawal, you may use our standard form or send a clear written statement to tepe@mail.bg."}
+              ? `За упражняване на правото на отказ можете да използвате нашия стандартен формуляр или да изпратите ясно писмено съобщение на ${SITE_INFO.contact.generalEmail}.`
+              : `To exercise the right of withdrawal, you may use our standard form or send a clear written statement to ${SITE_INFO.contact.generalEmail}.`}
           </p>
           <LegalNote>
             <Link href="/legal/withdrawal-form" style={{ color: "var(--plum)", fontWeight: 600 }}>
@@ -102,8 +103,8 @@ export default function ReturnsComplaintsPage() {
         <LegalSectionCard id="complaints" title={bg ? "5. Рекламации" : "5. Complaints"}>
           <p style={bodyText}>
             {bg
-              ? "При грешен, повреден, дефектен или несъответстващ продукт, моля свържете се с нас на tepe@mail.bg възможно най-скоро и не по-късно от 14 дни след получаване, като приложите:"
-              : "If you receive an incorrect, damaged, defective or non-conforming product, please contact us at tepe@mail.bg as soon as possible and no later than 14 days after receipt, including:"}
+              ? `При грешен, повреден, дефектен или несъответстващ продукт, моля свържете се с нас на ${SITE_INFO.contact.generalEmail} възможно най-скоро и не по-късно от 14 дни след получаване, като приложите:`
+              : `If you receive an incorrect, damaged, defective or non-conforming product, please contact us at ${SITE_INFO.contact.generalEmail} as soon as possible and no later than 14 days after receipt, including:`}
           </p>
           <ul style={{ ...bodyText, paddingLeft: 22 }}>
             <li style={{ marginBottom: 6 }}>{bg ? "Снимки на продукта и опаковката" : "Photos of the product and packaging"}</li>
@@ -121,8 +122,8 @@ export default function ReturnsComplaintsPage() {
           <ol style={{ ...bodyText, paddingLeft: 22 }}>
             <li style={{ marginBottom: 8 }}>
               {bg
-                ? 'Изпратете имейл на tepe@mail.bg с темата „Връщане" или „Рекламация".'
-                : "Send an email to tepe@mail.bg with the subject 'Return' or 'Complaint'."}
+                ? `Изпратете имейл на ${SITE_INFO.contact.generalEmail} с темата „Връщане" или „Рекламация".`
+                : `Send an email to ${SITE_INFO.contact.generalEmail} with the subject 'Return' or 'Complaint'.`}
             </li>
             <li style={{ marginBottom: 8 }}>
               {bg
@@ -142,7 +143,7 @@ export default function ReturnsComplaintsPage() {
           </ol>
           <p style={{ ...bodyText, marginTop: 16 }}>
             {bg ? "Имейл: " : "Email: "}
-            <a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)", fontWeight: 600 }}>tepe@mail.bg</a>
+            <a href={`mailto:${SITE_INFO.contact.generalEmail}`} style={{ color: "var(--plum)", fontWeight: 600 }}>{SITE_INFO.contact.generalEmail}</a>
           </p>
           <p style={bodyText}>
             {bg ? "Адрес за връщане: " : "Return address: "}

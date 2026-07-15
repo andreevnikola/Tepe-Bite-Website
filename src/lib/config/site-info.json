@@ -1,0 +1,31 @@
+{
+  "brand": {
+    "name": "ТЕПЕ bite",
+    "legalEntity": "ФИВОРА ООД",
+    "manager": "Георги Андреев",
+    "customerContact": "Никола Андреев"
+  },
+  "website": {
+    "url": "https://tepebite.eu"
+  },
+  "contact": {
+    "generalEmail": "office@tepebite.eu",
+    "impactEmail": "impact@tepebite.eu"
+  },
+  "social": {
+    "instagram": "https://www.instagram.com/tepe.bite/",
+    "tiktok": "https://www.tiktok.com/@tepe.bite",
+    "facebook": "https://www.facebook.com/p/%D0%A2%D0%95%D0%9F%D0%95-bite-61590321219204/"
+  },
+  "trader": {
+    "eik": "TODO_EIK // TODO business owner confirmation",
+    "vatRegistered": true,
+    "vatNumber": "TODO_VAT_NUMBER // TODO accountant review",
+    "hasPublicPhone": false,
+    "registeredOfficeAddress": "TODO_REGISTERED_OFFICE_ADDRESS // TODO business owner confirmation",
+    "correspondenceAddress": "TODO_CORRESPONDENCE_ADDRESS // TODO business owner confirmation",
+    "returnsAddress": "TODO_RETURNS_ADDRESS // TODO business owner confirmation",
+    "babhRegistration": "TODO_BABH_DISTANCE_SELLING_REGISTRATION_STATUS and TODO_BABH_REGISTRATION_NUMBER_OR_DETAILS // TODO business owner / legal review",
+    "napRegistration": "TODO_NRA_ECOMMERCE_REGISTRATION_STATUS and TODO_NRA_APPLICATION_33_DETAILS // TODO accountant / business owner confirmation"
+  }
+}

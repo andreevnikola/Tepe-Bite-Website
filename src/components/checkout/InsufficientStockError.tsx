@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 
+import { SITE_INFO } from '@/lib/config/site-info'
+
 type Props = {
   lang: 'bg' | 'en'
   message: string
@@ -27,7 +29,7 @@ export default function InsufficientStockError({ lang, message }: Props) {
         <Link href="/cart" className="btn btn-ghost" style={{ fontSize: '0.9rem' }}>
           {lang === 'bg' ? 'Към количката' : 'Back to cart'}
         </Link>
-        <a href="mailto:tepe@mail.bg" className="btn btn-caramel" style={{ fontSize: '0.9rem' }}>
+        <a href={`mailto:${SITE_INFO.contact.generalEmail}`} className="btn btn-caramel" style={{ fontSize: '0.9rem' }}>
           {lang === 'bg' ? 'Свържете се с нас' : 'Contact us'}
         </a>
       </div>

@@ -51,7 +51,7 @@ export default function PackCard({ plan }: Props) {
       {/* Product image strip */}
       <div style={{ position: 'relative', height: 160, background: isAvailable ? 'var(--plum)' : 'var(--surface2)', overflow: 'hidden' }}>
         <Image
-          src="/bar-product.png"
+          src="/photos/bar-product.png"
           alt={`ТЕПЕ bite — ${title}`}
           fill
           sizes="(max-width: 900px) 100vw, 380px"

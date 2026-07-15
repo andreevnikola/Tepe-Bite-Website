@@ -410,7 +410,7 @@ export function FundingSplitBar({
             }}
           >
             <Image
-              src="/TEPEbiteImpact-crop.png"
+              src="/brand/TEPEbiteImpact-crop.png"
               alt="ТЕПЕ bite Impact"
               width={90}
               height={42}

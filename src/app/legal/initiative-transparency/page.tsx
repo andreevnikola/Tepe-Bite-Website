@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -167,8 +168,8 @@ export default function InitiativeTransparencyPage() {
           </ul>
           <LegalNote>
             {bg
-              ? "Ако имате въпроси относно инициативите, пишете ни на tepe@mail.bg."
-              : "If you have questions about the initiatives, write to us at tepe@mail.bg."}
+              ? `Ако имате въпроси относно инициативите, пишете ни на ${SITE_INFO.contact.generalEmail}.`
+              : `If you have questions about the initiatives, write to us at ${SITE_INFO.contact.generalEmail}.`}
           </LegalNote>
         </LegalSectionCard>
       </LegalPageLayout>

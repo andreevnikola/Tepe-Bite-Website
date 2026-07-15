@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description:
       "Видими инициативи за Пловдив през ТЕПЕ bite Impact — партньори, външно финансиране и фиксираните 0.15 € от всяко барче, отчетени открито.",
     type: "website",
-    images: [{ url: "/TEPEbiteImpact.png" }],
+    images: [{ url: "/brand/TEPEbiteImpact.png" }],
   },
   alternates: {
     languages: {

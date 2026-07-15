@@ -73,7 +73,7 @@ export default async function OrderPage() {
             }}
           >
             <Image
-              src="/manufacturing.jpg"
+              src="/photos/manufacturing.jpg"
               alt="Производство на ТЕПЕ bite в Пловдив"
               fill
               priority

@@ -1,4 +1,5 @@
 "use client";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -306,7 +307,7 @@ export default function LegalPageLayout({
               ← {lang === "bg" ? "Всички правни документи" : "All legal documents"}
             </Link>
             <a
-              href="mailto:tepe@mail.bg"
+              href={`mailto:${SITE_INFO.contact.generalEmail}`}
               style={{
                 color: "var(--text-soft)",
                 fontSize: "0.82rem",
@@ -314,7 +315,7 @@ export default function LegalPageLayout({
               }}
             >
               {lang === "bg" ? "Въпроси: " : "Questions: "}
-              <span style={{ color: "var(--plum)" }}>tepe@mail.bg</span>
+              <span style={{ color: "var(--plum)" }}>{SITE_INFO.contact.generalEmail}</span>
             </a>
           </div>
         </div>

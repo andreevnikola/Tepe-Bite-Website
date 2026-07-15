@@ -5,6 +5,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -71,8 +72,8 @@ export default function WithdrawalFormPage() {
               {bg ? "До:" : "To:"}
             </div>
             <div style={{ lineHeight: 1.8, color: "var(--text-mid)", fontSize: "0.9rem" }}>
-              <strong>„Баир“ ЕООД / ТЕПЕ bite</strong><br />
-              {bg ? "Имейл: " : "Email: "}<strong>tepe@mail.bg</strong><br />
+              <strong>{SITE_INFO.brand.legalEntity} / ТЕПЕ bite</strong><br />
+              {bg ? "Имейл: " : "Email: "}<strong>{SITE_INFO.contact.generalEmail}</strong><br />
               {bg ? "Адрес: " : "Address: "}
               <LegalTodo label="TODO_CORRESPONDENCE_ADDRESS // TODO business owner confirmation" />
             </div>
@@ -187,8 +188,8 @@ export default function WithdrawalFormPage() {
           >
             <p style={{ margin: "0 0 8px" }}>
               {bg
-                ? "• Формулярът може да бъде копиран и изпратен по имейл на tepe@mail.bg."
-                : "• This form can be copied and sent by email to tepe@mail.bg."}
+                ? `• Формулярът може да бъде копиран и изпратен по имейл на ${SITE_INFO.contact.generalEmail}.`
+                : `• This form can be copied and sent by email to ${SITE_INFO.contact.generalEmail}.`}
             </p>
             <p style={{ margin: "0 0 8px" }}>
               {bg

@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -163,8 +164,8 @@ export default function DeliveryPaymentPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "За стандартни онлайн поръчки към крайни клиенти документът за плащане се издава чрез Speedy при наложен платеж. За бизнес/едрови заявки можете да се свържете с нас на tepe@mail.bg."
-              : "For standard online orders to end consumers, the payment document is issued through Speedy upon cash on delivery. For business or bulk requests, please contact us at tepe@mail.bg."}
+              ? `За стандартни онлайн поръчки към крайни клиенти документът за плащане се издава чрез Speedy при наложен платеж. За бизнес/едрови заявки можете да се свържете с нас на ${SITE_INFO.contact.generalEmail}.`
+              : `For standard online orders to end consumers, the payment document is issued through Speedy upon cash on delivery. For business or bulk requests, please contact us at ${SITE_INFO.contact.generalEmail}.`}
           </p>
           {/* TODO accountant/business confirmation */}
           <LegalTodo label="Verify active Speedy contract and cash-receipt service before launch. // TODO accountant/business confirmation" />
@@ -191,8 +192,8 @@ export default function DeliveryPaymentPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "За анулиране пишете възможно най-скоро на tepe@mail.bg с посочен номер на поръчка."
-              : "To cancel, write as soon as possible to tepe@mail.bg with your order number."}
+              ? `За анулиране пишете възможно най-скоро на ${SITE_INFO.contact.generalEmail} с посочен номер на поръчка.`
+              : `To cancel, write as soon as possible to ${SITE_INFO.contact.generalEmail} with your order number.`}
           </p>
         </LegalSectionCard>
 
@@ -204,7 +205,7 @@ export default function DeliveryPaymentPage() {
               : "Online orders are for end consumers (B2C). For business requests, resale or bulk quantities, please contact us:"}
           </p>
           <p style={{ ...bodyText, margin: 0 }}>
-            <a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)", fontWeight: 600 }}>tepe@mail.bg</a>
+            <a href={`mailto:${SITE_INFO.contact.generalEmail}`} style={{ color: "var(--plum)", fontWeight: 600 }}>{SITE_INFO.contact.generalEmail}</a>
           </p>
         </LegalSectionCard>
 

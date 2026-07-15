@@ -1,5 +1,6 @@
 'use client'
 
+import { SITE_INFO } from '@/lib/config/site-info'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
@@ -218,7 +219,7 @@ export default function DismissibleOrdersGate() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <a
-                href="mailto:tepe@mail.bg"
+                href={`mailto:${SITE_INFO.contact.generalEmail}`}
                 className="btn btn-primary"
                 style={{ justifyContent: 'center', fontSize: '0.93rem', textDecoration: 'none' }}
               >
@@ -306,10 +307,10 @@ function InfoBanner({ t }: { t: typeof T['bg'] }) {
           </Link>{' '}
           {t.infoBannerOr}{' '}
           <a
-            href="mailto:tepe@mail.bg"
+            href={`mailto:${SITE_INFO.contact.generalEmail}`}
             style={{ color: 'var(--caramel)', fontWeight: 700, textDecoration: 'underline' }}
           >
-            tepe@mail.bg
+            {SITE_INFO.contact.generalEmail}
           </a>
           .
         </p>

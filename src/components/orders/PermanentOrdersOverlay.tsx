@@ -1,5 +1,6 @@
 'use client'
 
+import { SITE_INFO } from '@/lib/config/site-info'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
@@ -136,7 +137,7 @@ export default function PermanentOrdersOverlay() {
             }}
           >
             <a
-              href="mailto:tepe@mail.bg"
+              href={`mailto:${SITE_INFO.contact.generalEmail}`}
               className="btn btn-primary"
               style={{
                 justifyContent: 'center',

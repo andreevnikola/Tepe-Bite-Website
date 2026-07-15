@@ -85,7 +85,7 @@ export default function ProductSection() {
               }}
             >
               <Image
-                src="/bar-product.png"
+                src="/photos/bar-product.png"
                 alt="ТЕПЕ bite — Солен карамел"
                 width={280}
                 height={280}

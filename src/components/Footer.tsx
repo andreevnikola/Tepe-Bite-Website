@@ -1,5 +1,6 @@
 "use client";
 import { IconFb, IconInsta, IconLink, IconTiktok } from "@/components/icons";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -81,7 +82,7 @@ export default function Footer() {
           <div>
             <div style={{ marginBottom: 20 }}>
               <Image
-                src="/logo-full.png"
+                src="/brand/logo-full.png"
                 alt="ТЕПЕ bite"
                 width={120}
                 height={120}
@@ -219,7 +220,7 @@ export default function Footer() {
               {lang === "bg" ? "Контакт" : "Contact"}
             </div>
             <a
-              href="mailto:tepe@mail.bg"
+              href={`mailto:${SITE_INFO.contact.generalEmail}`}
               style={{
                 ...linkStyle,
                 marginBottom: 15,
@@ -232,7 +233,7 @@ export default function Footer() {
                 ((e.target as HTMLElement).style.color = "oklch(82% 0.04 310)")
               }
             >
-              tepe@mail.bg
+              {SITE_INFO.contact.generalEmail}
             </a>
 
             {/* Social icons */}
@@ -243,17 +244,17 @@ export default function Footer() {
               {[
                 {
                   icon: <IconInsta />,
-                  link: "https://www.instagram.com/tepe.bite/",
+                  link: SITE_INFO.social.instagram,
                   available: true,
                 },
                 {
                   icon: <IconTiktok />,
-                  link: "https://www.tiktok.com/@tepe.bite",
+                  link: SITE_INFO.social.tiktok,
                   available: true,
                 },
                 {
                   icon: <IconFb />,
-                  link: "",
+                  link: SITE_INFO.social.facebook ?? "",
                   available: false,
                 },
               ].map(({ icon, link, available }, i) => (
@@ -383,7 +384,7 @@ export default function Footer() {
               fontWeight: 600,
             }}
           >
-            © 2026 ТЕПЕ bite · Баир ЕООД
+            © 2026 ТЕПЕ bite · {SITE_INFO.brand.legalEntity}
           </span>
           <span
             style={{

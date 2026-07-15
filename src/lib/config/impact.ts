@@ -10,6 +10,8 @@
  * All monetary values are integer EUR cents (same convention as `@/lib/money`).
  */
 
+import { SITE_INFO } from "./site-info";
+
 export type ImpactDonor = {
   name: string;
   amountCents: number;
@@ -44,7 +46,7 @@ export const IMPACT: ImpactConfig = {
   externalDonationsCents: 0,
   expectedIncomingCents: 0,
   lastUpdatedISO: null,
-  contactEmail: "tepe@mail.bg",
+  contactEmail: SITE_INFO.contact.impactEmail,
   iban: null,
   donors: [],
   formUrl: process.env.NEXT_PUBLIC_IMPACT_FORM_URL ?? "",

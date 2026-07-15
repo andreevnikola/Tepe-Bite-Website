@@ -28,7 +28,7 @@ export default function OrderCTA() {
         >
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Image
-              src="/bar-product.png"
+              src="/photos/bar-product.png"
               alt="ТЕПЕ bite — Солен карамел"
               width={260}
               height={260}

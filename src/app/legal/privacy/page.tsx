@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -43,10 +44,10 @@ export default function PrivacyPage() {
               : "The data controller within the meaning of the GDPR is:"}
           </p>
           <ul style={{ ...bodyText, paddingLeft: 20 }}>
-            <li><strong>„Баир“ ЕООД</strong> ({bg ? "търговска марка: " : "trading as "}<strong>ТЕПЕ bite</strong>)</li>
+            <li><strong>{SITE_INFO.brand.legalEntity}</strong> ({bg ? "търговска марка: " : "trading as "}<strong>ТЕПЕ bite</strong>)</li>
             <li>ЕИК / UIC: <LegalTodo label="TODO_EIK // TODO business owner confirmation" /></li>
             <li>{bg ? "Адрес: " : "Address: "}<LegalTodo label="TODO_REGISTERED_OFFICE_ADDRESS // TODO business owner confirmation" /></li>
-            <li>{bg ? "Имейл: " : "Email: "}<a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)" }}>tepe@mail.bg</a></li>
+            <li>{bg ? "Имейл: " : "Email: "}<a href={`mailto:${SITE_INFO.contact.generalEmail}`} style={{ color: "var(--plum)" }}>{SITE_INFO.contact.generalEmail}</a></li>
           </ul>
           <LegalNote>
             {bg
@@ -194,8 +195,8 @@ export default function PrivacyPage() {
           </ul>
           <p style={bodyText}>
             {bg
-              ? "За упражняване на правата си изпратете имейл на tepe@mail.bg. Ще отговорим в срок от 30 дни."
-              : "To exercise your rights, send an email to tepe@mail.bg. We will respond within 30 days."}
+              ? `За упражняване на правата си изпратете имейл на ${SITE_INFO.contact.generalEmail}. Ще отговорим в срок от 30 дни.`
+              : `To exercise your rights, send an email to ${SITE_INFO.contact.generalEmail}. We will respond within 30 days.`}
           </p>
           <p style={bodyText}>
             {bg
@@ -232,9 +233,9 @@ export default function PrivacyPage() {
         {/* 9. Contact */}
         <LegalSectionCard id="contact-privacy" title={bg ? "9. Контакт по поверителността" : "9. Privacy Contact"}>
           <p style={{ ...bodyText, margin: 0 }}>
-            <strong>ТЕПЕ bite / „Баир“ ЕООД</strong><br />
+            <strong>ТЕПЕ bite / {SITE_INFO.brand.legalEntity}</strong><br />
             {bg ? "За въпроси, свързани с поверителността: " : "For privacy-related questions: "}
-            <a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)" }}>tepe@mail.bg</a>
+            <a href={`mailto:${SITE_INFO.contact.generalEmail}`} style={{ color: "var(--plum)" }}>{SITE_INFO.contact.generalEmail}</a>
           </p>
         </LegalSectionCard>
 

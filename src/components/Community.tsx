@@ -1,5 +1,6 @@
 "use client";
 import { IconArrow, IconFb, IconInsta, IconLink, IconTiktok } from "@/components/icons";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -9,7 +10,7 @@ const socials = [
     icon: <IconInsta />,
     label: "Instagram",
     handle: "@tepe.bite",
-    href: "https://www.instagram.com/tepe.bite/",
+    href: SITE_INFO.social.instagram,
     hoverBg:
       "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
     disabled: false,
@@ -18,7 +19,7 @@ const socials = [
     icon: <IconTiktok />,
     label: "TikTok",
     handle: "@tepe.bite",
-    href: "https://www.tiktok.com/@tepe.bite",
+    href: SITE_INFO.social.tiktok,
     hoverBg: "#010101",
     disabled: false,
   },

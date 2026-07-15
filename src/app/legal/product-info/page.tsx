@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -232,7 +233,7 @@ export default function ProductInfoPage() {
             <a href="mailto:sales@biostyle.bg" style={{ color: "var(--plum)" }}>sales@biostyle.bg</a>
           </p>
           <p style={{ ...bodyText, margin: 0 }}>
-            <strong>{bg ? "Произведено за:" : "Produced for:"}</strong> „Баир“ ЕООД (ТЕПЕ bite)
+            <strong>{bg ? "Произведено за:" : "Produced for:"}</strong> {SITE_INFO.brand.legalEntity} (ТЕПЕ bite)
           </p>
         </LegalSectionCard>
 
@@ -294,8 +295,8 @@ export default function ProductInfoPage() {
           </div>
           <p style={{ fontSize: "0.84rem", color: "var(--text-soft)", margin: "12px 0 0", lineHeight: 1.6 }}>
             {bg
-              ? "За въпроси относно продукта се свържете с нас на tepe@mail.bg."
-              : "For questions about the product, contact us at tepe@mail.bg."}
+              ? `За въпроси относно продукта се свържете с нас на ${SITE_INFO.contact.generalEmail}.`
+              : `For questions about the product, contact us at ${SITE_INFO.contact.generalEmail}.`}
           </p>
         </LegalSectionCard>
 

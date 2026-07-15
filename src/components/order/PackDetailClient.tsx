@@ -148,7 +148,7 @@ export default function PackDetailClient({ plan }: Props) {
             }}
           >
             <Image
-              src="/bar-product.png"
+              src="/photos/bar-product.png"
               alt={`ТЕПЕ bite — ${title}`}
               fill
               priority

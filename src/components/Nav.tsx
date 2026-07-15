@@ -127,7 +127,7 @@ export default function Nav() {
             }}
           >
             <Image
-              src="/logo-nav.png"
+              src="/brand/logo-nav.png"
               alt="ТЕПЕ bite лого"
               width={38}
               height={38}

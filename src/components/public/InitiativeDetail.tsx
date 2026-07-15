@@ -30,6 +30,7 @@ import {
 import Gallery from "@/components/public/Gallery";
 import type { InitiativeDetail as InitiativeDetailData } from "@/lib/public/initiatives";
 import type { ExpenseDTO, InflowDTO, PartnerDTO } from "@/lib/dashboard/dto";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { formatDualMoney, formatMoneyEUR } from "@/lib/money";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
@@ -1171,7 +1172,7 @@ function FundingGapInvite({
 }) {
   const bg = lang === "bg";
   const gap = formatMoneyEUR(gapCents);
-  const email = "impact@tepebite.eu";
+  const email = SITE_INFO.contact.impactEmail;
   const subject = encodeURIComponent(
     bg
       ? `Подкрепа за инициатива: ${title}`

@@ -765,7 +765,7 @@ function WhatWeChooseSection({
               }}
             >
               <Image
-                src="/TEPEbiteImpact-crop.png"
+                src="/brand/TEPEbiteImpact-crop.png"
                 alt="ТЕПЕ bite Impact"
                 width={600}
                 height={286}
@@ -1156,7 +1156,7 @@ function ResponsibilitiesSection({ lang }: { lang: Lang }) {
                   }}
                 >
                   <Image
-                    src="/TEPEbiteImpact-crop.png"
+                    src="/brand/TEPEbiteImpact-crop.png"
                     alt="ТЕПЕ bite Impact"
                     width={200}
                     height={95}

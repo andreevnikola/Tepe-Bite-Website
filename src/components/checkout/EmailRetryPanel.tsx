@@ -3,6 +3,8 @@
 import { Fragment, useState } from "react";
 import { Link } from "sanity/router";
 
+import { SITE_INFO } from "@/lib/config/site-info";
+
 type Props = {
   lang: "bg" | "en";
   publicOrderNumber: string;
@@ -184,10 +186,10 @@ export default function EmailRetryPanel({
           >
             {retryState === "expired" ? t.expired : t.failedAgain}{" "}
             <a
-              href="mailto:tepe@mail.bg"
+              href={`mailto:${SITE_INFO.contact.generalEmail}`}
               style={{ color: "var(--caramel)", fontWeight: 700 }}
             >
-              tepe@mail.bg
+              {SITE_INFO.contact.generalEmail}
             </a>
             {retryState === "expired"
               ? t.expiredSuffix(publicOrderNumber)
@@ -214,10 +216,10 @@ export default function EmailRetryPanel({
             >
               {lang === "bg" ? "Въпроси? " : "Questions? "}
               <a
-                href="mailto:tepe@mail.bg"
+                href={`mailto:${SITE_INFO.contact.generalEmail}`}
                 style={{ color: "var(--caramel)", fontWeight: 600 }}
               >
-                tepe@mail.bg
+                {SITE_INFO.contact.generalEmail}
               </a>
             </p>
           </Fragment>

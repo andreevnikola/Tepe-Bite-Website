@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -43,33 +44,33 @@ export default function TraderInfoPage() {
       <LegalPageLayout
         titleBg="Данни за търговеца"
         titleEn="Trader Information / Legal Notice"
-        subtitleBg={'Идентификационни и регистрационни данни на „Баир“ ЕООД — търговска марка ТЕПЕ bite.'}
-        subtitleEn="Identification and registration details of Баир ЕООД — trading as ТЕПЕ bite."
+        subtitleBg={`Идентификационни и регистрационни данни на ${SITE_INFO.brand.legalEntity} — търговска марка ТЕПЕ bite.`}
+        subtitleEn={`Identification and registration details of ${SITE_INFO.brand.legalEntity} — trading as ТЕПЕ bite.`}
       >
         {/* Identity */}
         <LegalSectionCard title={bg ? "Идентификация на търговеца" : "Trader Identity"}>
-          <Row label={bg ? "Търговска марка" : "Brand"} value={<strong>ТЕПЕ bite</strong>} />
-          <Row label={bg ? "Правен субект" : "Legal entity"} value={<strong>„Баир“ ЕООД</strong>} />
+          <Row label={bg ? "Търговска марка" : "Brand"} value={<strong>{SITE_INFO.brand.name}</strong>} />
+          <Row label={bg ? "Юридическо лице" : "Legal entity"} value={<strong>{SITE_INFO.brand.legalEntity}</strong>} />
           <Row
             label={bg ? "ЕИК / UIC" : "EIK / UIC"}
-            value={<LegalTodo label="TODO_EIK // TODO business owner confirmation" />}
+            value={<LegalTodo label={SITE_INFO.trader.eik} />}
           />
           <Row
             label={bg ? "ДДС регистрация" : "VAT registration"}
             value={
               <>
                 {bg ? "Дружеството е регистрирано по ДДС." : "The company is VAT registered."}
-                {" "}<LegalTodo label="TODO_VAT_NUMBER // TODO accountant review" />
+                {" "}<LegalTodo label={SITE_INFO.trader.vatNumber} />
               </>
             }
           />
           <Row
             label={bg ? "Управител" : "Manager / Representative"}
-            value={<strong>Маргарита Стоичкова</strong>}
+            value={<strong>{SITE_INFO.brand.manager}</strong>}
           />
           <Row
             label={bg ? "Контакт за клиенти" : "Customer contact"}
-            value={<strong>Никола Андреев</strong>}
+            value={<strong>{SITE_INFO.brand.customerContact}</strong>}
           />
         </LegalSectionCard>
 
@@ -77,7 +78,7 @@ export default function TraderInfoPage() {
         <LegalSectionCard title={bg ? "Контакт" : "Contact"}>
           <Row
             label={bg ? "Имейл" : "Email"}
-            value={<a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)", fontWeight: 600 }}>tepe@mail.bg</a>}
+            value={<a href={`mailto:${SITE_INFO.contact.generalEmail}`} style={{ color: "var(--plum)", fontWeight: 600 }}>{SITE_INFO.contact.generalEmail}</a>}
           />
           <Row
             label={bg ? "Телефон" : "Phone"}
@@ -90,7 +91,7 @@ export default function TraderInfoPage() {
           />
           <Row
             label={bg ? "Уебсайт" : "Website"}
-            value={<LegalTodo label="TODO_DOMAIN // TODO business owner confirmation" />}
+            value={<a href={SITE_INFO.website.url} style={{ color: "var(--plum)", fontWeight: 600 }}>{SITE_INFO.website.url}</a>}
           />
         </LegalSectionCard>
 
@@ -98,15 +99,15 @@ export default function TraderInfoPage() {
         <LegalSectionCard title={bg ? "Адреси" : "Addresses"}>
           <Row
             label={bg ? "Седалище и адрес на управление" : "Registered office address"}
-            value={<LegalTodo label="TODO_REGISTERED_OFFICE_ADDRESS // TODO business owner confirmation" />}
+            value={<LegalTodo label={SITE_INFO.trader.registeredOfficeAddress} />}
           />
           <Row
             label={bg ? "Кореспондентски адрес" : "Correspondence address"}
-            value={<LegalTodo label="TODO_CORRESPONDENCE_ADDRESS // TODO business owner confirmation" />}
+            value={<LegalTodo label={SITE_INFO.trader.correspondenceAddress} />}
           />
           <Row
             label={bg ? "Адрес за връщане" : "Returns address"}
-            value={<LegalTodo label="TODO_RETURNS_ADDRESS // TODO business owner confirmation" />}
+            value={<LegalTodo label={SITE_INFO.trader.returnsAddress} />}
           />
         </LegalSectionCard>
 
@@ -114,11 +115,11 @@ export default function TraderInfoPage() {
         <LegalSectionCard title={bg ? "Регулаторни регистрации" : "Regulatory Registrations"}>
           <Row
             label={bg ? "Регистрация БАБХ / ОДБХ за дистанционна търговия с храни" : "BABH/ODBH distance food trade registration"}
-            value={<LegalTodo label="TODO_BABH_DISTANCE_SELLING_REGISTRATION_STATUS and TODO_BABH_REGISTRATION_NUMBER_OR_DETAILS // TODO business owner / legal review" />}
+            value={<LegalTodo label={SITE_INFO.trader.babhRegistration} />}
           />
           <Row
             label={bg ? "Регистрация НАП (Заявление 33) за е-търговия" : "NRA/NAP e-commerce registration (Application 33)"}
-            value={<LegalTodo label="TODO_NRA_ECOMMERCE_REGISTRATION_STATUS and TODO_NRA_APPLICATION_33_DETAILS // TODO accountant / business owner confirmation" />}
+            value={<LegalTodo label={SITE_INFO.trader.napRegistration} />}
           />
         </LegalSectionCard>
 
@@ -131,8 +132,8 @@ export default function TraderInfoPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "За стандартни онлайн поръчки към крайни клиенти документът за плащане се издава чрез Speedy при наложен платеж. За бизнес/едрови заявки можете да се свържете с нас на tepe@mail.bg."
-              : "For standard online orders to end consumers, the payment document is issued through Speedy upon cash on delivery. For business or bulk requests, please contact us at tepe@mail.bg."}
+              ? `За стандартни онлайн поръчки към крайни клиенти документът за плащане се издава чрез Speedy при наложен платеж. За бизнес/едрови заявки можете да се свържете с нас на ${SITE_INFO.contact.generalEmail}.`
+              : `For standard online orders to end consumers, the payment document is issued through Speedy upon cash on delivery. For business or bulk requests, please contact us at ${SITE_INFO.contact.generalEmail}.`}
           </p>
           <LegalTodo label="Invoice-on-request wording and VAT treatment for business orders. // TODO accountant review" />
         </LegalSectionCard>

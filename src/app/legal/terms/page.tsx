@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -41,33 +42,74 @@ export default function TermsPage() {
         sections={sections}
       >
         {/* 1. Merchant */}
-        <LegalSectionCard id="merchant" title={bg ? "1. Данни за търговеца" : "1. Merchant Identity"}>
+        <LegalSectionCard
+          id="merchant"
+          title={bg ? "1. Данни за търговеца" : "1. Merchant Identity"}
+        >
           <p style={bodyText}>
-            {bg
-              ? "Уебсайтът се управлява от:"
-              : "The website is operated by:"}
+            {bg ? "Уебсайтът се управлява от:" : "The website is operated by:"}
           </p>
           <ul style={{ ...bodyText, paddingLeft: 20, margin: 0 }}>
-            <li>{bg ? "Търговска марка: " : "Brand: "}<strong>ТЕПЕ bite</strong></li>
-            <li>{bg ? "Правен субект: " : "Legal entity: "}<strong>„Баир“ ЕООД</strong></li>
-            <li>ЕИК / UIC: <LegalTodo label="TODO_EIK — потвърди ЕИК пред пускане в продукция. // TODO business owner confirmation" /></li>
-            <li>{bg ? "ДДС номер: " : "VAT number: "}<LegalTodo label="TODO_VAT_NUMBER — потвърди ДДС номер. // TODO accountant review" /></li>
-            <li>{bg ? "Управител: " : "Manager: "}<strong>Маргарита Стоичкова</strong></li>
-            <li>{bg ? "Контакт за клиенти: " : "Customer contact: "}<strong>Никола Андреев</strong></li>
-            <li>{bg ? "Имейл: " : "Email: "}<a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)" }}>tepe@mail.bg</a></li>
-            <li>{bg ? "Уебсайт: " : "Website: "}<LegalTodo label="TODO_DOMAIN — потвърди домейн. // TODO business owner confirmation" /></li>
-            <li>{bg ? "Седалище: " : "Registered office: "}<LegalTodo label="TODO_REGISTERED_OFFICE_ADDRESS — потвърди адрес на регистрация. // TODO business owner confirmation" /></li>
+            <li>
+              {bg ? "Търговска марка: " : "Brand: "}
+              <strong>{SITE_INFO.brand.name}</strong>
+            </li>
+            <li>
+              {bg ? "Юридическо лице: " : "Legal entity: "}
+              <strong>{SITE_INFO.brand.legalEntity}</strong>
+            </li>
+            <li>
+              ЕИК / UIC:{" "}
+              <LegalTodo label="TODO_EIK — потвърди ЕИК пред пускане в продукция. // TODO business owner confirmation" />
+            </li>
+            <li>
+              {bg ? "ДДС номер: " : "VAT number: "}
+              <LegalTodo label="TODO_VAT_NUMBER — потвърди ДДС номер. // TODO accountant review" />
+            </li>
+            <li>
+              {bg ? "Управител: " : "Manager: "}
+              <strong>{SITE_INFO.brand.manager}</strong>
+            </li>
+            <li>
+              {bg ? "Контакт за клиенти: " : "Customer contact: "}
+              <strong>{SITE_INFO.brand.customerContact}</strong>
+            </li>
+            <li>
+              {bg ? "Имейл: " : "Email: "}
+              <a
+                href={`mailto:${SITE_INFO.contact.generalEmail}`}
+                style={{ color: "var(--plum)" }}
+              >
+                {SITE_INFO.contact.generalEmail}
+              </a>
+            </li>
+            <li>
+              {bg ? "Уебсайт: " : "Website: "}
+              <LegalTodo label="TODO_DOMAIN — потвърди домейн. // TODO business owner confirmation" />
+            </li>
+            <li>
+              {bg ? "Седалище: " : "Registered office: "}
+              <LegalTodo label="TODO_REGISTERED_OFFICE_ADDRESS — потвърди адрес на регистрация. // TODO business owner confirmation" />
+            </li>
           </ul>
           <LegalNote>
             {bg
               ? "За пълни данни за търговеца вижте страницата Данни за търговеца."
-              : "For full trader details see the Trader Information page."}
-            {" "}<Link href="/legal/trader-info" style={{ color: "var(--plum)", fontWeight: 600 }}>{bg ? "Данни за търговеца →" : "Trader Information →"}</Link>
+              : "For full trader details see the Trader Information page."}{" "}
+            <Link
+              href="/legal/trader-info"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
+              {bg ? "Данни за търговеца →" : "Trader Information →"}
+            </Link>
           </LegalNote>
         </LegalSectionCard>
 
         {/* 2. Scope */}
-        <LegalSectionCard id="scope" title={bg ? "2. Обхват на уебсайта" : "2. Scope of the Website"}>
+        <LegalSectionCard
+          id="scope"
+          title={bg ? "2. Обхват на уебсайта" : "2. Scope of the Website"}
+        >
           <p style={bodyText}>
             {bg
               ? "Уебсайтът предоставя информация за продуктите на ТЕПЕ bite и дава възможност за поръчка онлайн. Продажбите са насочени изключително към крайни потребители (B2C) в България."
@@ -75,8 +117,8 @@ export default function TermsPage() {
           </p>
           <p style={bodyText}>
             {bg
-              ? "За бизнес или едрови заявки, моля свържете се с нас на tepe@mail.bg."
-              : "For business or bulk orders, please contact us at tepe@mail.bg."}
+              ? `За бизнес или едрови заявки, моля свържете се с нас на ${SITE_INFO.contact.generalEmail}.`
+              : `For business or bulk orders, please contact us at ${SITE_INFO.contact.generalEmail}.`}
           </p>
           <p style={bodyText}>
             {bg
@@ -86,7 +128,14 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 3. Products */}
-        <LegalSectionCard id="products" title={bg ? "3. Продукти и информация за продуктите" : "3. Products and Product Information"}>
+        <LegalSectionCard
+          id="products"
+          title={
+            bg
+              ? "3. Продукти и информация за продуктите"
+              : "3. Products and Product Information"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "ТЕПЕ bite предлага предварително пакетирано хранително барче — ТЕПЕ bite солен карамел, 40 г. Продуктът се продава онлайн само в пакети от 10, 20 или 35 бройки."
@@ -105,26 +154,68 @@ export default function TermsPage() {
           <LegalNote>
             {bg
               ? "Пълна информация за продукта:"
-              : "Full product information: "}
-            {" "}<Link href="/legal/product-info" style={{ color: "var(--plum)", fontWeight: 600 }}>{bg ? "Информация за продукта и безопасност →" : "Product Information and Food Safety →"}</Link>
+              : "Full product information: "}{" "}
+            <Link
+              href="/legal/product-info"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
+              {bg
+                ? "Информация за продукта и безопасност →"
+                : "Product Information and Food Safety →"}
+            </Link>
           </LegalNote>
         </LegalSectionCard>
 
         {/* 4. Orders */}
-        <LegalSectionCard id="orders" title={bg ? "4. Поръчки и процес на потвърждение" : "4. Orders and Confirmation Process"}>
+        <LegalSectionCard
+          id="orders"
+          title={
+            bg
+              ? "4. Поръчки и процес на потвърждение"
+              : "4. Orders and Confirmation Process"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "Поръчката се извършва чрез уебсайта, без да е необходима регистрация. Процесът е следният:"
               : "Orders are placed through the website without registration. The process is as follows:"}
           </p>
           <ol style={{ ...bodyText, paddingLeft: 22 }}>
-            <li style={{ marginBottom: 8 }}>{bg ? "Клиентът попълва информацията за поръчката на уебсайта." : "The customer fills in the order information on the website."}</li>
-            <li style={{ marginBottom: 8 }}>{bg ? "Клиентът получава имейл с линк за потвърждение." : "The customer receives an email with a confirmation link."}</li>
-            <li style={{ marginBottom: 8 }}>{bg ? "Клиентът потвърждава поръчката чрез линка в имейла." : "The customer confirms the order via the link in the email."}</li>
-            <li style={{ marginBottom: 8 }}>{bg ? "След потвърждение поръчката изчаква обработка." : "After confirmation, the order awaits processing."}</li>
-            <li style={{ marginBottom: 8 }}>{bg ? "При обработка клиентът получава имейл за статуса." : "Upon processing, the customer receives a status email."}</li>
-            <li style={{ marginBottom: 8 }}>{bg ? "Поръчката се предава на Speedy за доставка." : "The order is handed to Speedy for delivery."}</li>
-            <li style={{ marginBottom: 8 }}>{bg ? "Клиентът плаща с наложен платеж при получаване. Касовият бон се издава от Speedy." : "The customer pays by cash on delivery. The cash/fiscal receipt is issued by Speedy."}</li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "Клиентът попълва информацията за поръчката на уебсайта."
+                : "The customer fills in the order information on the website."}
+            </li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "Клиентът получава имейл с линк за потвърждение."
+                : "The customer receives an email with a confirmation link."}
+            </li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "Клиентът потвърждава поръчката чрез линка в имейла."
+                : "The customer confirms the order via the link in the email."}
+            </li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "След потвърждение поръчката изчаква обработка."
+                : "After confirmation, the order awaits processing."}
+            </li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "При обработка клиентът получава имейл за статуса."
+                : "Upon processing, the customer receives a status email."}
+            </li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "Поръчката се предава на Speedy за доставка."
+                : "The order is handed to Speedy for delivery."}
+            </li>
+            <li style={{ marginBottom: 8 }}>
+              {bg
+                ? "Клиентът плаща с наложен платеж при получаване. Касовият бон се издава от Speedy."
+                : "The customer pays by cash on delivery. The cash/fiscal receipt is issued by Speedy."}
+            </li>
           </ol>
           <p style={bodyText}>
             {bg
@@ -135,7 +226,10 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 5. Contract formation */}
-        <LegalSectionCard id="contract" title={bg ? "5. Сключване на договора" : "5. Contract Formation"}>
+        <LegalSectionCard
+          id="contract"
+          title={bg ? "5. Сключване на договора" : "5. Contract Formation"}
+        >
           <p style={bodyText}>
             {bg
               ? "Договорът за продажба от разстояние се счита за сключен в момента, в който клиентът потвърди поръчката чрез линка в потвърдителния имейл и търговецът потвърди, че е получил поръчката."
@@ -151,7 +245,10 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 6. Prices */}
-        <LegalSectionCard id="prices" title={bg ? "6. Цени и валута" : "6. Prices and Currency"}>
+        <LegalSectionCard
+          id="prices"
+          title={bg ? "6. Цени и валута" : "6. Prices and Currency"}
+        >
           <p style={bodyText}>
             {bg
               ? "Всички цени са посочени в лева (BGN) с включен ДДС, освен ако изрично не е посочено друго."
@@ -171,14 +268,32 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 7. Delivery */}
-        <LegalSectionCard id="delivery" title={bg ? "7. Доставка" : "7. Delivery"}>
+        <LegalSectionCard
+          id="delivery"
+          title={bg ? "7. Доставка" : "7. Delivery"}
+        >
           <p style={bodyText}>
-            {bg ? "Доставяме само в България чрез Speedy." : "We deliver only in Bulgaria via Speedy."}
+            {bg
+              ? "Доставяме само в България чрез Speedy."
+              : "We deliver only in Bulgaria via Speedy."}
           </p>
           <ul style={{ ...bodyText, paddingLeft: 20 }}>
-            <li>{bg ? "Доставка до Speedy автомат/офис — 4.49 лв." : "Delivery to a Speedy locker/office — BGN 4.49."}</li>
-            <li>{bg ? "Доставка до адрес — 9.90 лв." : "Delivery to an address — BGN 9.90."}</li>
-            <li>{bg ? "Безплатна доставка над 30 EUR." : "Free delivery over EUR 30."} <LegalTodo label="TODO_CONFIRM_FREE_DELIVERY_THRESHOLD_BGN_EQUIVALENT_IF_NEEDED // TODO business owner / accountant confirmation" /></li>
+            <li>
+              {bg
+                ? "Доставка до Speedy автомат/офис — 4.49 лв."
+                : "Delivery to a Speedy locker/office — BGN 4.49."}
+            </li>
+            <li>
+              {bg
+                ? "Доставка до адрес — 9.90 лв."
+                : "Delivery to an address — BGN 9.90."}
+            </li>
+            <li>
+              {bg
+                ? "Безплатна доставка над 30 EUR."
+                : "Free delivery over EUR 30."}{" "}
+              <LegalTodo label="TODO_CONFIRM_FREE_DELIVERY_THRESHOLD_BGN_EQUIVALENT_IF_NEEDED // TODO business owner / accountant confirmation" />
+            </li>
           </ul>
           <p style={bodyText}>
             {bg
@@ -192,8 +307,13 @@ export default function TermsPage() {
           </p>
           <LegalTodo label="Legal review: enforceability of charging return delivery on uncollected shipments. // TODO legal review" />
           <LegalNote>
-            {bg ? "Пълна информация за доставката: " : "Full delivery information: "}
-            <Link href="/legal/delivery-payment" style={{ color: "var(--plum)", fontWeight: 600 }}>
+            {bg
+              ? "Пълна информация за доставката: "
+              : "Full delivery information: "}
+            <Link
+              href="/legal/delivery-payment"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
               {bg ? "Доставка и плащане →" : "Delivery and Payment →"}
             </Link>
           </LegalNote>
@@ -215,14 +335,21 @@ export default function TermsPage() {
           <LegalTodo label="Verify active Speedy contract and cash-receipt service before launch. // TODO accountant/business confirmation" />
           <p style={bodyText}>
             {bg
-              ? "За стандартни онлайн поръчки към крайни клиенти документът за плащане се издава чрез Speedy при наложен платеж. За бизнес/едрови заявки можете да се свържете с нас на tepe@mail.bg."
-              : "For standard online orders to end consumers, the payment document is issued through Speedy upon cash on delivery. For business or bulk requests, please contact us at tepe@mail.bg."}
+              ? `За стандартни онлайн поръчки към крайни клиенти документът за плащане се издава чрез Speedy при наложен платеж. За бизнес/едрови заявки можете да се свържете с нас на ${SITE_INFO.contact.generalEmail}.`
+              : `For standard online orders to end consumers, the payment document is issued through Speedy upon cash on delivery. For business or bulk requests, please contact us at ${SITE_INFO.contact.generalEmail}.`}
           </p>
           <LegalTodo label="Invoice-on-request wording and VAT treatment for business orders. // TODO accountant review" />
         </LegalSectionCard>
 
         {/* 9. Returns */}
-        <LegalSectionCard id="returns" title={bg ? "9. Връщане, отказ и рекламации" : "9. Returns, Withdrawal and Complaints"}>
+        <LegalSectionCard
+          id="returns"
+          title={
+            bg
+              ? "9. Връщане, отказ и рекламации"
+              : "9. Returns, Withdrawal and Complaints"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "Клиентите имат право на отказ от договор от разстояние при условията на приложимото законодателство. Поради естеството на продукта като предварително пакетирано хранително барче, връщане при отказ се приема само за неотворени продукти с ненарушена опаковка, когато са изпълнени законовите условия. При отворена или нарушена опаковка връщането може да бъде отказано по хигиенни и здравни съображения, освен ако продуктът е дефектен, грешен или несъответстващ."
@@ -231,18 +358,31 @@ export default function TermsPage() {
           <LegalTodo label="Confirm food-specific withdrawal exception wording with a lawyer. // TODO legal review" />
           <LegalNote>
             {bg ? "Пълна информация: " : "Full information: "}
-            <Link href="/legal/returns-complaints" style={{ color: "var(--plum)", fontWeight: 600 }}>
-              {bg ? "Връщане, отказ и рекламации →" : "Returns, Withdrawal and Complaints →"}
+            <Link
+              href="/legal/returns-complaints"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
+              {bg
+                ? "Връщане, отказ и рекламации →"
+                : "Returns, Withdrawal and Complaints →"}
             </Link>
             {" · "}
-            <Link href="/legal/withdrawal-form" style={{ color: "var(--plum)", fontWeight: 600 }}>
+            <Link
+              href="/legal/withdrawal-form"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
               {bg ? "Формуляр за отказ →" : "Withdrawal Form →"}
             </Link>
           </LegalNote>
         </LegalSectionCard>
 
         {/* 10. Food notes */}
-        <LegalSectionCard id="food-notes" title={bg ? "10. Бележки за хранителния продукт" : "10. Food Product Notes"}>
+        <LegalSectionCard
+          id="food-notes"
+          title={
+            bg ? "10. Бележки за хранителния продукт" : "10. Food Product Notes"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "Продуктът не е лекарствен продукт и не е предназначен за диагностика, лечение или превенция на заболявания."
@@ -257,21 +397,36 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 11. Initiatives */}
-        <LegalSectionCard id="initiatives" title={bg ? "11. Инициативи" : "11. Initiatives"}>
+        <LegalSectionCard
+          id="initiatives"
+          title={bg ? "11. Инициативи" : "11. Initiatives"}
+        >
           <p style={bodyText}>
             {bg
               ? "За всяко продадено барче ТЕПЕ bite заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact, който подкрепя градски инициативи в Пловдив. Средствата се водят като обособено, внимателно проследявано перо в сметката на фирмата и се използват както е обявено; с разрастването ни планираме напълно отделна сметка. Фондът може да приема външни дарения и публично обявява събраните средства. Освен финансиране, екипът избира каузите, координира партньори, търси съфинансиране и участва в реализацията им."
               : "For every ТЕПЕ bite bar sold, we set aside a fixed 0.15 € into the ТЕПЕ bite Impact fund, which supports urban initiatives in Plovdiv. The funds are tracked as a ring-fenced, carefully monitored line within the company's account and used as stated; as we grow, we plan a fully separate account. The fund may accept external donations and publicly announces the amounts collected. Beyond funding, the team chooses the causes, coordinates partners, seeks co-funding and takes part in delivery."}
           </p>
           <LegalNote>
-            <Link href="/legal/initiative-transparency" style={{ color: "var(--plum)", fontWeight: 600 }}>
-              {bg ? "Прозрачност на инициативите →" : "Initiative Transparency →"}
+            <Link
+              href="/legal/initiative-transparency"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
+              {bg
+                ? "Прозрачност на инициативите →"
+                : "Initiative Transparency →"}
             </Link>
           </LegalNote>
         </LegalSectionCard>
 
         {/* 12. Liability */}
-        <LegalSectionCard id="liability" title={bg ? "12. Отговорност и наличност" : "12. Liability and Availability"}>
+        <LegalSectionCard
+          id="liability"
+          title={
+            bg
+              ? "12. Отговорност и наличност"
+              : "12. Liability and Availability"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "Търговецът полага разумни усилия за поддържане на наличност на продуктите и точност на информацията. При изчерпване на наличността клиентът ще бъде уведомен и поръчката ще бъде анулирана без такса."
@@ -286,7 +441,10 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 13. Changes */}
-        <LegalSectionCard id="changes" title={bg ? "13. Промени в Общите условия" : "13. Changes to Terms"}>
+        <LegalSectionCard
+          id="changes"
+          title={bg ? "13. Промени в Общите условия" : "13. Changes to Terms"}
+        >
           <p style={bodyText}>
             {bg
               ? "Търговецът може да актуализира настоящите Общи условия. При съществени промени клиентите ще бъдат уведомени по подходящ начин. Продължаването на използването на сайта след публикуване на промените означава приемане на актуализираните условия."
@@ -295,22 +453,39 @@ export default function TermsPage() {
         </LegalSectionCard>
 
         {/* 14. Contact */}
-        <LegalSectionCard id="contact" title={bg ? "14. Контакт" : "14. Contact"}>
+        <LegalSectionCard
+          id="contact"
+          title={bg ? "14. Контакт" : "14. Contact"}
+        >
           <p style={bodyText}>
             {bg
               ? "За въпроси относно Общите условия, поръчки или потребителски права, моля свържете се с нас:"
               : "For questions about these Terms, orders or consumer rights, please contact us:"}
           </p>
           <p style={{ ...bodyText, margin: 0 }}>
-            <strong>ТЕПЕ bite / „Баир“ ЕООД</strong><br />
-            {bg ? "Имейл: " : "Email: "}<a href="mailto:tepe@mail.bg" style={{ color: "var(--plum)" }}>tepe@mail.bg</a><br />
+            <strong>ТЕПЕ bite / {SITE_INFO.brand.legalEntity}</strong>
+            <br />
+            {bg ? "Имейл: " : "Email: "}
+            <a
+              href={`mailto:${SITE_INFO.contact.generalEmail}`}
+              style={{ color: "var(--plum)" }}
+            >
+              {SITE_INFO.contact.generalEmail}
+            </a>
+            <br />
             {bg ? "Контакт за клиенти: " : "Customer contact: "}Никола Андреев
           </p>
           {/* TODO legal review */}
           <LegalTodo label="Confirm whether email-only public contact is sufficient for legal notice. // TODO legal review" />
         </LegalSectionCard>
 
-        <p style={{ fontSize: "0.82rem", color: "var(--text-soft)", marginTop: 24 }}>
+        <p
+          style={{
+            fontSize: "0.82rem",
+            color: "var(--text-soft)",
+            marginTop: 24,
+          }}
+        >
           {bg
             ? "Тези Общи условия са изготвени за целите на предстоящото пускане в продукция и подлежат на правен преглед преди публикуване."
             : "These Terms and Conditions are prepared for the upcoming production launch and are subject to legal review before publication."}

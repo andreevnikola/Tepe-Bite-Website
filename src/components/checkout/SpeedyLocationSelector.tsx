@@ -3,6 +3,8 @@
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 
+import { SITE_INFO } from '@/lib/config/site-info'
+
 type PickupPoint = {
   code: string
   type: 'locker' | 'office'
@@ -27,7 +29,7 @@ const T = {
   bg: {
     loading: 'Зареждане на точките за получаване...',
     error: 'Неуспешно зареждане на пунктовете.',
-    unsupported: 'В момента онлайн доставката до Speedy автомат/офис е активна само за Пловдив. За друг град, моля свържете се с нас на tepe@mail.bg.',
+    unsupported: `В момента онлайн доставката до Speedy автомат/офис е активна само за Пловдив. За друг град, моля свържете се с нас на ${SITE_INFO.contact.generalEmail}.`,
     noPoints: 'Няма намерени пунктове.',
     select: 'Изберете пункт',
     workingTime: 'Работно време',
@@ -36,7 +38,7 @@ const T = {
   en: {
     loading: 'Loading pickup points...',
     error: 'Failed to load pickup points.',
-    unsupported: 'Online delivery to a Speedy locker/office is currently available only for Plovdiv. For another city, please contact us at tepe@mail.bg.',
+    unsupported: `Online delivery to a Speedy locker/office is currently available only for Plovdiv. For another city, please contact us at ${SITE_INFO.contact.generalEmail}.`,
     noPoints: 'No pickup points found.',
     select: 'Select a pickup point',
     workingTime: 'Working hours',

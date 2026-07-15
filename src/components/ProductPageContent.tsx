@@ -6,6 +6,7 @@ import {
   IconLeaf,
   IconShop,
 } from "@/components/icons";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -203,7 +204,7 @@ function ProductHero({ lang }: { lang: Lang }) {
               }}
             />
             <Image
-              src="/logo-nav.png"
+              src="/brand/logo-nav.png"
               alt=""
               aria-hidden="true"
               width={380}
@@ -220,7 +221,7 @@ function ProductHero({ lang }: { lang: Lang }) {
               }}
             />
             <Image
-              src="/bar-product.png"
+              src="/photos/bar-product.png"
               alt="ТЕПЕ bite — Солен карамел"
               width={500}
               height={500}
@@ -435,7 +436,7 @@ function TasteSection({ lang }: { lang: Lang }) {
             >
               {/* TODO: Replace with /assets/images/product/tepe-bite-bar-closeup.jpg when available */}
               <Image
-                src="/bar-product.png"
+                src="/photos/bar-product.png"
                 alt="ТЕПЕ bite — Солен карамел отблизо"
                 width={320}
                 height={320}
@@ -1200,19 +1201,19 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
     lang === "bg"
       ? [
           {
-            img: "/images/certificates/ifs-food.png",
+            img: "/certificates/ifs-food.png",
             initials: "IFS",
             title: "IFS Food",
             desc: "Производствената база на BioStyle Ltd. е свързана с IFS Food сертификация — международен стандарт за безопасност и качество в хранителното производство.",
           },
           {
-            img: "/images/certificates/organic-certificate.jpeg",
+            img: "/certificates/organic-certificate.jpeg",
             initials: "ORG",
             title: "Organic Certificate",
             desc: "BioStyle Ltd. работи с органично производство и има Organic Certificate. Това подкрепя фокуса върху по-съзнателен избор на суровини и производствени практики.",
           },
           {
-            img: "/images/certificates/balkan-biocert.png",
+            img: "/certificates/balkan-biocert.png",
             initials: "BBC",
             title: "Balkan Biocert",
             desc: "BioStyle Ltd. е посочена в органичен каталог със сертификация от Balkan Biocert — регионален орган за органична сертификация.",
@@ -1226,19 +1227,19 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
         ]
       : [
           {
-            img: "/images/certificates/ifs-food.png",
+            img: "/certificates/ifs-food.png",
             initials: "IFS",
             title: "IFS Food",
             desc: "BioStyle Ltd.'s production facility is associated with IFS Food certification — an international standard for food safety and quality.",
           },
           {
-            img: "/images/certificates/organic-certificate.jpeg",
+            img: "/certificates/organic-certificate.jpeg",
             initials: "ORG",
             title: "Organic Certificate",
             desc: "BioStyle Ltd. operates organic production and holds an Organic Certificate, supporting a more conscious approach to raw materials and manufacturing practices.",
           },
           {
-            img: "/images/certificates/balkan-biocert.png",
+            img: "/certificates/balkan-biocert.png",
             initials: "BBC",
             title: "Balkan Biocert",
             desc: "BioStyle Ltd. is listed in an organic catalogue with Balkan Biocert certification — a regional organic certification body.",
@@ -1295,7 +1296,7 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
         >
           {/* TODO: Replace with /assets/images/product/tepe-bite-production.jpg when available */}
           <Image
-            src="/manufacturing.jpg"
+            src="/photos/manufacturing.jpg"
             alt={
               lang === "bg"
                 ? "Производствена база BioStyle Ltd."
@@ -1916,7 +1917,7 @@ function OrderSection({ lang }: { lang: Lang }) {
             {lang === "bg" ? "Към поръчка" : "Place an order"}
           </Link>
           <a
-            href="mailto:tepe@mail.bg"
+            href={`mailto:${SITE_INFO.contact.generalEmail}`}
             className="btn btn-secondary"
             style={{ fontSize: "1.05rem", padding: "16px 32px" }}
           >

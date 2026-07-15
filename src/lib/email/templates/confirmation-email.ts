@@ -1,3 +1,4 @@
+import { SITE_INFO } from '@/lib/config/site-info'
 import { formatDualMoney, formatMoneyEUR } from '@/lib/money'
 
 type OrderItem = {
@@ -190,8 +191,8 @@ export function buildConfirmationEmail(data: ConfirmationEmailData): { subject: 
         <!-- Support -->
         <p style="font-size:13px;color:#9ca3af;">
           ${lang === 'bg'
-            ? 'Въпроси? Пиши ни на <a href="mailto:tepe@mail.bg" style="color:#c9833a;">tepe@mail.bg</a>'
-            : 'Questions? Write us at <a href="mailto:tepe@mail.bg" style="color:#c9833a;">tepe@mail.bg</a>'
+            ? `Въпроси? Пиши ни на <a href="mailto:${SITE_INFO.contact.generalEmail}" style="color:#c9833a;">${SITE_INFO.contact.generalEmail}</a>`
+            : `Questions? Write us at <a href="mailto:${SITE_INFO.contact.generalEmail}" style="color:#c9833a;">${SITE_INFO.contact.generalEmail}</a>`
           }
         </p>
       </td></tr>

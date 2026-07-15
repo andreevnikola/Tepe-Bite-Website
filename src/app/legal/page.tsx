@@ -1,6 +1,7 @@
 "use client";
 import Footer from "@/components/Footer";
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -72,9 +73,9 @@ const cards = [
     titleBg: "Данни за търговеца",
     titleEn: "Trader Information",
     descBg:
-      "Идентификационни данни на търговеца — ТЕПЕ bite / Баир ЕООД.",
+      `Идентификационни данни на търговеца — ТЕПЕ bite / ${SITE_INFO.brand.legalEntity}.`,
     descEn:
-      "Trader identification — ТЕПЕ bite / Баир ЕООД.",
+      `Trader identification — ТЕПЕ bite / ${SITE_INFO.brand.legalEntity}.`,
   },
   {
     href: "/legal/product-info",
@@ -124,10 +125,10 @@ export default function LegalIndexPage() {
             ? "Стараем се да бъдем прозрачни и коректни. Тук ще намерите правните документи, свързани с покупката, доставката, личните данни и нашите инициативи. Ако имате въпрос, пишете ни на "
             : "We aim to be transparent and fair. Here you will find the legal documents related to purchases, delivery, personal data and our initiatives. If you have a question, write to us at "}
           <a
-            href="mailto:tepe@mail.bg"
+            href={`mailto:${SITE_INFO.contact.generalEmail}`}
             style={{ color: "var(--plum)", fontWeight: 600 }}
           >
-            tepe@mail.bg
+            {SITE_INFO.contact.generalEmail}
           </a>
           .
         </p>
@@ -236,10 +237,10 @@ export default function LegalIndexPage() {
                 ? "За въпроси, свързани с поръчки, доставка, права на потребителя или лични данни, пишете ни на "
                 : "For questions about orders, delivery, consumer rights or personal data, write to us at "}
               <a
-                href="mailto:tepe@mail.bg"
+                href={`mailto:${SITE_INFO.contact.generalEmail}`}
                 style={{ color: "var(--plum)", fontWeight: 600 }}
               >
-                tepe@mail.bg
+                {SITE_INFO.contact.generalEmail}
               </a>
               .
             </p>

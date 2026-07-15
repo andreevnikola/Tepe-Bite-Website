@@ -293,7 +293,7 @@ export default function Hero() {
             />
             {/* Faded logo behind bar */}
             <Image
-              src="/logo-nav.png"
+              src="/brand/logo-nav.png"
               alt=""
               aria-hidden="true"
               width={380}
@@ -311,7 +311,7 @@ export default function Hero() {
             />
             {/* Product bar photo */}
             <Image
-              src="/bar-product.png"
+              src="/photos/bar-product.png"
               alt="ТЕПЕ bite — Солен карамел"
               width={500}
               height={500}

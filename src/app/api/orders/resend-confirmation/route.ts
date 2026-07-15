@@ -1,4 +1,5 @@
 import { logSystem, LogSeverity } from '@/lib/admin/system-log'
+import { SITE_INFO } from '@/lib/config/site-info'
 import { getDataSource } from '@/lib/db'
 import { DeliveryStatus, EmailLog } from '@/lib/db/entities/EmailLog.entity'
 import { Order } from '@/lib/db/entities/Order.entity'
@@ -63,8 +64,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         error: 'retry_token_expired',
         message:
           order.language === 'bg'
-            ? 'Времето за повторно изпращане изтече. Свържете се с нас на tepe@mail.bg.'
-            : 'The retry window has expired. Please contact us at tepe@mail.bg.',
+            ? `Времето за повторно изпращане изтече. Свържете се с нас на ${SITE_INFO.contact.generalEmail}.`
+            : `The retry window has expired. Please contact us at ${SITE_INFO.contact.generalEmail}.`,
       },
       { status: 410 },
     )
@@ -174,8 +175,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       emailRetryToken: newRetryRaw,
       message:
         order.language === 'bg'
-          ? 'Изпращането на имейла отново не успя. Свържете се с нас на tepe@mail.bg.'
-          : 'Email sending failed again. Please contact us at tepe@mail.bg.',
+          ? `Изпращането на имейла отново не успя. Свържете се с нас на ${SITE_INFO.contact.generalEmail}.`
+          : `Email sending failed again. Please contact us at ${SITE_INFO.contact.generalEmail}.`,
     })
   }
 }

@@ -8,6 +8,7 @@ import StepDelivery, { type DeliveryFields } from '@/components/checkout/StepDel
 import StepReview from '@/components/checkout/StepReview'
 import Footer from '@/components/Footer'
 import PermanentOrdersOverlay from '@/components/orders/PermanentOrdersOverlay'
+import { SITE_INFO } from '@/lib/config/site-info'
 import { useCart, useCartSubtotalCents, useClearCart } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
@@ -393,7 +394,7 @@ export default function CheckoutPage() {
                 </Link>
                 <p style={{ fontSize: '0.79rem', color: 'var(--text-soft)', margin: 0, textAlign: 'center' }}>
                   {t.checkEmailContact}{' '}
-                  <a href="mailto:tepe@mail.bg" style={{ color: 'var(--caramel)', fontWeight: 600 }}>tepe@mail.bg</a>
+                  <a href={`mailto:${SITE_INFO.contact.generalEmail}`} style={{ color: 'var(--caramel)', fontWeight: 600 }}>{SITE_INFO.contact.generalEmail}</a>
                 </p>
               </div>
             </div>

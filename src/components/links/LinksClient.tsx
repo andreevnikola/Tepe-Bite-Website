@@ -4,6 +4,7 @@ import { PledgeHeart } from "@/components/ImpactPledge";
 import { IconArrow, IconInsta, IconTiktok, IconFb } from "@/components/icons";
 import { StatusBadge, pick } from "@/components/public/impactUi";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
+import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom, writeLangCookie, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import Image from "next/image";
@@ -176,7 +177,7 @@ const COPY: Record<Lang, Copy> = {
     socialTitle: "Последвай ни",
     contactTitle: "Свържи се с нас",
     comingSoon: "Очаквайте",
-    entity: "БАИР ЕООД",
+    entity: SITE_INFO.brand.legalEntity,
     footer: "ТЕПЕ bite · Пловдив",
     links: [
       {
@@ -189,16 +190,23 @@ const COPY: Record<Lang, Copy> = {
       {
         label: "Instagram",
         hint: "Новини и прогрес по бранда",
-        href: "https://www.instagram.com/tepe.bite/",
+        href: SITE_INFO.social.instagram,
         icon: <IconInsta />,
         external: true,
       },
       {
         label: "TikTok",
         hint: "Кратки видеа и зад кулисите",
-        href: "https://www.tiktok.com/@tepe.bite",
+        href: SITE_INFO.social.tiktok,
         icon: <IconTiktok />,
         external: true,
+      },
+      {
+        label: "Facebook",
+        hint: "Общност, новини и събития",
+        href: SITE_INFO.social.facebook,
+        icon: <IconFb />,
+        soon: false,
       },
       {
         label: "Нашите инициативи",
@@ -220,13 +228,6 @@ const COPY: Record<Lang, Copy> = {
         href: "/news",
         icon: <IconNews />,
         external: false,
-      },
-      {
-        label: "Facebook",
-        hint: "Общност, новини и събития",
-        href: "",
-        icon: <IconFb />,
-        soon: true,
       },
     ],
   },
@@ -265,14 +266,14 @@ const COPY: Record<Lang, Copy> = {
       {
         label: "Instagram",
         hint: "News and brand progress",
-        href: "https://www.instagram.com/tepe.bite/",
+        href: SITE_INFO.social.instagram,
         icon: <IconInsta />,
         external: true,
       },
       {
         label: "TikTok",
         hint: "Short videos and behind-the-scenes",
-        href: "https://www.tiktok.com/@tepe.bite",
+        href: SITE_INFO.social.tiktok,
         icon: <IconTiktok />,
         external: true,
       },
@@ -300,9 +301,9 @@ const COPY: Record<Lang, Copy> = {
       {
         label: "Facebook",
         hint: "Community, news and events",
-        href: "",
+        href: SITE_INFO.social.facebook,
         icon: <IconFb />,
-        soon: true,
+        external: true,
       },
     ],
   },
@@ -466,7 +467,7 @@ export default function LinksClient({
         >
           <div className="lk-brand">
             <Image
-              src="/logo-nav.png"
+              src="/brand/logo-nav.png"
               alt="ТЕПЕ bite"
               width={64}
               height={64}
@@ -622,7 +623,7 @@ export default function LinksClient({
           <div className="lk-social-row">
             <a
               className="lk-social"
-              href="https://www.instagram.com/tepe.bite/"
+              href={SITE_INFO.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -631,24 +632,33 @@ export default function LinksClient({
             </a>
             <a
               className="lk-social"
-              href="https://www.tiktok.com/@tepe.bite"
+              href={SITE_INFO.social.tiktok}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="TikTok"
             >
               <IconTiktok />
             </a>
-            <span className="lk-social soon" aria-label="Facebook — soon">
+            <a
+              className="lk-social"
+              href={SITE_INFO.social.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
               <IconFb />
-            </span>
+            </a>
           </div>
 
           <div className="lk-divider" />
 
           <div className="lk-section-title center">{t.contactTitle}</div>
-          <Link className="lk-contact" href="mailto:tepe@mail.bg">
+          <Link
+            className="lk-contact"
+            href={`mailto:${SITE_INFO.contact.generalEmail}`}
+          >
             <IconMail />
-            tepe@mail.bg
+            {SITE_INFO.contact.generalEmail}
           </Link>
         </section>
 
