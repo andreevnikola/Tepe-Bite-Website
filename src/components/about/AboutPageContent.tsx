@@ -7,7 +7,10 @@ import YouthPartnerCarousel from "@/components/about/YouthPartnerCarousel";
 import { IconArrow, IconShop } from "@/components/icons";
 import { PledgeHeart } from "@/components/ImpactPledge";
 import { GENERAL_EMAIL, mailtoHref } from "@/lib/config/site-info";
-import type { InitiativeDetail, PartnerCarouselItem } from "@/lib/public/initiatives";
+import type {
+  InitiativeDetail,
+  PartnerCarouselItem,
+} from "@/lib/public/initiatives";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -84,9 +87,24 @@ function Hero({ lang }: { lang: "bg" | "en" }) {
           className="heading-xl"
           style={{ color: "white", maxWidth: 820, marginBottom: 18 }}
         >
-          {bg
-            ? "Младежите зад барчето с кауза"
-            : "The young people behind the bar with a cause"}
+          {bg ? (
+            <>
+              <span>Младежите зад </span>
+              <span
+                style={{
+                  // fontFamily: "var(--font-brush)",
+                  fontWeight: 1600,
+                  color: "var(--caramel)",
+                  lineHeight: 0.9,
+                  borderBottom: "4px solid var(--caramel)",
+                }}
+              >
+                барчето с кауза
+              </span>
+            </>
+          ) : (
+            "The young people behind the bar with a cause"
+          )}
         </h1>
         <p
           style={{
@@ -105,19 +123,66 @@ function Hero({ lang }: { lang: "bg" | "en" }) {
   );
 }
 
+/* Faint per-person watermark icons behind each team row (in TEAM order):
+   briefcase, palette, heart, retro phone, scales of law. Filled silhouettes so
+   they read as a soft watermark rather than a rank number. */
+const TEAM_ICONS = [
+  // briefcase
+  <svg key="briefcase" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M9 3.5A2.5 2.5 0 0 0 6.5 6v1H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2.5V6A2.5 2.5 0 0 0 15 3.5H9zM8.5 6a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1h-7V6z" />
+  </svg>,
+  // palette
+  <svg key="palette" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 2.5C6.2 2.5 1.5 6.9 1.5 12.3 1.5 17.2 5.6 21 11 21c1.7 0 2.7-1.1 2.7-2.4 0-.6-.2-1-.5-1.4-.3-.4-.5-.7-.5-1.2 0-.8.7-1.4 1.6-1.4h1.9c3.4 0 6.3-2.7 6.3-6.1 0-3.4-4-5.9-8.5-5.9zM6.5 13a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2zm3.3-4.2a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2zm5 0a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2z" />
+  </svg>,
+  // heart
+  <svg key="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 20.7l-1.4-1.3C5.4 14.7 2.5 12 2.5 8.6 2.5 6 4.5 4 7 4c1.7 0 3.3.9 4.2 2.3l.8 1.2.8-1.2C13.7 4.9 15.3 4 17 4c2.5 0 4.5 2 4.5 4.6 0 3.4-2.9 6.1-8.1 10.8L12 20.7z" />
+  </svg>,
+  // retro desk phone with handset cradle
+  <svg key="phone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 4c-4.4 0-8 2.7-8 6 0 .8.3 1.6.9 2.2.4.4 1 .6 1.6.5l2-.3c.7-.1 1.2-.7 1.2-1.4v-.9c0-.4.3-.7.7-.8 1-.2 2.2-.2 3.2 0 .4.1.7.4.7.8v.9c0 .7.5 1.3 1.2 1.4l2 .3c.6.1 1.2-.1 1.6-.5.6-.6.9-1.4.9-2.2 0-3.3-3.6-6-8-6z" />
+    <path d="M6 16.5A1.5 1.5 0 0 1 7.5 15h9a1.5 1.5 0 0 1 1.5 1.5V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2.5z" />
+  </svg>,
+  // gavel (law)
+  <svg key="law" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M13.4 2.9l3.7 3.7-2.3 2.3-3.7-3.7 2.3-2.3zM10.4 5.9l3.7 3.7-8.2 8.2-3.7-3.7 8.2-8.2zM16.1 8.6l3.7 3.7-2.3 2.3-3.7-3.7 2.3-2.3zM3 19h10v2H3z" />
+  </svg>,
+];
+
 /* ── Team ──────────────────────────────────────────────────────────────────── */
 function TeamSection({ lang }: { lang: "bg" | "en" }) {
   const bg = lang === "bg";
   return (
-    <section className="section-spacing" style={{ background: "var(--surface)" }}>
-      <div className="section-inner">
-        <header style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 56px)" }}>
+    <section
+      className="section-spacing"
+      style={{
+        background: "var(--surface)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        className="section-inner"
+        style={{ position: "relative", zIndex: 1 }}
+      >
+        <header
+          style={{
+            textAlign: "center",
+            marginBottom: "clamp(36px, 5vw, 64px)",
+          }}
+        >
           <div className="section-divider" />
           <div className="label-tag" style={{ marginBottom: 14 }}>
             {bg ? "Екипът" : "The team"}
           </div>
-          <h2 className="heading-lg" style={{ margin: "0 auto", maxWidth: 720 }}>
-            {bg ? "Хората зад ТЕПЕ bite" : "The people behind ТЕПЕ bite"}
+          <h2
+            className="heading-lg"
+            style={{ margin: "0 auto", maxWidth: 720 }}
+          >
+            {bg
+              ? "Младежите зад ТЕПЕ bite"
+              : "The young people behind ТЕПЕ bite"}
           </h2>
           <p style={{ maxWidth: 600, margin: "16px auto 0" }}>
             {bg
@@ -126,78 +191,134 @@ function TeamSection({ lang }: { lang: "bg" | "en" }) {
           </p>
         </header>
 
-        <div className="team-grid">
-          {TEAM.map((m) => (
-            <article
-              key={m.email}
-              className="card"
-              style={{ padding: 24, display: "flex", flexDirection: "column", gap: 14 }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <span
-                  style={{
-                    position: "relative",
-                    width: 60,
-                    height: 60,
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    flexShrink: 0,
-                    background: "var(--plum-lt)",
-                  }}
-                >
-                  <Image src={m.photo} alt={m.name} fill sizes="60px" style={{ objectFit: "cover" }} />
+        <div>
+          {TEAM.map((m, i) => {
+            const right = i % 2 === 1;
+            return (
+              <article
+                key={m.email}
+                className={`team-row ${right ? "team-row--right" : ""}`}
+              >
+                <span className="team-bg-ico" aria-hidden="true">
+                  {TEAM_ICONS[i % TEAM_ICONS.length]}
                 </span>
-                <div style={{ minWidth: 0 }}>
+                <div className="team-photo">
+                  <Image
+                    src={m.photo}
+                    alt={m.name}
+                    fill
+                    sizes="(max-width: 760px) 60vw, 240px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                <div className="team-text">
                   <div
                     style={{
-                      fontFamily: "var(--font-head)",
-                      fontWeight: 700,
-                      fontSize: "1.1rem",
-                      color: "var(--plum)",
-                    }}
-                  >
-                    {m.name}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.78rem",
+                      fontSize: "0.74rem",
                       fontWeight: 600,
-                      letterSpacing: "0.04em",
+                      letterSpacing: "0.12em",
                       textTransform: "uppercase",
                       color: "var(--caramel)",
+                      marginBottom: 6,
                     }}
                   >
                     {bg ? m.titleBg : m.titleEn}
                   </div>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-head)",
+                      fontWeight: 700,
+                      fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)",
+                      color: "var(--plum)",
+                      margin: 0,
+                      lineHeight: 1.15,
+                    }}
+                  >
+                    {m.name}
+                  </h3>
+                  <p
+                    style={{
+                      margin: "12px 0 0",
+                      maxWidth: 520,
+                      lineHeight: 1.65,
+                    }}
+                  >
+                    {bg ? m.motivationBg : m.motivationEn}
+                  </p>
+                  <a
+                    href={`mailto:${m.email}`}
+                    className="team-email"
+                    style={{
+                      display: "inline-block",
+                      marginTop: 14,
+                      fontSize: "0.86rem",
+                      fontWeight: 600,
+                      color: "var(--plum-mid)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {m.email}
+                  </a>
                 </div>
-              </div>
-
-              <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.65, flex: 1 }}>
-                {bg ? m.motivationBg : m.motivationEn}
-              </p>
-
-              <a
-                href={`mailto:${m.email}`}
-                style={{
-                  fontSize: "0.85rem",
-                  fontWeight: 600,
-                  color: "var(--plum-mid)",
-                  textDecoration: "none",
-                  wordBreak: "break-all",
-                }}
-              >
-                {m.email}
-              </a>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
 
       <style>{`
-        .team-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 24px;
+        .team-row {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: clamp(24px, 4vw, 60px);
+          padding: clamp(28px, 3.5vw, 48px) 0;
+        }
+        .team-row + .team-row { border-top: 1px solid var(--border); }
+        .team-row--right { flex-direction: row-reverse; text-align: right; }
+        .team-row--right .team-text { align-items: flex-end; display: flex; flex-direction: column; }
+        .team-photo {
+          position: relative;
+          width: clamp(150px, 22vw, 240px);
+          aspect-ratio: 1 / 1;
+          border-radius: var(--r-lg);
+          overflow: hidden;
+          flex-shrink: 0;
+          background: var(--plum-lt);
+          box-shadow: var(--shadow);
+          z-index: 1;
+        }
+        .team-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+        .team-bg-ico {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: clamp(130px, 17vw, 230px);
+          height: clamp(130px, 17vw, 230px);
+          color: var(--plum);
+          opacity: 0.05;
+          z-index: 0;
+          pointer-events: none;
+          user-select: none;
+        }
+        .team-bg-ico svg { width: 100%; height: 100%; display: block; }
+        .team-row:not(.team-row--right) .team-bg-ico { right: 3%; }
+        .team-row--right .team-bg-ico { left: 3%; }
+        .team-email:hover { color: var(--caramel); }
+        @media (max-width: 760px) {
+          .team-row {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            gap: 18px;
+          }
+          .team-row--right {
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+          }
+          .team-row--right .team-text { align-items: flex-end; }
+          .team-bg-ico { display: none; }
         }
       `}</style>
     </section>
@@ -207,85 +328,330 @@ function TeamSection({ lang }: { lang: "bg" | "en" }) {
 /* ── Fantastico gratitude ──────────────────────────────────────────────────── */
 function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
   const bg = lang === "bg";
+
+  const support: {
+    icon: keyof typeof SUPPORT_ICONS;
+    label: string;
+    desc: string;
+    hero?: boolean;
+  }[] = bg
+    ? [
+        {
+          icon: "megaphone",
+          label: "Маркетинг",
+          desc: "Съвместни кампании и видимост пред клиентите им.",
+        },
+        {
+          icon: "design",
+          label: "Дизайнерски материали",
+          desc: "Професионални материали за опаковка и реклама.",
+        },
+        {
+          icon: "shop",
+          label: "Продажби в Пловдив",
+          desc: "Барчето по рафтовете в обектите им в Пловдив.",
+        },
+        {
+          icon: "gift",
+          label: "Дарение 4000 €",
+          desc: "За първата ни пълномащабна производствена партида.",
+          hero: true,
+        },
+      ]
+    : [
+        {
+          icon: "megaphone",
+          label: "Marketing",
+          desc: "Joint campaigns and visibility in front of their customers.",
+        },
+        {
+          icon: "design",
+          label: "Design materials",
+          desc: "Professional materials for packaging and promotion.",
+        },
+        {
+          icon: "shop",
+          label: "Retail in Plovdiv",
+          desc: "The bar on the shelves across their Plovdiv stores.",
+        },
+        {
+          icon: "gift",
+          label: "€4,000 donation",
+          desc: "Toward our first full-scale production batch.",
+          hero: true,
+        },
+      ];
+
   return (
-    <section style={{ background: "var(--plum)", position: "relative", overflow: "hidden" }}>
+    <section
+      style={{
+        background: "var(--plum)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       <div
-        className="section-spacing section-inner grat-grid"
-        style={{ position: "relative", zIndex: 1 }}
+        className="hero-blob"
+        style={{
+          background: "var(--caramel)",
+          width: 420,
+          height: 420,
+          top: -160,
+          right: -120,
+          opacity: 0.16,
+        }}
+      />
+      <div
+        className="section-spacing"
+        style={{ position: "relative", zIndex: 1, maxWidth: 1300, margin: "0 auto" }}
       >
-        <div className="grat-photo">
-          <Image
-            src="/photos/FantastikoWithOurTeam.jpg"
-            alt={bg ? "Екипът ни с Fantastico" : "Our team with Fantastico"}
-            width={1364}
-            height={908}
-            sizes="(max-width: 900px) 100vw, 46vw"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              borderRadius: "var(--r-lg)",
-              display: "block",
-            }}
-          />
-        </div>
+        <div className="grat-head">
+          <header style={{ maxWidth: 640 }}>
+            <div
+              className="label-tag"
+              style={{ color: "oklch(93% 0.06 70)", marginBottom: 14 }}
+            >
+              {bg ? "Заедно с Fantastico" : "Together with Fantastico"}
+            </div>
+            <h2 className="heading-lg" style={{ color: "white", margin: 0 }}>
+              {bg ? (
+                <>
+                  Гордо казваме: благодарим,{" "}
+                  <span className="grat-fanta">Fantastico</span>
+                </>
+              ) : (
+                <>
+                  We proudly say: thank you,{" "}
+                  <span className="grat-fanta">Fantastico</span>
+                </>
+              )}
+            </h2>
+            <p style={{ color: "oklch(88% 0.03 310)", marginTop: 16 }}>
+              {bg
+                ? "Една от най-големите търговски вериги в България реши да застане зад ученически екип. Ето какво означава тази подкрепа на практика."
+                : "One of Bulgaria's largest retail chains chose to stand behind a student team. Here's what that support means in practice."}
+            </p>
+          </header>
 
-        <div>
-          <div className="label-tag" style={{ color: "oklch(93% 0.06 70)", marginBottom: 14 }}>
-            {bg ? "Заедно с Fantastico" : "Together with Fantastico"}
-          </div>
-          <h2 className="heading-lg" style={{ color: "white", margin: 0 }}>
-            {bg ? "Благодарим на Fantastico" : "Thank you, Fantastico"}
-          </h2>
-          <p style={{ color: "oklch(88% 0.03 310)", marginTop: 16, maxWidth: 540 }}>
-            {bg
-              ? "Една от най-големите търговски вериги в България реши да застане зад ученически екип. Fantastico ни подкрепят с маркетинг, дизайн материали и съдействие за продажби в обектите си в Пловдив, а с дарение помогнаха да произведем първата си пълномащабна партида."
-              : "One of Bulgaria's largest retail chains chose to stand behind a student team. Fantastico support us with marketing, design materials and help selling across their Plovdiv locations, and their donation helped us produce our first full-scale batch."}
-          </p>
-          <p style={{ color: "oklch(88% 0.03 310)", marginTop: 14, maxWidth: 540 }}>
-            {bg
-              ? "Гордеем се с това партньорство и сме искрено благодарни за доверието."
-              : "We're proud of this partnership and sincerely grateful for the trust."}
-          </p>
-
-          <div
-            style={{
-              marginTop: 26,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 14,
-              background: "white",
-              borderRadius: 100,
-              padding: "12px 22px",
-            }}
-          >
+          <div className="grat-logo-plate">
             <Image
               src="/partners/FantasticoGroupLongLogo.png"
               alt="Fantastico Group"
               width={261}
               height={121}
-              style={{ height: 30, width: "auto", display: "block" }}
+              style={{ height: 52, width: "auto", display: "block" }}
             />
           </div>
         </div>
+
+        <div className="grat-grid">
+          <div className="grat-photo">
+            <Image
+              src="/photos/FantastikoWithOurTeam.jpg"
+              alt={bg ? "Екипът ни с Fantastico" : "Our team with Fantastico"}
+              fill
+              sizes="(max-width: 900px) 100vw, 46vw"
+              style={{ objectFit: "cover" }}
+            />
+            {/* fade the image into the plum section — also backs the tiles if
+                they crowd the image on tighter widths */}
+            <div className="grat-photo-fade" aria-hidden="true" />
+          </div>
+
+          <div className="grat-support">
+            {support.map((s) => (
+              <div
+                key={s.label}
+                className="grat-tile"
+                style={{
+                  background: s.hero
+                    ? "var(--caramel)"
+                    : "oklch(100% 0 0 / 0.06)",
+                  border: s.hero ? "none" : "1px solid oklch(100% 0 0 / 0.12)",
+                }}
+              >
+                <span
+                  className="grat-ico"
+                  style={{
+                    background: s.hero
+                      ? "oklch(100% 0 0 / 0.22)"
+                      : "oklch(100% 0 0 / 0.1)",
+                    color: "white",
+                  }}
+                >
+                  {SUPPORT_ICONS[s.icon]}
+                </span>
+                <div
+                  style={{
+                    fontFamily: "var(--font-head)",
+                    fontWeight: 700,
+                    fontSize: "1.02rem",
+                    color: "white",
+                    marginTop: 12,
+                  }}
+                >
+                  {s.label}
+                </div>
+                <p
+                  style={{
+                    margin: "6px 0 0",
+                    fontSize: "0.86rem",
+                    lineHeight: 1.5,
+                    color: s.hero
+                      ? "oklch(100% 0 0 / 0.9)"
+                      : "oklch(84% 0.03 310)",
+                  }}
+                >
+                  {s.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
 
       <style>{`
+        .grat-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: clamp(20px, 3vw, 40px);
+          flex-wrap: wrap;
+          margin-bottom: clamp(32px, 4vw, 52px);
+        }
+        .grat-fanta {
+          border-bottom: 4px solid #E2001A;
+          padding-bottom: 2px;
+          white-space: nowrap;
+        }
+        .grat-logo-plate {
+          background: white;
+          border-radius: var(--r-md);
+          padding: 16px 26px;
+          flex-shrink: 0;
+        }
         .grat-grid {
           display: grid;
-          grid-template-columns: 46% 1fr;
-          gap: clamp(28px, 4vw, 56px);
-          align-items: center;
+          grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+          gap: clamp(24px, 3vw, 44px);
+          align-items: stretch;
         }
-        .grat-photo { aspect-ratio: 3 / 2; }
+        .grat-photo {
+          position: relative;
+          overflow: hidden;
+          border-radius: var(--r-lg);
+          min-height: 340px;
+        }
+        .grat-photo-fade {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: linear-gradient(to bottom, transparent 55%, var(--plum) 100%);
+        }
+        .grat-support {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+        .grat-tile {
+          border-radius: var(--r-md);
+          padding: clamp(18px, 2vw, 24px);
+          transition: transform 0.2s ease;
+        }
+        .grat-tile:hover { transform: translateY(-3px); }
+        .grat-ico {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
         @media (max-width: 900px) {
           .grat-grid { grid-template-columns: 1fr; }
-          .grat-photo { aspect-ratio: 3 / 2; }
+          .grat-photo { min-height: 260px; }
+        }
+        @media (max-width: 460px) {
+          .grat-support { grid-template-columns: 1fr; }
         }
       `}</style>
     </section>
   );
 }
+
+/* Small line icons for the Fantastico support tiles (match the icon system:
+   24px viewBox, no fill, currentColor stroke, round caps). */
+const SUPPORT_ICONS = {
+  megaphone: (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 10v4h3l6 4V6L7 10H4z" />
+      <path d="M17 9a4 4 0 0 1 0 6" />
+    </svg>
+  ),
+  design: (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 20l4.5-1L19 8.5 15.5 5 5 15.5 4 20z" />
+      <path d="M13.5 6.5l4 4" />
+    </svg>
+  ),
+  shop: (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 9l1.2-4h13.6L20 9" />
+      <path d="M5 9v10h14V9" />
+      <path d="M4 9a2.4 2.4 0 0 0 4.7 0 2.4 2.4 0 0 0 4.6 0 2.4 2.4 0 0 0 4.7 0" />
+    </svg>
+  ),
+  gift: (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 11h16v9H4z" />
+      <path d="M3 8h18v3H3z" />
+      <path d="M12 8v12" />
+      <path d="M12 8S9.5 8 8.6 6.6C8 5.6 8.7 4 10 4c1.6 0 2 4 2 4z" />
+      <path d="M12 8s2.5 0 3.4-1.4c.6-1-.1-2.6-1.4-2.6-1.6 0-2 4-2 4z" />
+    </svg>
+  ),
+};
 
 /* ── Youth power + impact model + youth partner carousel ───────────────────── */
 function YouthPowerSection({
@@ -297,105 +663,146 @@ function YouthPowerSection({
 }) {
   const bg = lang === "bg";
 
-  const model: [string, string][] = bg
+  const benefits: [string, string][] = bg
     ? [
-        ["Събираме", "Фиксираните 0.15 € от всяко барче влизат във фонда."],
-        ["Обединяваме", "Каним младежки организации да съорганизират инициативата."],
-        ["Реализираме", "Заедно превръщаме средствата във видима промяна за Пловдив."],
-        ["„Бях част от това“", "Инициатива, която хората разпознават като своя."],
+        [
+          "Реални инициативи",
+          "Работят по истински инициативи на терен, а не на хартия.",
+        ],
+        ["Досег до партньори", "Срещат потенциални партньори през нашите."],
+        ["Видимост", "Печелят видимост в социалните мрежи чрез дейността си."],
       ]
     : [
-        ["We collect", "The fixed 0.15 € from every bar goes into the fund."],
-        ["We unite", "We invite youth-led organisations to co-run the initiative."],
-        ["We deliver", "Together we turn the money into visible change for Plovdiv."],
-        ['"I was part of it"', "An initiative people recognise as their own."],
+        [
+          "Real initiatives",
+          "They work on real initiatives on the ground, not on paper.",
+        ],
+        ["Reach to partners", "They meet potential partners through ours."],
+        [
+          "Visibility",
+          "They gain social-media visibility through their activity.",
+        ],
       ];
 
   return (
     <section className="section-spacing" style={{ background: "var(--bg)" }}>
       <div className="section-inner">
-        <header style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 52px)" }}>
+        <header
+          style={{
+            textAlign: "center",
+            marginBottom: "clamp(32px, 5vw, 52px)",
+          }}
+        >
           <div className="section-divider" />
           <div className="label-tag" style={{ marginBottom: 14 }}>
             {bg ? "Силата на младите" : "Youth power"}
           </div>
-          <h2 className="heading-lg" style={{ margin: "0 auto", maxWidth: 760 }}>
+          <h2
+            className="heading-lg"
+            style={{ margin: "0 auto", maxWidth: 760 }}
+          >
             {bg ? "Младите движат Пловдив" : "The young move Plovdiv"}
           </h2>
           <p style={{ maxWidth: 640, margin: "16px auto 0" }}>
             {bg
-              ? "Ние сме тийнейджъри, на които се падна шансът да строят бизнес на тази възраст. Вярваме в силата на младите — затова обичаме да работим с младежки организации. Като подкрепяш нас, подкрепяш и тях, и младежкото действие в Пловдив."
-              : "We're teenagers who got the chance to build a business at this age. We believe in the strength of the young — that's why we love working with youth-led organisations. When you support us, you support them too, and youth action in Plovdiv."}
+              ? "Ние сме тийнейджъри, които градят истински бизнес. Вярваме в силата на младите — затова партнираме с младежки организации. Когато подкрепиш нас, подкрепяш и тях."
+              : "We're teenagers building a real business. We believe in the strength of the young — so we partner with youth-led organisations. When you support us, you support them too."}
           </p>
         </header>
 
-        {/* impact model row */}
+        {/* how we multiply the pledge through youth partners */}
         <div
           className="card"
           style={{
-            padding: "clamp(24px, 4vw, 40px)",
+            padding: "clamp(24px, 4vw, 44px)",
             marginBottom: "clamp(36px, 5vw, 56px)",
             display: "flex",
             flexDirection: "column",
-            gap: 24,
+            gap: "clamp(24px, 3vw, 32px)",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              justifyContent: "center",
-              flexWrap: "wrap",
-              textAlign: "center",
-            }}
-          >
-            <PledgeHeart size={52} />
-            <p style={{ margin: 0, maxWidth: 560, fontSize: "1rem" }}>
+          <div className="yp-lead">
+            <PledgeHeart size={56} />
+            <p style={{ margin: 0, fontSize: "1.05rem", lineHeight: 1.6 }}>
               {bg ? (
                 <>
-                  Като инициативно ориентиран бранд, всяко барче добавя{" "}
-                  <strong style={{ color: "var(--plum)" }}>0.15 €</strong> към фонд{" "}
-                  <ImpactWord /> — инструментът, с който правим видими инициативи за града.
+                  Всяко барче добавя{" "}
+                  <strong style={{ color: "var(--plum)" }}>0.15 €</strong> към
+                  фонд <ImpactWord />.{" "}
+                  <strong style={{ color: "var(--plum)" }}>Умножаваме</strong>{" "}
+                  стойността на тези 0.15 €, като партнираме с младежки
+                  организации за всяка инициатива.
                 </>
               ) : (
                 <>
-                  As an initiative-driven brand, every bar adds{" "}
-                  <strong style={{ color: "var(--plum)" }}>0.15 €</strong> to the{" "}
-                  <ImpactWord /> fund — the tool we use to make visible initiatives for the city.
+                  Every bar adds{" "}
+                  <strong style={{ color: "var(--plum)" }}>0.15 €</strong> to
+                  the <ImpactWord /> fund. We{" "}
+                  <strong style={{ color: "var(--plum)" }}>multiply</strong> the
+                  value of those 0.15 € by partnering with youth-led
+                  organisations on every initiative.
                 </>
               )}
             </p>
           </div>
 
-          <div className="model-grid">
-            {model.map(([step, desc], i) => (
-              <div key={step} style={{ position: "relative" }}>
+          <div>
+            <div className="label-tag" style={{ marginBottom: 16 }}>
+              {bg ? "Какво получават те" : "What they gain"}
+            </div>
+            <div className="yp-benefits">
+              {benefits.map(([title, desc], i) => (
                 <div
+                  key={title}
                   style={{
-                    fontFamily: "var(--font-head)",
-                    fontWeight: 800,
-                    fontSize: "0.9rem",
-                    color: "var(--caramel)",
-                    marginBottom: 6,
+                    borderLeft: "3px solid var(--caramel)",
+                    paddingLeft: 16,
                   }}
                 >
-                  {String(i + 1).padStart(2, "0")}
+                  <div
+                    style={{
+                      fontFamily: "var(--font-head)",
+                      fontWeight: 800,
+                      fontSize: "0.82rem",
+                      color: "var(--caramel)",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      color: "var(--plum)",
+                      fontSize: "1rem",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {title}
+                  </div>
+                  <p
+                    style={{ margin: 0, fontSize: "0.88rem", lineHeight: 1.55 }}
+                  >
+                    {desc}
+                  </p>
                 </div>
-                <div
-                  style={{
-                    fontWeight: 700,
-                    color: "var(--plum)",
-                    fontSize: "0.98rem",
-                    marginBottom: 4,
-                  }}
-                >
-                  {step}
-                </div>
-                <p style={{ margin: 0, fontSize: "0.86rem", lineHeight: 1.55 }}>{desc}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          <p
+            style={{
+              margin: 0,
+              paddingTop: "clamp(20px, 2.5vw, 28px)",
+              borderTop: "1px solid var(--border)",
+              fontSize: "1.02rem",
+              color: "var(--text-mid)",
+            }}
+          >
+            {bg
+              ? "Подкрепяме младите — точно както ти подкрепяш нас, младите, купувайки барче."
+              : "We support the young — just as you support us, the young, by buying a bar."}
+          </p>
 
           <Link
             href="/impact"
@@ -407,10 +814,12 @@ function YouthPowerSection({
               fontWeight: 600,
               fontSize: "0.9rem",
               textDecoration: "none",
-              alignSelf: "center",
             }}
           >
-            {bg ? "Виж целия модел на въздействие" : "See the full impact model"} →
+            {bg
+              ? "Виж целия модел на въздействие"
+              : "See the full impact model"}{" "}
+            →
           </Link>
         </div>
 
@@ -441,18 +850,19 @@ function YouthPowerSection({
       </div>
 
       <style>{`
-        .model-grid {
+        .yp-lead {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+        .yp-benefits {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 24px;
-          border-top: 1px solid var(--border);
-          padding-top: 24px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: clamp(20px, 3vw, 32px);
         }
-        @media (max-width: 760px) {
-          .model-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 440px) {
-          .model-grid { grid-template-columns: 1fr; }
+        @media (max-width: 680px) {
+          .yp-lead { flex-direction: column; text-align: center; gap: 14px; }
+          .yp-benefits { grid-template-columns: 1fr; }
         }
       `}</style>
     </section>
@@ -500,20 +910,33 @@ function BusinessCaseSection({ lang }: { lang: "bg" | "en" }) {
       ];
 
   return (
-    <section className="section-spacing" style={{ background: "var(--surface)" }}>
+    <section
+      className="section-spacing"
+      style={{ background: "var(--surface)" }}
+    >
       <div className="section-inner">
-        <header style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 52px)" }}>
+        <header
+          style={{
+            textAlign: "center",
+            marginBottom: "clamp(32px, 5vw, 52px)",
+          }}
+        >
           <div className="section-divider" />
           <div className="label-tag" style={{ marginBottom: 14 }}>
             {bg ? "Защо вярваме в това" : "Why we believe in this"}
           </div>
-          <h2 className="heading-lg" style={{ margin: "0 auto", maxWidth: 720 }}>
-            {bg ? "Три причини, една посока" : "Three reasons, one direction"}
+          <h2
+            className="heading-lg"
+            style={{ margin: "0 auto", maxWidth: 720 }}
+          >
+            {bg
+              ? "Три причини, един силен бизнес"
+              : "Three reasons, one strong business"}
           </h2>
           <p style={{ maxWidth: 620, margin: "16px auto 0" }}>
             {bg
-              ? "Напълно прозрачно: ето защо вярваме в ТЕПЕ bite. Трите ни силни страни се събират в едно — кауза, хора и продукт, които се крепят взаимно."
-              : "In full transparency: here's why we believe in ТЕПЕ bite. Our three strengths meet in one place — a cause, people and a product that hold each other up."}
+              ? "Напълно прозрачни сме защо вярваме в ТЕПЕ bite. Кауза, хора и продукт — трите заедно правят не просто добра идея, а убедителен бизнес."
+              : "We're fully transparent about why we believe in ТЕПЕ bite. A cause, a team and a product — together the three make not just a good idea, but a compelling business."}
           </p>
         </header>
 
@@ -563,8 +986,8 @@ function BusinessCaseSection({ lang }: { lang: "bg" | "en" }) {
           }}
         >
           {bg
-            ? "Заедно това е повече от добра кауза — това е и стабилен бизнес казус: продукт, който хората купуват отново, кауза, която ги връща, и екип, който расте."
-            : "Together this is more than a good cause — it's a sound business case too: a product people buy again, a cause that brings them back, and a team that keeps growing."}
+            ? "Кауза, която връща клиентите. Продукт, който купуват отново. Екип, който расте. Затова вярваме, че ТЕПЕ bite е не само добра кауза, а убедителен бизнес казус."
+            : "A cause that brings customers back. A product they buy again. A team that keeps growing. That's why we believe ТЕПЕ bite is not just a good cause, but a compelling business case."}
         </p>
       </div>
 
@@ -593,8 +1016,8 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
       name: "Fantastico Group",
       href: "https://www.fantastico.bg/",
       body: bg
-        ? "Маркетинг, дизайн материали, съдействие за продажби в Пловдив и дарение за първата ни партида."
-        : "Marketing, design materials, retail support in Plovdiv and a donation toward our first batch.",
+        ? "Най-големият ни партньор — от маркетинг и продажби до основополагащото дарение за първата партида."
+        : "Our biggest backer — from marketing and retail to the founding donation for our first batch.",
     },
     {
       logo: "/partners/SuperhostingLogoFullLong.png",
@@ -611,13 +1034,23 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
   return (
     <section className="section-spacing" style={{ background: "var(--bg)" }}>
       <div className="section-inner">
-        <header style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 48px)" }}>
+        <header
+          style={{
+            textAlign: "center",
+            marginBottom: "clamp(32px, 5vw, 48px)",
+          }}
+        >
           <div className="section-divider" />
           <div className="label-tag" style={{ marginBottom: 14 }}>
             {bg ? "Партньори на бизнеса" : "Business partners"}
           </div>
-          <h2 className="heading-lg" style={{ margin: "0 auto", maxWidth: 720 }}>
-            {bg ? "Компаниите зад бизнеса" : "The companies behind the business"}
+          <h2
+            className="heading-lg"
+            style={{ margin: "0 auto", maxWidth: 720 }}
+          >
+            {bg
+              ? "Компании, които подкрепят бизнеса ни"
+              : "Companies that support our business"}
           </h2>
           <p style={{ maxWidth: 600, margin: "16px auto 0" }}>
             {bg
@@ -645,9 +1078,10 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
             >
               <div
                 style={{
-                  height: 56,
                   display: "flex",
                   alignItems: "center",
+                  justifyContent: "center",
+                  padding: "8px 0",
                 }}
               >
                 <Image
@@ -655,10 +1089,24 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
                   alt={p.name}
                   width={p.w}
                   height={p.h}
-                  style={{ height: "auto", maxHeight: 46, width: "auto", maxWidth: "70%", display: "block" }}
+                  sizes="(max-width: 640px) 90vw, 400px"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    display: "block",
+                  }}
                 />
               </div>
-              <p style={{ margin: 0, fontSize: "0.92rem", lineHeight: 1.65, flex: 1 }}>{p.body}</p>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "0.92rem",
+                  lineHeight: 1.65,
+                  flex: 1,
+                }}
+              >
+                {p.body}
+              </p>
               <span
                 style={{
                   display: "inline-flex",
@@ -696,7 +1144,10 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
 function SupportSection({ lang }: { lang: "bg" | "en" }) {
   const bg = lang === "bg";
   return (
-    <section className="section-spacing" style={{ background: "var(--surface2)" }}>
+    <section
+      className="section-spacing"
+      style={{ background: "var(--surface2)" }}
+    >
       <div
         className="section-inner"
         style={{ maxWidth: 760, textAlign: "center" }}
@@ -706,7 +1157,9 @@ function SupportSection({ lang }: { lang: "bg" | "en" }) {
           {bg ? "Отворени сме" : "We're open"}
         </div>
         <h2 className="heading-lg" style={{ margin: "0 auto", maxWidth: 640 }}>
-          {bg ? "Искаш да си част от историята?" : "Want to be part of the story?"}
+          {bg
+            ? "Искаш да си част от историята?"
+            : "Want to be part of the story?"}
         </h2>
         <p style={{ maxWidth: 560, margin: "16px auto 28px" }}>
           {bg

@@ -24,6 +24,9 @@ export default function Nav() {
   // so the nav needs a solid background even before scrolling. /impact is a
   // marketing page with its own hero and keeps its transparent-on-hero look.
   const isInitiativesData = pathname.startsWith("/initiatives");
+  // /about opens on a full-bleed team photo that sits directly under the nav;
+  // a transparent header over it reads as broken, so keep it solid throughout.
+  const isAbout = pathname === "/about";
   // The /links link-hub is a standalone, mobile-first landing with its own
   // header and language switch — the site chrome would only get in its way.
   const isLinks = pathname.startsWith("/links");
@@ -50,6 +53,7 @@ export default function Nav() {
     isLocationDetail ||
     isNewsDetail ||
     isInitiativesData ||
+    isAbout ||
     mobileOpen;
 
   const handleLangChange = (value: Lang) => {

@@ -13,9 +13,17 @@ import Link from "next/link";
 
 const sections = [
   { id: "why", labelBg: "Защо инициативи", labelEn: "Why Initiatives" },
-  { id: "first-initiative", labelBg: "Първата инициатива", labelEn: "First Initiative" },
+  {
+    id: "first-initiative",
+    labelBg: "Първата инициатива",
+    labelEn: "First Initiative",
+  },
   { id: "funding", labelBg: "Модел на финансиране", labelEn: "Funding Model" },
-  { id: "transparency-promise", labelBg: "Обещание за прозрачност", labelEn: "Transparency Promise" },
+  {
+    id: "transparency-promise",
+    labelBg: "Обещание за прозрачност",
+    labelEn: "Transparency Promise",
+  },
   { id: "no-promises", labelBg: "Честни граници", labelEn: "Honest Limits" },
 ];
 
@@ -33,7 +41,12 @@ export default function InitiativeTransparencyPage() {
         sections={sections}
       >
         {/* 1. Why */}
-        <LegalSectionCard id="why" title={bg ? "1. Защо са важни инициативите" : "1. Why Initiatives Matter"}>
+        <LegalSectionCard
+          id="why"
+          title={
+            bg ? "1. Защо са важни инициативите" : "1. Why Initiatives Matter"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "ТЕПЕ bite е бранд, вдъхновен от Пловдив и неговите тепета. Вярваме, че бизнесът може да има реален принос за местната общност — не само като продава продукти, но и като реализира конкретни проекти за града."
@@ -47,7 +60,14 @@ export default function InitiativeTransparencyPage() {
         </LegalSectionCard>
 
         {/* 2. First initiative */}
-        <LegalSectionCard id="first-initiative" title={bg ? "2. Първата инициатива: RE-CONNECT Бунарджика" : "2. First Initiative: RE-CONNECT Bunardzhika"}>
+        <LegalSectionCard
+          id="first-initiative"
+          title={
+            bg
+              ? "2. Първата инициатива: RE-CONNECT Бунарджика"
+              : "2. First Initiative: RE-CONNECT Bunardzhika"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? 'Нашата пилотна инициатива е RE-CONNECT Бунарджика — проект за облагородяване на зона около тепетата в Пловдив, конкретно около чешмичката на „Кръгчето".'
@@ -60,14 +80,22 @@ export default function InitiativeTransparencyPage() {
           </p>
           <LegalTodo label="TODO — confirm whether partners, municipality or foundation must be mentioned for RE-CONNECT Бунарджика, and align wording accordingly. // TODO business owner confirmation" />
           <LegalNote>
-            <Link href="/impact" style={{ color: "var(--plum)", fontWeight: 600 }}>
-              {bg ? "Вижте подробности за инициативата →" : "See initiative details →"}
+            <Link
+              href="/impact"
+              style={{ color: "var(--plum)", fontWeight: 600 }}
+            >
+              {bg
+                ? "Вижте подробности за инициативата →"
+                : "See initiative details →"}
             </Link>
           </LegalNote>
         </LegalSectionCard>
 
         {/* 3. Funding model */}
-        <LegalSectionCard id="funding" title={bg ? "3. Модел на финансиране" : "3. Funding Model"}>
+        <LegalSectionCard
+          id="funding"
+          title={bg ? "3. Модел на финансиране" : "3. Funding Model"}
+        >
           <p style={bodyText}>
             {bg
               ? "За всяко продадено барче ТЕПЕ bite заделяме фиксирани 0.15 € във фонд ТЕПЕ bite Impact. Това е обвързващо обещание — не зависи от промоции или отделни кампании."
@@ -90,19 +118,33 @@ export default function InitiativeTransparencyPage() {
           </p>
           <LegalNote>
             {bg
-              ? "Търговската дейност на ТЕПЕ bite и ТЕПЕ bite Impact се осъществяват в рамките на едно юридическо лице — БАИР ЕООД. Управлението на две отделни организации носи правна и административна сложност, несъразмерна с настоящия ни мащаб. В близко бъдеще планираме да регистрираме НПО."
-              : "The commercial activity of ТЕПЕ bite and ТЕПЕ bite Impact operate under one legal entity — БАИР ЕООД. Running two separate organisations carries legal and administrative complexity disproportionate to our current scale. We plan to register an NGO (НПО) in the near future."}
+              ? "Търговската дейност на ТЕПЕ bite и ТЕПЕ bite Impact се осъществяват в рамките на едно юридическо лице — ФИВОРА ООД. Управлението на две отделни организации носи правна и административна сложност, несъразмерна с настоящия ни мащаб. В близко бъдеще планираме да регистрираме НПО."
+              : "The commercial activity of ТЕПЕ bite and ТЕПЕ bite Impact operate under one legal entity — ФИВОРА ООД. Running two separate organisations carries legal and administrative complexity disproportionate to our current scale. We plan to register an NGO (НПО) in the near future."}
           </LegalNote>
         </LegalSectionCard>
 
         {/* 4. Transparency promise */}
-        <LegalSectionCard id="transparency-promise" title={bg ? "4. Нашето обещание за прозрачност" : "4. Our Transparency Promise"}>
+        <LegalSectionCard
+          id="transparency-promise"
+          title={
+            bg
+              ? "4. Нашето обещание за прозрачност"
+              : "4. Our Transparency Promise"
+          }
+        >
           <p style={bodyText}>
             {bg
               ? "Ще споделяме ясно какви инициативи реализираме или подпомагаме, какъв е техният обхват и как клиентите ни са допринесли за тях чрез подкрепата си към бранда."
               : "We will clearly share which initiatives we implement or support, their scope, and how our customers have contributed through their support for the brand."}
           </p>
-          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", margin: "20px 0" }}>
+          <div
+            style={{
+              display: "grid",
+              gap: 12,
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+              margin: "20px 0",
+            }}
+          >
             {[
               {
                 icon: "✅",
@@ -135,11 +177,28 @@ export default function InitiativeTransparencyPage() {
                   padding: "16px",
                 }}
               >
-                <div style={{ fontSize: "1.4rem", marginBottom: 8 }}>{c.icon}</div>
-                <div style={{ fontFamily: "var(--font-head)", fontWeight: 700, color: "var(--plum)", marginBottom: 6, fontSize: "0.95rem" }}>
+                <div style={{ fontSize: "1.4rem", marginBottom: 8 }}>
+                  {c.icon}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-head)",
+                    fontWeight: 700,
+                    color: "var(--plum)",
+                    marginBottom: 6,
+                    fontSize: "0.95rem",
+                  }}
+                >
                   {bg ? c.titleBg : c.titleEn}
                 </div>
-                <p style={{ margin: 0, fontSize: "0.84rem", color: "var(--text-soft)", lineHeight: 1.6 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "0.84rem",
+                    color: "var(--text-soft)",
+                    lineHeight: 1.6,
+                  }}
+                >
                   {bg ? c.descBg : c.descEn}
                 </p>
               </div>
@@ -148,7 +207,10 @@ export default function InitiativeTransparencyPage() {
         </LegalSectionCard>
 
         {/* 5. Honest limits */}
-        <LegalSectionCard id="no-promises" title={bg ? "5. Честни граници" : "5. Honest Limits"}>
+        <LegalSectionCard
+          id="no-promises"
+          title={bg ? "5. Честни граници" : "5. Honest Limits"}
+        >
           <ul style={{ ...bodyText, paddingLeft: 22 }}>
             <li style={{ marginBottom: 8 }}>
               {bg

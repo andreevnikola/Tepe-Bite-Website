@@ -22,6 +22,8 @@ export type TimelineStep = {
   logo?: { src: string; alt: string; maxH: number };
   /** Named render slot for live/DB-driven content (e.g. "first-initiative"). */
   slot?: string;
+  /** Renders the step in a distinct highlighted panel (used for the "now" step). */
+  highlight?: boolean;
 };
 
 export type TimelineGroup = {
@@ -82,9 +84,9 @@ export const TEAM: TeamMember[] = [
     titleBg: "Продукт и стратегия", // TODO: финална роля
     titleEn: "Product & strategy", // TODO: final role
     motivationBg:
-      "Започнах ТЕПЕ bite, защото исках да докажа, че един местен бранд може да прави добро, което се вижда на улицата, а не само на хартия. Обичам да свързвам хора, идеи и партньори около нещо конкретно за Пловдив. За мен това не е ученически проект — това е първата ни истинска компания и се отнасям към нея точно така.", // TODO: заменете с реалния текст
+      "Започнах ТЕПЕ bite, за да докажа, че местен бранд може да прави добро, което се вижда на улицата, а не само на хартия. За мен това не е ученически проект, а първата ни истинска компания — и се отнасям към нея точно така.", // TODO: заменете с реалния текст
     motivationEn:
-      "I started ТЕПЕ bite to prove that a local brand can do good you actually see on the street, not just on paper. I love bringing people, ideas and partners together around something concrete for Plovdiv. To me this isn't a school project — it's our first real company, and I treat it that way.", // TODO: replace with the real text
+      "I started ТЕПЕ bite to prove a local brand can do good you actually see on the street, not just on paper. To me this isn't a school project — it's our first real company, and I treat it that way.", // TODO: replace with the real text
   },
   {
     name: "Стоян Тошев",
@@ -93,9 +95,9 @@ export const TEAM: TeamMember[] = [
     titleBg: "Продажби и партньорства", // TODO: финална роля
     titleEn: "Sales & partnerships", // TODO: final role
     motivationBg:
-      "Влязох в екипа, защото исках да разбера как един продукт стига от идеята до рафта. Най-много ме мотивира моментът, в който човек купи барче не заради нас, а защото сам вижда смисъла зад него. Работя с обектите и партньорите ни и се грижа всяка продажба да означава още малко реална промяна за града.", // TODO: заменете с реалния текст
+      "Влязох в екипа, за да разбера как продукт стига от идея до рафта. Мотивира ме моментът, в който човек купи барче, защото сам вижда смисъла зад него. Грижа се всяка продажба да означава още малко реална промяна за града.", // TODO: заменете с реалния текст
     motivationEn:
-      "I joined because I wanted to understand how a product travels from an idea to the shelf. What drives me most is the moment someone buys a bar not because of us, but because they see the point behind it themselves. I work with our locations and partners and make sure every sale means a little more real change for the city.", // TODO: replace with the real text
+      "I joined to understand how a product travels from an idea to the shelf. What drives me is the moment someone buys a bar because they see the point behind it themselves. I make sure every sale means a little more real change for the city.", // TODO: replace with the real text
   },
   {
     name: "Мария Иванова",
@@ -104,9 +106,9 @@ export const TEAM: TeamMember[] = [
     titleBg: "Маркетинг и съдържание", // TODO: финална роля
     titleEn: "Marketing & content", // TODO: final role
     motivationBg:
-      "За мен ТЕПЕ bite е начин да разказвам истинска история — за Пловдив, за тепетата и за хора на моята възраст, които не чакат разрешение да започнат нещо свое. Грижа се брандът да звучи топло и човешки, а не като поредната реклама. Вярвам, че когато историята е искрена, хората я усещат и стават част от нея.", // TODO: заменете с реалния текст
+      "За мен ТЕПЕ bite е начин да разказвам истинска история — за Пловдив, за тепетата и за хора на моята възраст, които не чакат разрешение да започнат нещо свое. Грижа се брандът да звучи топло и човешки, а не като поредната реклама.", // TODO: заменете с реалния текст
     motivationEn:
-      "For me ТЕПЕ bite is a way to tell a real story — about Plovdiv, the hills, and people my age who don't wait for permission to start something of their own. I make sure the brand sounds warm and human, not like another ad. I believe that when the story is honest, people feel it and become part of it.", // TODO: replace with the real text
+      "For me ТЕПЕ bite is a way to tell a real story — about Plovdiv, the hills, and people my age who don't wait for permission to start something. I keep the brand sounding warm and human, not like another ad.", // TODO: replace with the real text
   },
   {
     name: "Габриела Иванова",
@@ -115,9 +117,9 @@ export const TEAM: TeamMember[] = [
     titleBg: "Дизайн и опаковка", // TODO: финална роля
     titleEn: "Design & packaging", // TODO: final role
     motivationBg:
-      "Обичам детайлите, които хората усещат, без да ги забелязват — формата на опаковката, цветовете, начина, по който барчето стои в ръката. Присъединих се, защото исках да видя как визуалната идея се превръща в нещо, което можеш да държиш. Всяка опаковка е малко обещание и държа то да изглежда толкова грижовно, колкото е и намерението зад него.", // TODO: заменете с реалния текст
+      "Обичам детайлите, които хората усещат, без да ги забелязват — формата на опаковката, цветовете, начина, по който барчето стои в ръката. Всяка опаковка е малко обещание и държа то да изглежда толкова грижовно, колкото е и намерението зад него.", // TODO: заменете с реалния текст
     motivationEn:
-      "I love the details people feel without noticing — the shape of the pack, the colours, the way the bar sits in your hand. I joined because I wanted to see a visual idea turn into something you can actually hold. Every wrapper is a small promise, and I want it to look as caring as the intention behind it.", // TODO: replace with the real text
+      "I love the details people feel without noticing — the shape of the pack, the colours, the way the bar sits in your hand. Every wrapper is a small promise, and I want it to look as caring as the intention behind it.", // TODO: replace with the real text
   },
   {
     name: "Николай Иванов",
@@ -126,9 +128,9 @@ export const TEAM: TeamMember[] = [
     titleBg: "Операции и логистика", // TODO: финална роля
     titleEn: "Operations & logistics", // TODO: final role
     motivationBg:
-      "Мен ме увлича частта, която обикновено остава невидима — как барчетата стигат навреме, как всичко се връзва зад кулисите. Влязох в екипа, защото исках да поема отговорност за нещо реално, а не измислено. Харесва ми, че грешките ни струват истински, защото така и уроците са истински. Гордея се, че градим това толкова млади.", // TODO: заменете с реалния текст
+      "Увлича ме частта, която обикновено остава невидима — как барчетата стигат навреме и как всичко се връзва зад кулисите. Влязох в екипа, за да поема отговорност за нещо реално. Харесва ми, че грешките ни струват истински — така и уроците са истински.", // TODO: заменете с реалния текст
     motivationEn:
-      "I'm drawn to the part that usually stays invisible — how the bars arrive on time, how everything ties together behind the scenes. I joined because I wanted to own something real, not hypothetical. I like that our mistakes cost real things, because that makes the lessons real too. I'm proud we're building this so young.", // TODO: replace with the real text
+      "I'm drawn to the part that usually stays invisible — how the bars arrive on time and how everything ties together behind the scenes. I joined to own something real. I like that our mistakes cost real things — it makes the lessons real too.", // TODO: replace with the real text
   },
 ];
 
@@ -138,12 +140,12 @@ export const TIMELINE: TimelineGroup[] = [
     id: "teenovator",
     phaseBg: "Първа глава",
     phaseEn: "Chapter one",
-    titleBg: "ТЕПЕ bite в Teenovator",
-    titleEn: "ТЕПЕ bite inside Teenovator",
+    titleBg: "В Teenovator",
+    titleEn: "At Teenovator",
     introBg:
-      "Teenovator е национална предприемаческа програма, в която ученици от цялата страна се обединяват в екипи и работят рамо до рамо с местни ментори — хора с реален бизнес опит — за да изградят истинска компания. Идеята за ТЕПЕ bite се роди тук и тук направихме първите си истински стъпки. Благодарни сме на целия екип на Teenovator за подкрепата и рамката, която ни даде смелост да започнем.",
+      "Teenovator е национална предприемаческа програма: ученици от цялата страна се събират в екипи и работят с местни ментори — хора с реален бизнес опит — за да изградят истинска компания. Идеята за ТЕПЕ bite се роди тук и тук направихме първите си стъпки. Благодарим на екипа на Teenovator за подкрепата.",
     introEn:
-      "Teenovator is a national entrepreneurship programme where students from across the country form teams and work side by side with local mentors — people with real business experience — to build an actual company. The idea for ТЕПЕ bite was born here, and here we took our first real steps. We're grateful to the whole Teenovator team for the support and the framework that gave us the courage to begin.",
+      "Teenovator is a national entrepreneurship programme: students from across the country form teams and work with local mentors — people with real business experience — to build an actual company. The idea for ТЕПЕ bite was born here, and here we took our first steps. Thank you to the Teenovator team for the support.",
     steps: [
       {
         titleBg: "Кауза за Пловдив, търсеща форма",
@@ -168,7 +170,7 @@ export const TIMELINE: TimelineGroup[] = [
           "За производството Маргарита се сети за свой приятел — собственика на BioStyle LTD, сертифициран производител на висококачествени био храни. Оттам започна партньорството, което и до днес стои в основата на продукта ни.",
         bodyEn:
           "For manufacturing, Margarita thought of a friend of hers — the owner of BioStyle LTD, a certified maker of high-quality organic foods. That's where the partnership began, and it still sits at the core of our product today.",
-        logo: { src: "/partners/BioStyleLogo.png", alt: "BioStyle LTD", maxH: 34 },
+        logo: { src: "/partners/BioStyleLogo.png", alt: "BioStyle", maxH: 34 },
       },
       {
         titleBg: "Опаковка и първо производство",
@@ -179,12 +181,12 @@ export const TIMELINE: TimelineGroup[] = [
           "We designed the packaging and reached out to BioStyle. We arranged to work on credit — they produce now, and we return the money once we're able. That gesture is the reason we could even start, and we're deeply grateful for it. We still work together to this day.",
       },
       {
-        titleBg: "Юридически дом: Баир ЕООД",
-        titleEn: "A legal home: Bair Ltd",
+        titleBg: "Юридически дом: ФИВОРА ООД",
+        titleEn: "A legal home: FIVORA Ltd",
         bodyBg:
-          "Започнахме дейност под Баир ЕООД — фирмата на нашия ментор Маргарита. Благодарни сме ѝ, че ни отвори вратата към реалната търговия, преди да имаме собствено дружество.",
+          "Започнахме дейност под ФИВОРА ООД — фирмата на нашия ментор Маргарита. Благодарни сме ѝ, че ни отвори вратата към реалната търговия, преди да имаме собствено дружество.",
         bodyEn:
-          "We began operating under Bair Ltd — the company of our mentor Margarita. We're grateful to her for opening the door to real trade before we had a company of our own.",
+          "We began operating under FIVORA Ltd — the company of our mentor Margarita. We're grateful to her for opening the door to real trade before we had a company of our own.",
       },
       {
         titleBg: "Първи обекти, първо събитие",
@@ -208,7 +210,7 @@ export const TIMELINE: TimelineGroup[] = [
         titleBg: "Финалът и Fantastico",
         titleEn: "The finale and Fantastico",
         bodyBg:
-          "На финала направихме силен pitch. Питчът, идеята и продуктът привлякоха вниманието на висши представители на Fantastico, сред които Владимир Николов. Те заявиха намерението си да ни помогнат — и оттам започна следващата ни глава.",
+          "На финала направихме силен питч. Питчът, идеята и продуктът привлякоха вниманието на хора от ръководството на Fantastico, сред които Владимир Николов. Те заявиха, че искат да ни помогнат — и оттам започна следващата ни глава.",
         bodyEn:
           "At the finale we delivered a strong pitch. The pitch, the idea and the product caught the eye of senior representatives from Fantastico, among them Vladimir Nikolov. They stated their intention to help us — and that's where our next chapter began.",
       },
@@ -218,26 +220,26 @@ export const TIMELINE: TimelineGroup[] = [
     id: "beyond",
     phaseBg: "Втора глава",
     phaseEn: "Chapter two",
-    titleBg: "Пътят след програмата",
-    titleEn: "The road beyond the programme",
+    titleBg: "След програмата",
+    titleEn: "After Teenovator",
     introBg:
-      "Teenovator ни постави на пътя, но истинската компания започва след програмата. Ето какво се случи, откакто сме сами на пътя — и накъде вървим.",
+      "Програмата ни постави на пътя, но истинската компания започва след нея. Ето какво се случи, откакто сме сами — и накъде вървим.",
     introEn:
-      "Teenovator set us on the path, but the real company begins after the programme. Here's what has happened since we've been on our own — and where we're headed next.",
+      "The programme set us on the path, but the real company starts after it. Here's what has happened since we've been on our own — and where we're headed.",
     steps: [
       {
         titleBg: "Срещата с Fantastico",
         titleEn: "The meeting with Fantastico",
         bodyBg:
-          "Уредихме среща с висши представители на Fantastico. Благодарни сме им за отвореността и за времето — рядко голяма компания сяда срещу ученически екип като с равни.",
+          "Уредихме среща с представители на ръководството на Fantastico. Благодарни сме им за отвореността и за времето, което ни отделиха.",
         bodyEn:
-          "We arranged a meeting with senior representatives of Fantastico. We're grateful for their openness and their time — it's rare for a large company to sit across from a student team as equals.",
+          "We arranged a meeting with senior representatives of Fantastico. We're grateful for their openness and for the time they gave us.",
       },
       {
         titleBg: "Пълна подкрепа",
         titleEn: "Full backing",
         bodyBg:
-          "Представихме плановете, нуждите и постигнатото дотогава. В отговор ни предложиха пълна подкрепа: маркетинг, дизайн материали, съдействие за продажби в обектите им в Пловдив и дарение от 4000 €, с което да произведем първата си пълномащабна партида.",
+          "Представихме плановете, нуждите и постигнатото дотогава. В отговор ни предложиха пълна подкрепа: маркетинг, рекламни материали, съдействие за продажби в обектите им в Пловдив и дарение от 4000 €, с което да произведем първата си голяма партида.",
         bodyEn:
           "We presented our plans, our needs and what we'd achieved so far. In return they offered full support: marketing, design materials, help selling across their Plovdiv locations, and a €4,000 donation so we could produce our first full-scale batch.",
       },
@@ -245,9 +247,9 @@ export const TIMELINE: TimelineGroup[] = [
         titleBg: "Търговската марка е наша",
         titleEn: "The trademark is ours",
         bodyBg:
-          "Регистрацията на търговската марка приключи — вече притежаваме марката ТЕПЕ bite. Едно тихо, но важно основание под всичко, което градим.",
+          "Регистрацията на търговската марка приключи — марката ТЕПЕ bite вече е наша.",
         bodyEn:
-          "The trademark registration is complete — we now own the ТЕПЕ bite mark. A quiet but important foundation under everything we're building.",
+          "The trademark registration is complete — the ТЕПЕ bite mark is now ours.",
       },
       {
         slot: "first-initiative",
@@ -259,12 +261,13 @@ export const TIMELINE: TimelineGroup[] = [
           "We finalised our first social initiative through the ТЕПЕ bite Impact fund — from idea to a finished result on the ground.",
       },
       {
+        highlight: true,
         metaBg: "Сега",
         metaEn: "Now",
         titleBg: "Историята, която още пишем",
         titleEn: "The story we're still writing",
         bodyBg:
-          "В момента подготвяме визуалните материали за опаковките, дисплей кутията и другите POS материали, и финализираме регистрацията на собствената си фирма. Очакваме производството да е готово до 1 август, а към средата на август да влезем във Fantastico. Планираме големи неща напред — още инициативи за Пловдив и стартирането на подобни брандове. Малък спойлер: SERDIKA bite.",
+          "В момента подготвяме визуалните материали за опаковките, кутията за щанда и другите рекламни материали за обектите, и финализираме регистрацията на собствената си фирма. Очакваме производството да е готово до 1 август, а към средата на август да влезем във Fantastico. Планираме големи неща напред — още инициативи за Пловдив и стартиране на подобни брандове. Малък спойлер: SERDIKA bite.",
         bodyEn:
           "Right now we're preparing the visual materials for the wrappers, the display box and the other POS materials, and finalising the registration of our own company. We expect production to be ready by 1 August, and to enter Fantastico by mid-August. We're planning big things ahead — more initiatives for Plovdiv and the launch of similar brands. A small spoiler: SERDIKA bite.",
       },

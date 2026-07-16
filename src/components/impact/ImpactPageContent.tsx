@@ -2451,8 +2451,8 @@ function WhereItGoesSection({ lang }: { lang: Lang }) {
               }}
             >
               {bg
-                ? "Всеки цент вложен в ТЕПЕ bite Impact се уползотворява за реализацията на конкретни инициативи. Съвместно с партньори и нас (екипа зад бранда), реализираме видими инициативи съфинансирани от събраните средства."
-                : "Every cent put into ТЕПЕ bite Impact is used to deliver concrete initiatives. Together with partners and us (the team behind the brand), we deliver visible initiatives co-funded by the funds raised."}
+                ? "Всеки цент вложен в ТЕПЕ bite Impact се уползотворява за реализацията на конкретни инициативи. Ние (екипа зад бранда) съвместно с партньори реализираме видими инициативи съфинансирани от събраните средства."
+                : "Every cent put into ТЕПЕ bite Impact is used to deliver concrete initiatives. Us (the team behind the brand), we deliver visible initiatives co-funded by the funds raised."}
             </p>
             <Link href="/initiatives" className="btn btn-caramel">
               {bg ? "Разгледай всички инициативи" : "Explore all initiatives"}{" "}
