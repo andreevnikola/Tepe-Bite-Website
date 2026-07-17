@@ -1363,7 +1363,7 @@ function Finances({
           {pt.total > 0 && (
             <div>
               <h3 style={financeSubHeading}>
-                {bg ? "Осигорено финансиранe" : "Aquired funding"}
+                {bg ? "Осигурено финансиране" : "Acquired funding"}
               </h3>
               <PhaseBreakdown
                 totals={pt}
@@ -1415,7 +1415,7 @@ function Finances({
                   value={formatMoneyEUR(availableLeft)}
                   hint={
                     bg
-                      ? "налични (фаза 3) − усчетоводени разходи"
+                      ? "налични (фаза 3) − осчетоводени разходи"
                       : "available (phase 3) − accounted expenses"
                   }
                   accent={INFLOW_GREEN}

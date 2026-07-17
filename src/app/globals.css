@@ -59,7 +59,11 @@
     font-size: 16px;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    /* Must match `html` above: `overflow-x: hidden` here forces `overflow-y`
+       to compute as `auto`, turning body into a (non-scrolling) scroll
+       container that defeats `position: sticky` for all descendants. `clip`
+       contains horizontal overflow the same way without that side effect. */
+    overflow-x: clip;
   }
 
   ::-webkit-scrollbar {

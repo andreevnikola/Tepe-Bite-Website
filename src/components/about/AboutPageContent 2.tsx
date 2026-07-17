@@ -123,33 +123,6 @@ function Hero({ lang }: { lang: "bg" | "en" }) {
   );
 }
 
-/* Faint per-person watermark icons behind each team row (in TEAM order):
-   briefcase, palette, heart, retro phone, scales of law. Filled silhouettes so
-   they read as a soft watermark rather than a rank number. */
-const TEAM_ICONS = [
-  // briefcase
-  <svg key="briefcase" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M9 3.5A2.5 2.5 0 0 0 6.5 6v1H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2.5V6A2.5 2.5 0 0 0 15 3.5H9zM8.5 6a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1h-7V6z" />
-  </svg>,
-  // palette
-  <svg key="palette" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12 2.5C6.2 2.5 1.5 6.9 1.5 12.3 1.5 17.2 5.6 21 11 21c1.7 0 2.7-1.1 2.7-2.4 0-.6-.2-1-.5-1.4-.3-.4-.5-.7-.5-1.2 0-.8.7-1.4 1.6-1.4h1.9c3.4 0 6.3-2.7 6.3-6.1 0-3.4-4-5.9-8.5-5.9zM6.5 13a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2zm3.3-4.2a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2zm5 0a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2z" />
-  </svg>,
-  // heart
-  <svg key="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12 20.7l-1.4-1.3C5.4 14.7 2.5 12 2.5 8.6 2.5 6 4.5 4 7 4c1.7 0 3.3.9 4.2 2.3l.8 1.2.8-1.2C13.7 4.9 15.3 4 17 4c2.5 0 4.5 2 4.5 4.6 0 3.4-2.9 6.1-8.1 10.8L12 20.7z" />
-  </svg>,
-  // retro desk phone with handset cradle
-  <svg key="phone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12 4c-4.4 0-8 2.7-8 6 0 .8.3 1.6.9 2.2.4.4 1 .6 1.6.5l2-.3c.7-.1 1.2-.7 1.2-1.4v-.9c0-.4.3-.7.7-.8 1-.2 2.2-.2 3.2 0 .4.1.7.4.7.8v.9c0 .7.5 1.3 1.2 1.4l2 .3c.6.1 1.2-.1 1.6-.5.6-.6.9-1.4.9-2.2 0-3.3-3.6-6-8-6z" />
-    <path d="M6 16.5A1.5 1.5 0 0 1 7.5 15h9a1.5 1.5 0 0 1 1.5 1.5V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2.5z" />
-  </svg>,
-  // gavel (law)
-  <svg key="law" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M13.4 2.9l3.7 3.7-2.3 2.3-3.7-3.7 2.3-2.3zM10.4 5.9l3.7 3.7-8.2 8.2-3.7-3.7 8.2-8.2zM16.1 8.6l3.7 3.7-2.3 2.3-3.7-3.7 2.3-2.3zM3 19h10v2H3z" />
-  </svg>,
-];
-
 /* ── Team ──────────────────────────────────────────────────────────────────── */
 function TeamSection({ lang }: { lang: "bg" | "en" }) {
   const bg = lang === "bg";
@@ -199,8 +172,8 @@ function TeamSection({ lang }: { lang: "bg" | "en" }) {
                 key={m.email}
                 className={`team-row ${right ? "team-row--right" : ""}`}
               >
-                <span className="team-bg-ico" aria-hidden="true">
-                  {TEAM_ICONS[i % TEAM_ICONS.length]}
+                <span className="team-bg-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="team-photo">
                   <Image
@@ -289,36 +262,32 @@ function TeamSection({ lang }: { lang: "bg" | "en" }) {
           z-index: 1;
         }
         .team-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
-        .team-bg-ico {
+        .team-bg-num {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          width: clamp(130px, 17vw, 230px);
-          height: clamp(130px, 17vw, 230px);
+          font-family: var(--font-head);
+          font-weight: 900;
+          font-size: clamp(120px, 18vw, 230px);
+          line-height: 1;
           color: var(--plum);
-          opacity: 0.05;
+          opacity: 0.04;
           z-index: 0;
           pointer-events: none;
           user-select: none;
         }
-        .team-bg-ico svg { width: 100%; height: 100%; display: block; }
-        .team-row:not(.team-row--right) .team-bg-ico { right: 3%; }
-        .team-row--right .team-bg-ico { left: 3%; }
+        .team-row--left .team-bg-num, .team-row:not(.team-row--right) .team-bg-num { right: 4%; }
+        .team-row--right .team-bg-num { left: 4%; }
         .team-email:hover { color: var(--caramel); }
         @media (max-width: 760px) {
-          .team-row {
+          .team-row, .team-row--right {
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
             gap: 18px;
           }
-          .team-row--right {
-            flex-direction: column;
-            align-items: flex-end;
-            text-align: right;
-          }
-          .team-row--right .team-text { align-items: flex-end; }
-          .team-bg-ico { display: none; }
+          .team-row--right .team-text { align-items: flex-start; }
+          .team-bg-num { display: none; }
         }
       `}</style>
     </section>
@@ -343,7 +312,7 @@ function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
         },
         {
           icon: "design",
-          label: "Дизайнерски материали",
+          label: "Дизайн материали",
           desc: "Професионални материали за опаковка и реклама.",
         },
         {
@@ -402,63 +371,46 @@ function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
         }}
       />
       <div
-        className="section-spacing"
-        style={{ position: "relative", zIndex: 1, maxWidth: 1300, margin: "0 auto" }}
+        className="section-spacing section-inner"
+        style={{ position: "relative", zIndex: 1 }}
       >
-        <div className="grat-head">
-          <header style={{ maxWidth: 640 }}>
-            <div
-              className="label-tag"
-              style={{ color: "oklch(93% 0.06 70)", marginBottom: 14 }}
-            >
-              {bg ? "Заедно с Fantastico" : "Together with Fantastico"}
-            </div>
-            <h2 className="heading-lg" style={{ color: "white", margin: 0 }}>
-              {bg ? (
-                <>
-                  Гордо казваме: благодарим,{" "}
-                  <span className="grat-fanta">Fantastico</span>
-                </>
-              ) : (
-                <>
-                  We proudly say: thank you,{" "}
-                  <span className="grat-fanta">Fantastico</span>
-                </>
-              )}
-            </h2>
-            <p style={{ color: "oklch(88% 0.03 310)", marginTop: 16 }}>
-              {bg
-                ? "Една от най-големите търговски вериги в България реши да застане зад ученически екип. Ето какво означава тази подкрепа на практика."
-                : "One of Bulgaria's largest retail chains chose to stand behind a student team. Here's what that support means in practice."}
-            </p>
-          </header>
-
-          <div className="grat-logo-plate">
-            <Image
-              src="/partners/FantasticoGroupLongLogo.png"
-              alt="Fantastico Group"
-              width={261}
-              height={121}
-              style={{ height: 72, width: "auto", display: "block" }}
-            />
-            <span className="grat-plate-note">
-              {bg ? "Те ни се довериха" : "They entrusted us"}
-            </span>
+        <header
+          style={{ maxWidth: 720, marginBottom: "clamp(32px, 4vw, 52px)" }}
+        >
+          <div
+            className="label-tag"
+            style={{ color: "oklch(93% 0.06 70)", marginBottom: 14 }}
+          >
+            {bg ? "Заедно с Fantastico" : "Together with Fantastico"}
           </div>
-        </div>
+          <h2 className="heading-lg" style={{ color: "white", margin: 0 }}>
+            {bg
+              ? "Гордо казваме: благодарим, Fantastico"
+              : "We proudly say: thank you, Fantastico"}
+          </h2>
+          <p style={{ color: "oklch(88% 0.03 310)", marginTop: 16 }}>
+            {bg
+              ? "Една от най-големите търговски вериги в България реши да застане зад ученически екип. Ето какво означава тази подкрепа на практика."
+              : "One of Bulgaria's largest retail chains chose to stand behind a student team. Here's what that support means in practice."}
+          </p>
+        </header>
 
         <div className="grat-grid">
           <div className="grat-photo">
             <Image
               src="/photos/FantastikoWithOurTeam.jpg"
               alt={bg ? "Екипът ни с Fantastico" : "Our team with Fantastico"}
-              fill
+              width={1364}
+              height={908}
               sizes="(max-width: 900px) 100vw, 46vw"
-              style={{ objectFit: "cover" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "var(--r-lg)",
+                display: "block",
+              }}
             />
-            {/* fade the image into the plum section — also backs the tiles if
-                they crowd the image on tighter widths */}
-            <div className="grat-photo-fade" aria-hidden="true" />
           </div>
 
           <div className="grat-support">
@@ -512,70 +464,48 @@ function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
           </div>
         </div>
 
+        <div className="grat-foot">
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 14,
+              background: "white",
+              borderRadius: 100,
+              padding: "12px 24px",
+            }}
+          >
+            <Image
+              src="/partners/FantasticoGroupLongLogo.png"
+              alt="Fantastico Group"
+              width={261}
+              height={121}
+              style={{ height: 34, width: "auto", display: "block" }}
+            />
+          </div>
+          <p
+            style={{
+              margin: 0,
+              color: "oklch(88% 0.03 310)",
+              maxWidth: 460,
+              fontSize: "0.95rem",
+            }}
+          >
+            {bg
+              ? "Гордеем се с това партньорство и сме искрено благодарни за доверието."
+              : "We're proud of this partnership and sincerely grateful for the trust."}
+          </p>
+        </div>
       </div>
 
       <style>{`
-        .grat-head {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: clamp(20px, 3vw, 40px);
-          flex-wrap: wrap;
-          margin-bottom: clamp(32px, 4vw, 52px);
-        }
-        .grat-fanta {
-          border-bottom: 4px solid #E2001A;
-          padding-bottom: 2px;
-          white-space: nowrap;
-        }
-        .grat-logo-plate {
-          background: white;
-          border-radius: var(--r-md);
-          padding: 12px 16px;
-          flex-shrink: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-        }
-        .grat-plate-note {
-          font-family: var(--font-head);
-          font-weight: 600;
-          font-size: 0.86rem;
-          color: var(--text-soft);
-          letter-spacing: 0.01em;
-          text-align: center;
-        }
-        @media (min-width: 760px) {
-          .grat-logo-plate {
-            flex-direction: row;
-            gap: 16px;
-            padding: 12px 18px;
-          }
-          .grat-plate-note {
-            text-align: left;
-            padding-left: 16px;
-            border-left: 1px solid var(--border);
-          }
-        }
         .grat-grid {
           display: grid;
-          grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
-          gap: clamp(24px, 3vw, 44px);
+          grid-template-columns: 44% 1fr;
+          gap: clamp(24px, 3.5vw, 48px);
           align-items: stretch;
         }
-        .grat-photo {
-          position: relative;
-          overflow: hidden;
-          border-radius: var(--r-lg);
-          min-height: 340px;
-        }
-        .grat-photo-fade {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          background: linear-gradient(to bottom, transparent 55%, var(--plum) 100%);
-        }
+        .grat-photo { aspect-ratio: 3 / 2; }
         .grat-support {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -595,9 +525,15 @@ function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
           align-items: center;
           justify-content: center;
         }
+        .grat-foot {
+          display: flex;
+          align-items: center;
+          gap: clamp(18px, 3vw, 32px);
+          flex-wrap: wrap;
+          margin-top: clamp(28px, 3.5vw, 44px);
+        }
         @media (max-width: 900px) {
           .grat-grid { grid-template-columns: 1fr; }
-          .grat-photo { min-height: 260px; }
         }
         @media (max-width: 460px) {
           .grat-support { grid-template-columns: 1fr; }
@@ -1105,10 +1041,9 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
             >
               <div
                 style={{
+                  height: 80,
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  padding: "8px 0",
                 }}
               >
                 <Image
@@ -1116,10 +1051,11 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
                   alt={p.name}
                   width={p.w}
                   height={p.h}
-                  sizes="(max-width: 640px) 90vw, 400px"
                   style={{
-                    width: "100%",
                     height: "auto",
+                    maxHeight: 64,
+                    width: "auto",
+                    maxWidth: "80%",
                     display: "block",
                   }}
                 />

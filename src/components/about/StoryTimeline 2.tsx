@@ -100,8 +100,6 @@ export default function StoryTimeline({
         .tl-group--right .tl-steps-col { order: 1; }
         .tl-aside { position: sticky; top: 88px; align-self: start; }
 
-        .tl-extras { margin-top: clamp(20px, 2.5vw, 30px); }
-
         .tl-steps { list-style: none; position: relative; padding-left: 0; margin: 0; }
         .tl-spine {
           position: absolute;
@@ -135,7 +133,7 @@ export default function StoryTimeline({
         @media (max-width: 960px) {
           .tl-group--left, .tl-group--right { grid-template-columns: 1fr; }
           .tl-group--right .tl-aside, .tl-group--right .tl-steps-col { order: 0; }
-          .tl-aside { position: static; margin-bottom: 20px; }
+          .tl-aside { position: static; margin-bottom: 4px; }
         }
         @media (max-width: 460px) {
           .mentor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -165,14 +163,8 @@ function GroupBlock({
 
   return (
     <div className={`tl-group ${isTeen ? "tl-group--left" : "tl-group--right"}`}>
-      {/* The whole chapter context — phase, title, intro AND the extras
-          (mentors / partner logo) — lives in the sticky aside and pins to the
-          top for the length of the chapter, releasing at the next chapter's
-          boundary. Sticky works now that `body` no longer forces a scroll
-          container (see globals.css). */}
       <aside className="tl-aside">
-        <ChapterHeader group={group} lang={lang} />
-        <ChapterExtras group={group} lang={lang} />
+        <GroupAside group={group} lang={lang} />
       </aside>
 
       <div className="tl-steps-col">
@@ -257,23 +249,22 @@ function GroupBlock({
   );
 }
 
-/* ── Compact sticky chapter header (phase + title + short intro) ────────────── */
-/* Deliberately short — guaranteed to fit the viewport so it pins smoothly at
-   top:88px for the whole chapter and releases at the next chapter's boundary. */
-function ChapterHeader({ group, lang }: { group: TimelineGroup; lang: Lang }) {
+/* ── Chapter aside: phase, title, intro + chapter-specific context ─────────── */
+function GroupAside({ group, lang }: { group: TimelineGroup; lang: Lang }) {
   const bg = lang === "bg";
   const isTeen = group.id === "teenovator";
 
-  const shortIntro = isTeen
-    ? bg
-      ? "Националната предприемаческа програма, в която се роди идеята за ТЕПЕ bite."
-      : "The national entrepreneurship programme where the idea for ТЕПЕ bite was born."
-    : bg
-      ? "Програмата ни постави на пътя — истинската компания започва оттук нататък."
-      : "The programme set us on the path — the real company starts from here on.";
+  // Split the Teenovator intro so the "what Teenovator is" description sits in
+  // its own callout (with the logo to its left), followed by the ТЕПЕ-bite
+  // origin line as a normal paragraph.
+  const intro = pick(lang, group.introBg, group.introEn);
+  const marker = bg ? "Идеята за ТЕПЕ bite" : "The idea for ТЕПЕ bite";
+  const mi = intro.indexOf(marker);
+  const introLead = isTeen && mi > 0 ? intro.slice(0, mi).trim() : "";
+  const introRest = isTeen && mi > 0 ? intro.slice(mi).trim() : intro;
 
   return (
-    <div className="tl-head">
+    <div>
       <div
         style={{
           fontFamily: "var(--font-head)",
@@ -291,47 +282,81 @@ function ChapterHeader({ group, lang }: { group: TimelineGroup; lang: Lang }) {
         {pick(lang, group.titleBg, group.titleEn)}
       </h3>
 
-      <p style={{ margin: "14px 0 0", fontSize: "0.95rem", maxWidth: 340 }}>{shortIntro}</p>
-    </div>
-  );
-}
-
-/* ── Non-sticky chapter context, above the steps (scrolls away) ─────────────── */
-/* The heavy extras that used to bloat the aside past viewport height. Kept in
-   normal flow so they never prevent the header above from pinning. */
-function ChapterExtras({ group, lang }: { group: TimelineGroup; lang: Lang }) {
-  const bg = lang === "bg";
-  const isTeen = group.id === "teenovator";
-
-  // The "what Teenovator is" portion of the intro fills the logo callout.
-  const intro = pick(lang, group.introBg, group.introEn);
-  const marker = bg ? "Идеята за ТЕПЕ bite" : "The idea for ТЕПЕ bite";
-  const mi = intro.indexOf(marker);
-  const introLead = mi > 0 ? intro.slice(0, mi).trim() : intro;
-
-  if (!isTeen) {
-    return (
-      <div className="tl-extras">
+      {isTeen && introLead && (
         <div
           style={{
-            display: "inline-flex",
+            display: "flex",
             alignItems: "center",
             gap: 16,
+            marginTop: 18,
             background: "var(--surface2)",
             border: "1px solid var(--border)",
             borderRadius: "var(--r-md)",
-            padding: "16px 20px",
+            padding: "16px 18px",
           }}
         >
+          <Image
+            src="/partners/Teenovator Logo.jpg"
+            alt="Teenovator"
+            width={64}
+            height={64}
+            style={{ height: 56, width: "auto", borderRadius: 12, display: "block", flexShrink: 0 }}
+          />
+          <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.55 }}>{introLead}</p>
+        </div>
+      )}
+
+      <p style={{ marginTop: 14 }}>{introRest}</p>
+
+      {isTeen && (
+        <div style={{ marginTop: 26 }}>
+          <div className="label-tag" style={{ marginBottom: 14 }}>
+            {bg ? "Нашите ментори" : "Our mentors"}
+          </div>
+          <div className="mentor-grid">
+            {MENTORS.map((m) => (
+              <div key={m.name}>
+                <div className="mentor-photo">
+                  <Image src={m.photo} alt={m.name} fill sizes="180px" style={{ objectFit: "cover" }} />
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-head)",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    color: "var(--plum)",
+                    marginTop: 10,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {m.name}
+                </div>
+                <div style={{ fontSize: "0.82rem", color: "var(--text-soft)", marginTop: 2 }}>
+                  {pick(lang, m.expertiseBg, m.expertiseEn)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p style={{ marginTop: 16, fontSize: "0.92rem" }}>
+            {bg
+              ? "Благодарим на Маргарита и Антон — за юридическото лице, под което започнахме да продаваме, за всеки отворен контакт и за подкрепата във всяка непозната ситуация."
+              : "Thank you to Margarita and Anton — for the legal entity we started selling under, for every contact they opened, and for their support in every unfamiliar situation."}
+          </p>
+        </div>
+      )}
+
+      {!isTeen && (
+        <div style={{ marginTop: 26 }}>
           <Image
             src="/partners/FantasticoGroupLongLogo.png"
             alt="Fantastico Group"
             width={261}
             height={121}
-            style={{ height: 64, width: "auto", display: "block" }}
+            style={{ height: 48, width: "auto", display: "block" }}
           />
           <div
             style={{
+              marginTop: 10,
               fontSize: "0.82rem",
               fontWeight: 600,
               letterSpacing: "0.02em",
@@ -341,67 +366,7 @@ function ChapterExtras({ group, lang }: { group: TimelineGroup; lang: Lang }) {
             {bg ? "Партньорът на тази глава" : "The partner of this chapter"}
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="tl-extras">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          background: "var(--surface2)",
-          border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)",
-          padding: "16px 18px",
-        }}
-      >
-        <Image
-          src="/partners/Teenovator Logo.jpg"
-          alt="Teenovator"
-          width={64}
-          height={64}
-          style={{ height: 56, width: "auto", borderRadius: 12, display: "block", flexShrink: 0 }}
-        />
-        <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.55 }}>{introLead}</p>
-      </div>
-
-      <div style={{ marginTop: 24 }}>
-        <div className="label-tag" style={{ marginBottom: 14 }}>
-          {bg ? "Нашите ментори" : "Our mentors"}
-        </div>
-        <div className="mentor-grid">
-          {MENTORS.map((m) => (
-            <div key={m.name}>
-              <div className="mentor-photo">
-                <Image src={m.photo} alt={m.name} fill sizes="240px" style={{ objectFit: "cover" }} />
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-head)",
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  color: "var(--plum)",
-                  marginTop: 10,
-                  lineHeight: 1.2,
-                }}
-              >
-                {m.name}
-              </div>
-              <div style={{ fontSize: "0.82rem", color: "var(--text-soft)", marginTop: 2 }}>
-                {pick(lang, m.expertiseBg, m.expertiseEn)}
-              </div>
-            </div>
-          ))}
-        </div>
-        <p style={{ marginTop: 16, fontSize: "0.92rem" }}>
-          {bg
-            ? "Благодарим на Маргарита и Антон — за юридическото лице, под което започнахме да продаваме, за всеки отворен контакт и за подкрепата във всяка непозната ситуация."
-            : "Thank you to Margarita and Anton — for the legal entity we started selling under, for every contact they opened, and for their support in every unfamiliar situation."}
-        </p>
-      </div>
+      )}
     </div>
   );
 }

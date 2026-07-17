@@ -90,7 +90,7 @@ export const ARRANGED_TYPE_LABELS: Record<ArrangedType, { bg: string; en: string
 
 /** Shared BG/EN wording for the "accounted expenses" concept. */
 export const EXPENSE_LABELS = {
-  bg: 'усчетоводени разходи',
+  bg: 'осчетоводени разходи',
   en: 'Accounted expenses',
 } as const
 

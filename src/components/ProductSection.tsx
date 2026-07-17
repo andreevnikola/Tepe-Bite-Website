@@ -249,12 +249,68 @@ export default function ProductSection() {
             </div>
           </div>
         </div>
+
+        {/* Locally made — production fact + photo, presented as a full-width band */}
+        <div className="mfg-band">
+          <Image
+            src="/photos/manufacturing.jpg"
+            alt={lang === "bg" ? "Производство на ТЕПЕ bite в Пловдив" : "ТЕПЕ bite production in Plovdiv"}
+            fill
+            style={{ objectFit: "cover", objectPosition: "center 30%" }}
+          />
+          <div className="mfg-overlay">
+            <div className="label-tag" style={{ color: "oklch(85% 0.08 55)", marginBottom: 10 }}>
+              {lang === "bg" ? "Местно производство" : "Locally produced"}
+            </div>
+            <p className="mfg-text">
+              {lang === "bg"
+                ? "Всяко барче е направено с грижа в с. Брестовица, област Пловдив"
+                : "Every bar is made with care in Brestovitsa, Plovdiv Region"}
+            </p>
+          </div>
+        </div>
       </div>
 
       <style>{`
         @media (max-width: 900px) {
           .product-grid {
             grid-template-columns: 1fr !important;
+          }
+        }
+        .mfg-band {
+          position: relative;
+          margin-top: clamp(48px, 7vw, 80px);
+          width: 100%;
+          height: clamp(200px, 28vw, 360px);
+          border-radius: var(--r-lg);
+          overflow: hidden;
+          box-shadow: var(--shadow-lg);
+        }
+        .mfg-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding-left: clamp(24px, 4vw, 56px);
+          background: linear-gradient(to right, oklch(32% 0.09 315 / 0.8) 10%, transparent 100%);
+        }
+        .mfg-text {
+          color: white;
+          font-family: var(--font-head);
+          font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+          font-weight: 600;
+          max-width: 360px;
+          line-height: 1.25;
+          margin: 0;
+        }
+        @media (max-width: 768px) {
+          .mfg-band {
+            border-radius: 0;
+            margin-left: -20px;
+            margin-right: -20px;
+            width: calc(100% + 40px);
+            height: clamp(220px, 55vw, 320px);
           }
         }
       `}</style>

@@ -1,6 +1,7 @@
 "use client";
 
 import { IconArrow, IconExternal, IconStar } from "@/components/icons";
+import ImpactPolicyBand from "@/components/public/ImpactPolicyBand";
 import InitiativeCard from "@/components/public/InitiativeCard";
 import PartnersCarousel from "@/components/public/PartnersCarousel";
 import {
@@ -238,7 +239,7 @@ function FundsPanel({
             color: "var(--text-soft)",
           }}
         >
-          {bg ? "Осигорено финансиране" : "Aquired funding"}
+          {bg ? "Осигурено финансиране" : "Acquired funding"}
         </span>
         <span
           style={{
@@ -296,12 +297,24 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
   if (stats.realisedCount > 0)
     pills.push({
       value: stats.realisedCount,
-      label: bg ? "завършени инициативи" : "completed initiatives",
+      label: bg
+        ? stats.realisedCount === 1
+          ? "завършена инициатива"
+          : "завършени инициативи"
+        : stats.realisedCount === 1
+          ? "completed initiative"
+          : "completed initiatives",
     });
   if (data.byStatus.in_progress.length > 0)
     pills.push({
       value: data.byStatus.in_progress.length,
-      label: bg ? "инициатива в прогрес" : "initiative in motion",
+      label: bg
+        ? data.byStatus.in_progress.length === 1
+          ? "инициатива в прогрес"
+          : "инициативи в прогрес"
+        : data.byStatus.in_progress.length === 1
+          ? "initiative in motion"
+          : "initiatives in motion",
     });
   if (stats.partnerCount > 0)
     pills.push({
@@ -423,7 +436,7 @@ function TopBand({ data, lang }: { data: OverviewData; lang: Lang }) {
                   style={{ maxWidth: 640, margin: "6px 0 0", color: headText }}
                 >
                   {bg
-                    ? "усчетоводени разходи за социални проекти"
+                    ? "осчетоводени разходи за социални проекти"
                     : "in accounted expenses for social projects"}
                 </h1>
                 <p
@@ -1188,6 +1201,10 @@ export default function InitiativesOverview({ data }: { data: OverviewData }) {
       {data.hasAnyInitiative ? (
         <>
           <Spotlight data={data} lang={lang} background={bgSpotlight} />
+          {/* Fixed-plum pointer band → /impact story. Sits OUTSIDE the
+              surface↔bg alternation (a hard dark divider between the light
+              Spotlight and Partners sections), so it is not part of `bgs`. */}
+          <ImpactPolicyBand lang={lang} />
           <PartnersCarousel
             items={data.partners}
             lang={lang}

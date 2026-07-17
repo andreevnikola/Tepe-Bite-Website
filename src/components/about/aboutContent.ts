@@ -170,7 +170,7 @@ export const TIMELINE: TimelineGroup[] = [
           "За производството Маргарита се сети за свой приятел — собственика на BioStyle LTD, сертифициран производител на висококачествени био храни. Оттам започна партньорството, което и до днес стои в основата на продукта ни.",
         bodyEn:
           "For manufacturing, Margarita thought of a friend of hers — the owner of BioStyle LTD, a certified maker of high-quality organic foods. That's where the partnership began, and it still sits at the core of our product today.",
-        logo: { src: "/partners/BioStyleLogo.png", alt: "BioStyle", maxH: 34 },
+        logo: { src: "/partners/BioStyleLogo.png", alt: "BioStyle", maxH: 52 },
       },
       {
         titleBg: "Опаковка и първо производство",

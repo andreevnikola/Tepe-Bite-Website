@@ -1,226 +1,301 @@
 "use client";
-import { IconHeart, IconLeaf, IconMap } from "@/components/icons";
+import { IconArrow } from "@/components/icons";
+import { PledgeHeart } from "@/components/ImpactPledge";
+import InitiativeCard from "@/components/public/InitiativeCard";
+import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
 
-const pillars = {
-  bg: [
-    {
-      icon: <IconLeaf />,
-      title: "Качествен продукт",
-      copy: "Солен карамел, ядки, семена, фибри и растителен протеин — в барче, създадено за балансиран избор през деня.",
-    },
-    {
-      icon: <IconMap />,
-      title: "Пловдивска идея",
-      copy: "ТЕПЕ bite е вдъхновено от Пловдив — град с характер, общност и енергия за промяна.",
-    },
-    {
-      icon: <IconHeart />,
-      title: "Реално въздействие",
-      copy: "Фиксирани 0.15 € от всяко барче влизат във фонд ТЕПЕ bite Impact — организираме, съфинансираме и отчитаме прозрачно всяка инициатива.",
-    },
-  ],
-  en: [
-    {
-      icon: <IconLeaf />,
-      title: "Quality Product",
-      copy: "Salted caramel, nuts, seeds, fibre and plant protein — a bar made for a balanced choice during the day.",
-    },
-    {
-      icon: <IconMap />,
-      title: "A Plovdiv Idea",
-      copy: "ТЕПЕ bite is inspired by Plovdiv — a city with character, community and energy for change.",
-    },
-    {
-      icon: <IconHeart />,
-      title: "Real Impact",
-      copy: "A fixed 0.15 € from every bar goes to the ТЕПЕ bite Impact fund — we organise, co-fund and openly report every initiative.",
-    },
-  ],
-};
+/* ── Engine-step icons (stroke, sky-tinted) — absorbed from the retired
+   InitiativesPromo so the transparency pledge content is preserved. ── */
+const IconTarget = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="5" />
+    <circle cx="12" cy="12" r="1.4" fill="currentColor" />
+  </svg>
+);
+const IconPartners = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+const IconCoins = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="8" cy="8" r="6" />
+    <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
+    <path d="M7 6h1v4" />
+    <path d="M16.71 13.88l.7.71-2.82 2.82" />
+  </svg>
+);
+const IconReport = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 11l3 3L22 4" />
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+  </svg>
+);
 
-export default function WhySection() {
+export default function MissionSection({ cards }: { cards: InitiativeDTO[] }) {
   const lang = useAtomValue(langAtom);
-  const items = pillars[lang];
+  const bg = lang === "bg";
+
+  const engine = bg
+    ? [
+        { icon: <IconTarget />, title: "Избираме каузата", copy: "Свързана с Пловдив, тепетата и младите хора." },
+        { icon: <IconPartners />, title: "Намираме партньори", copy: "Организации, които реализират на терен." },
+        { icon: <IconCoins />, title: "Осигуряваме съфинансиране", copy: "Спонсори и партньори, за да умножим всеки лев." },
+        { icon: <IconReport />, title: "Отчитаме прозрачно", copy: "Какво обещахме, какво направихме, какво вложихме." },
+      ]
+    : [
+        { icon: <IconTarget />, title: "We choose the cause", copy: "Tied to Plovdiv, its hills and young people." },
+        { icon: <IconPartners />, title: "We find partners", copy: "Organisations that get it built on the ground." },
+        { icon: <IconCoins />, title: "We secure co-funding", copy: "Sponsors and partners to multiply every lev." },
+        { icon: <IconReport />, title: "We report openly", copy: "What we promised, did, and put in." },
+      ];
 
   return (
     <section
-      id="za-nas"
+      id="impact"
       className="section-spacing"
-      style={{ background: "var(--surface)" }}
+      style={{
+        background: "var(--plum)",
+        color: "white",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      <div className="section-inner" style={{ textAlign: "center" }}>
-        <div className="section-divider" />
-        <div className="label-tag" style={{ marginBottom: 16 }}>
-          {lang === "bg" ? "Нашата мисия" : "Our Mission"}
-        </div>
-        <h2
-          className="heading-lg"
-          style={{ maxWidth: 640, margin: "0 auto 20px" }}
-        >
-          {lang === "bg"
-            ? "Не просто барче. Малък начин да подкрепиш нещо по-голямо."
-            : "Not just a bar. A small way to support something bigger."}
-        </h2>
-        <p
-          style={{ maxWidth: 580, margin: "0 auto 48px", fontSize: "1.05rem" }}
-        >
-          {lang === "bg" ? (
-            <>
-              <strong>
-                Създадохме ТЕПЕ bite като продукт, който съчетава вкус, качество
-                и кауза.
-              </strong>{" "}
-              Идеята е проста: когато избираш по-добра междинна закуска, можеш
-              едновременно да подкрепиш реални социални инициативи.
-            </>
-          ) : (
-            <>
-              <strong>
-                We created ТЕПЕ bite as a product that combines taste, quality
-                and purpose.
-              </strong>{" "}
-              The idea is simple: when you choose a better snack, you can
-              simultaneously support real social initiatives.
-            </>
-          )}
-        </p>
+      {/* Solid silhouette logo watermark */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          right: -60,
+          bottom: -10,
+          width: "50vw",
+          maxWidth: 350,
+          minWidth: 250,
+          aspectRatio: "1 / 1",
+          backgroundColor: "rgb(82, 51, 95)",
+          pointerEvents: "none",
+          userSelect: "none",
+          zIndex: 0,
+          maskImage: "url(/logo-nav.png)",
+          maskSize: "contain",
+          maskPosition: "center",
+          maskRepeat: "no-repeat",
+        }}
+      />
 
-        {/* Manufacturing photo strip */}
-        <div
-          className="mfg-photo-wrap"
-          style={{
-            width: "100%",
-            height: "clamp(200px, 28vw, 380px)",
-            borderRadius: "var(--r-lg)",
-            overflow: "hidden",
-            marginBottom: 56,
-            position: "relative",
-            boxShadow: "var(--shadow-lg)",
-          }}
-        >
-          <Image
-            src="/photos/manufacturing.jpg"
-            alt={
-              lang === "bg"
-                ? "Производство на ТЕПЕ bite в Пловдив"
-                : "ТЕПЕ bite production in Plovdiv"
-            }
-            fill
-            style={{ objectFit: "cover", objectPosition: "center 30%" }}
-          />
+      {/* Hills motif */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 200"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, width: "100%", pointerEvents: "none", zIndex: 0 }}
+      >
+        <path d="M0 200 L0 160 Q200 80 400 120 Q600 160 800 90 Q1000 30 1200 80 L1200 200 Z" fill="rgb(82, 51, 95)" />
+      </svg>
+
+      {/* Sky glow blob — transparency accent */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: -60,
+          right: "18%",
+          width: 340,
+          height: 340,
+          borderRadius: "50%",
+          background: "oklch(74% 0.1 230 / 0.18)",
+          filter: "blur(70px)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+
+      <div className="section-inner" style={{ position: "relative", zIndex: 1 }}>
+        {/* ── Header — introduce ТЕПЕ bite Impact ── */}
+        <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto" }}>
+          <div className="section-divider" style={{ background: "var(--caramel)" }} />
+          <div className="label-tag" style={{ color: "oklch(82% 0.09 230)", marginBottom: 20 }}>
+            {bg ? "Нашата мисия" : "Our Mission"}
+          </div>
+
+          {/* Impact logo lockup on a light plate so it reads on plum */}
           <div
             style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to right, oklch(32% 0.09 315 / 0.8) 10%, transparent 100%)",
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: "clamp(24px, 4vw, 56px)",
+              display: "inline-flex",
+              background: "white",
+              borderRadius: "var(--r-md)",
+              padding: "16px 26px",
+              marginBottom: 24,
+              boxShadow: "var(--shadow-lg)",
             }}
           >
-            <div className="z-10">
-              <div
-                className="label-tag"
-                style={{ color: "oklch(85% 0.08 55)", marginBottom: 10 }}
-              >
-                {lang === "bg" ? "Местно производство" : "Locally produced"}
-              </div>
-              <p
-                style={{
-                  color: "white",
-                  fontFamily: "var(--font-head)",
-                  fontSize: "clamp(1.1rem, 2.5vw, 1.8rem)",
-                  fontWeight: 600,
-                  maxWidth: 350,
-                  lineHeight: 1.25,
-                  margin: 0,
-                }}
-              >
-                {lang === "bg"
-                  ? "Всяко барче е направено с грижа в с. Брестовица, област Пловдив"
-                  : "Every bar is made with care in Brestovitsa, Plovdiv Region"}
-              </p>
+            <Image
+              src="/brand/TEPEbiteImpact-crop.png"
+              alt="ТЕПЕ bite Impact"
+              width={400}
+              height={160}
+              style={{ height: "clamp(46px, 8vw, 64px)", width: "auto", display: "block" }}
+            />
+          </div>
+
+          <h2 className="heading-lg" style={{ color: "white", margin: "0 auto 18px", maxWidth: 720 }}>
+            {bg ? (
+              <>
+                Всяко барче захранва{" "}
+                <span style={{ color: "var(--caramel)" }}>ТЕПЕ bite Impact</span>
+              </>
+            ) : (
+              <>
+                Every bar powers{" "}
+                <span style={{ color: "var(--caramel)" }}>ТЕПЕ bite Impact</span>
+              </>
+            )}
+          </h2>
+
+          <p style={{ color: "oklch(90% 0.03 310)", fontSize: "1.08rem", margin: "0 auto", maxWidth: 700 }}>
+            {bg
+              ? "ТЕПЕ bite Impact е фондът, през който организираме всяка инициатива за Пловдив — за градските пространства и тепетата, за общността и за младите хора. Но ние не спираме до дарение: избираме каузата, намираме партньори и съфинансиране и реализираме — за да извлечем максимума от всеки лев."
+              : "ТЕПЕ bite Impact is the fund through which we organise every initiative for Plovdiv — for the city's public spaces and hills, for the community and for young people. But we don't stop at a donation: we choose the cause, find partners and co-funding, and get it built — to get the most out of every lev."}
+          </p>
+        </div>
+
+        {/* ── Pledge lockup ── */}
+        <div className="mission-pledge">
+          <PledgeHeart size={72} fill="var(--caramel)" textColor="white" />
+          <div style={{ textAlign: "left" }}>
+            <div
+              style={{
+                fontFamily: "var(--font-head)",
+                fontWeight: 700,
+                fontSize: "clamp(1.5rem, 3vw, 2rem)",
+                color: "white",
+                lineHeight: 1.1,
+              }}
+            >
+              {bg ? "0.15 € от всяко барче." : "0.15 € from every bar."}{" "}
+              <span style={{ color: "var(--caramel)" }}>
+                {bg ? "Фиксирано обещание." : "A fixed promise."}
+              </span>
             </div>
+            <p style={{ color: "oklch(82% 0.03 310)", fontSize: "0.92rem", margin: "8px 0 0", maxWidth: 460 }}>
+              {bg
+                ? "Обединяваме средствата от всички продажби във фонда — открито и отчетено."
+                : "We pool the money from every sale into the fund — openly and accountably."}
+            </p>
           </div>
         </div>
 
-        {/* Pillar cards */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 24,
-          }}
-        >
-          {items.map((p, i) => (
+        {/* ── The engine — 4 steps ── */}
+        <div className="mission-engine">
+          {engine.map((s, i) => (
             <div
               key={i}
-              className={`card pillar-card ${i === items.length - 1 ? "pillar-last" : ""}`}
               style={{
-                padding: "40px 32px",
-                textAlign: "left",
+                background: "oklch(38% 0.07 315 / 0.5)",
+                border: "1px solid oklch(74% 0.1 230 / 0.25)",
+                borderRadius: "var(--r-md)",
+                padding: "22px 20px",
               }}
             >
               <div
                 style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 14,
-                  background: "var(--plum-lt)",
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  background: "oklch(74% 0.1 230 / 0.15)",
+                  color: "oklch(85% 0.09 230)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "var(--plum)",
-                  marginBottom: 22,
+                  marginBottom: 16,
                 }}
               >
-                {p.icon}
+                {s.icon}
               </div>
-              <h3
-                className="heading-md"
-                style={{ marginBottom: 12, fontSize: "1.2rem" }}
-              >
-                {p.title}
-              </h3>
-              <p style={{ fontSize: "0.95rem" }}>{p.copy}</p>
+              <div style={{ fontFamily: "var(--font-head)", fontWeight: 600, fontSize: "1rem", color: "white", marginBottom: 6 }}>
+                {s.title}
+              </div>
+              <p style={{ color: "oklch(82% 0.03 310)", fontSize: "0.85rem", margin: 0, lineHeight: 1.55 }}>{s.copy}</p>
             </div>
           ))}
         </div>
+
+        {/* ── Learn about the policy ── */}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "clamp(28px, 4vw, 40px)" }}>
+          <Link href="/impact" className="btn btn-sky justify-center">
+            {bg ? "Разбери повече за политиката ни" : "Learn more about our policy"}
+            <IconArrow />
+          </Link>
+        </div>
+
+        {/* ── Initiative cards ── */}
+        {cards.length > 0 && (
+          <div style={{ marginTop: "clamp(48px, 7vw, 80px)" }}>
+            <div
+              className="label-tag"
+              style={{ color: "oklch(82% 0.09 230)", textAlign: "center", marginBottom: 24 }}
+            >
+              {bg ? "Инициативи през фонда" : "Initiatives through the fund"}
+            </div>
+            <div className="mission-cards">
+              {cards.map((i) => (
+                <InitiativeCard key={i.id} initiative={i} lang={lang} />
+              ))}
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
+              <Link
+                href="/initiatives"
+                className="btn justify-center"
+                style={{ background: "transparent", color: "white", border: "2px solid oklch(100% 0 0 / 0.3)" }}
+              >
+                {bg ? "Виж всички инициативи" : "See all initiatives"}
+                <IconArrow />
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       <style>{`
-        .pillar-card {
-          flex: 1 1 calc((100% - 48px) / 3);
+        .mission-pledge {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          margin: clamp(40px, 6vw, 60px) auto 0;
+          max-width: 720px;
         }
-
-        @media (max-width: 1000px) {
-          .pillar-card {
-            flex: 1 1 calc((100% - 24px) / 2);
-          }
-
-          .pillar-card.pillar-last {
-            flex-basis: 100%;
-          }
+        .mission-engine {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+          margin: clamp(36px, 5vw, 48px) auto 0;
+          max-width: 980px;
         }
-
-        @media (max-width: 650px) {
-          .pillar-card {
-            flex-basis: 100%;
-          }
+        .mission-cards {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 24px;
+          max-width: 1080px;
+          margin: 0 auto;
         }
-
-        @media (max-width: 768px) {
-          .mfg-photo-wrap {
-            border-radius: 0 !important;
-            margin-left: -20px !important;
-            margin-right: -20px !important;
-            width: calc(100% + 40px) !important;
-            height: clamp(220px, 55vw, 320px) !important;
-          }
+        @media (max-width: 900px) {
+          .mission-engine { grid-template-columns: repeat(2, 1fr) !important; }
+          .mission-cards { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: 720px; }
+        }
+        @media (max-width: 560px) {
+          .mission-pledge { flex-direction: column; text-align: center; gap: 14px; }
+          .mission-pledge > div { text-align: center !important; }
+          .mission-engine { grid-template-columns: 1fr !important; }
+          .mission-cards { grid-template-columns: 1fr !important; max-width: 360px; }
         }
       `}</style>
     </section>

@@ -68,6 +68,15 @@ npm run build
 npm run lint
 ```
 
+IMPRTANT: If there is a corruption related with node_modules or .next cache you must resolve it. Such corruptions might be an error stating out of ETIMEDOUT related with node_modules. To resolve errors of such manner, just run these commands:
+
+```bash
+rm -rf .next
+rm -rf node_modules
+npm cache verify
+npm ci
+```
+
 ## Implementation
 
 Before creating anything, search for an existing component, token, utility, asset, hook, helper, or abstraction.
