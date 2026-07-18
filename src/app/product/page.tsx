@@ -1,5 +1,7 @@
 import Footer from "@/components/Footer";
 import ProductPageContent from "@/components/ProductPageContent";
+import { getAllLocations } from "@/sanity/queries";
+import type { Location } from "@/sanity/types";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -44,7 +46,14 @@ const jsonLd = {
   },
 };
 
-export default function ProductPage() {
+export default async function ProductPage() {
+  let locations: Location[] = [];
+  try {
+    locations = await getAllLocations();
+  } catch {
+    // Sanity not configured or unavailable
+  }
+
   return (
     <>
       <script
@@ -52,7 +61,7 @@ export default function ProductPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main>
-        <ProductPageContent />
+        <ProductPageContent locations={locations} />
       </main>
       <Footer />
     </>

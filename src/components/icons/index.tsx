@@ -14,6 +14,25 @@ export const IconLeaf = () => (
   </svg>
 );
 
+// BIO / organic seal — a small sprout (stem + two leaves) inside a rounded seal.
+export const IconBio = ({ size = 20 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 18v-6.4" />
+    <path d="M12 12C9 12 7.4 10 7.4 7.4 10 7.4 12 9.4 12 12Z" />
+    <path d="M12 13c3 0 4.6-2 4.6-4.6C13.6 8.4 12 10.4 12 13Z" />
+  </svg>
+);
+
 export const IconHeart = () => (
   <svg
     width="20"
@@ -206,6 +225,74 @@ export const IconExternal = ({ size = 14 }: { size?: number }) => (
     <path d="M14 4h6v6" />
     <path d="M20 4 11 13" />
     <path d="M18 13.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10" />
+  </svg>
+);
+
+export const IconNoSugar = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="5.5" y="5.5" width="7" height="7" rx="1.5" />
+    <rect x="11.5" y="11.5" width="7" height="7" rx="1.5" />
+    <line x1="4" y1="20" x2="20" y2="4" />
+  </svg>
+);
+
+export const IconFibre = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 21V8" />
+    <path d="M12 12c-2.2 0-4-1.8-4-4 2.2 0 4 1.8 4 4Z" />
+    <path d="M12 12c2.2 0 4-1.8 4-4-2.2 0-4 1.8-4 4Z" />
+    <path d="M12 8c-2.2 0-4-1.8-4-4 2.2 0 4 1.8 4 4Z" />
+    <path d="M12 8c2.2 0 4-1.8 4-4-2.2 0-4 1.8-4 4Z" />
+  </svg>
+);
+
+export const IconCarbLow = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="4 7 10 13 14 9 20 15" />
+    <polyline points="15 15 20 15 20 10" />
+  </svg>
+);
+
+export const IconSweetener = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 3l1.7 5.1 5.1 1.7-5.1 1.7L12 16.6l-1.7-5.1L5.2 9.8l5.1-1.7z" />
+    <path d="M18.4 14.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" />
   </svg>
 );
 

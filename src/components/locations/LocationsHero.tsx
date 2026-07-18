@@ -40,7 +40,7 @@ export default function LocationsHero() {
           className="label-tag"
           style={{ color: "var(--caramel)", marginBottom: 16 }}
         >
-          {lang === "bg" ? "Партньорски локации" : "Partner Locations"}
+          {lang === "bg" ? "Партниращи обекти" : "Partner Locations"}
         </div>
 
         <h1 className="heading-xl" style={{ maxWidth: 640, marginBottom: 20 }}>

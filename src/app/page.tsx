@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import MissionSection from "@/components/WhySection";
 import NewsStrip from "@/components/NewsStrip";
-import OrderCTA from "@/components/OrderCTA";
+import OrderOnlineStrip from "@/components/OrderOnlineStrip";
 import PartnersImpactSection from "@/components/PartnersImpactSection";
 import ProductSection from "@/components/ProductSection";
 import StoresSection from "@/components/StoresSection";
@@ -50,25 +50,25 @@ const EMPTY_OVERVIEW: OverviewData = {
 };
 
 /**
- * A small, varied set of initiatives for the Mission section cards — one per
- * status where possible, excluding the pinned RE-CONNECT initiative (it gets
- * its own bespoke deep-dive section right below). Derived on the server so the
- * choice is stable within the ISR window.
+ * Ordered set of initiatives for the Mission "portfolio" rail. The flagship
+ * (featured / "start") initiative leads; then completed initiatives most-recent
+ * first; then in-progress, planned and frozen. Deduped and capped at 3. Derived
+ * on the server so the choice is stable within the ISR window.
  */
-function pickMissionCards(
-  data: OverviewData,
-  excludeId: string | null,
-): InitiativeDTO[] {
-  const pool: InitiativeDTO[] = [
+function pickMissionCards(data: OverviewData): InitiativeDTO[] {
+  const doneByRecent = [...data.byStatus.done].sort((a, b) =>
+    (b.completionDateISO || "").localeCompare(a.completionDateISO || ""),
+  );
+  const ordered: InitiativeDTO[] = [
+    ...(data.featured ? [data.featured] : []),
+    ...doneByRecent,
     ...data.byStatus.in_progress,
-    ...data.byStatus.done,
     ...data.byStatus.planned,
     ...data.byStatus.frozen,
   ];
   const seen = new Set<string>();
   const out: InitiativeDTO[] = [];
-  for (const i of pool) {
-    if (excludeId && i.id === excludeId) continue;
+  for (const i of ordered) {
     if (seen.has(i.id)) continue;
     seen.add(i.id);
     out.push(i);
@@ -98,25 +98,34 @@ export default async function Home() {
     youthPartners = [];
   }
 
-  const missionCards = pickMissionCards(
-    overview,
-    reconnect?.initiative.id ?? null,
-  );
+  const missionCards = pickMissionCards(overview);
+
+  // Total distinct initiatives across every status. Drives the portfolio rail's
+  // trailing "see more" card: it only appears when more exist than the rail shows.
+  const totalInitiatives = new Set(
+    [
+      ...overview.byStatus.in_progress,
+      ...overview.byStatus.done,
+      ...overview.byStatus.planned,
+      ...overview.byStatus.frozen,
+    ].map((i) => i.id),
+  ).size;
+  const moreCount = Math.max(0, totalInitiatives - missionCards.length);
 
   return (
     <>
       <main>
         <Hero />
         <ProductSection />
-        <MissionSection cards={missionCards} />
+        <MissionSection cards={missionCards} moreCount={moreCount} />
         <FirstInitiative reconnect={reconnect} />
         <PartnersImpactSection youthPartners={youthPartners} />
         <FantasticoTrust />
+        {latestPosts.length > 0 && <NewsStrip posts={latestPosts} />}
         <AboutTeaser />
         <TrustSection />
-        {latestPosts.length > 0 && <NewsStrip posts={latestPosts} />}
-        <OrderCTA />
         <StoresSection />
+        <OrderOnlineStrip />
         <Community />
       </main>
       <Footer />

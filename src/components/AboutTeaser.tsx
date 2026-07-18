@@ -32,19 +32,19 @@ export default function AboutTeaser() {
 
         <div className="section-inner at-content">
           <div className="label-tag" style={{ color: "oklch(93% 0.06 70)", marginBottom: 16 }}>
-            {bg ? "Екипът" : "The team"}
+            {bg ? "За нас" : "About us"}
           </div>
           <h2 className="heading-lg" style={{ color: "white", maxWidth: 720, margin: 0 }}>
-            {bg ? "Млад екип от Пловдив, който строи истинска компания" : "A young Plovdiv team building a real company"}
+            {bg ? "Марка, създадена от ученици — за ученици като тях" : "A brand built by high-schoolers — for young people like them"}
           </h2>
-          <p style={{ color: "oklch(92% 0.02 300)", fontSize: "clamp(1.02rem, 1.7vw, 1.2rem)", maxWidth: 600, lineHeight: 1.6, margin: "18px 0 0" }}>
+          <p style={{ color: "oklch(92% 0.02 300)", fontSize: "clamp(1.02rem, 1.7vw, 1.2rem)", maxWidth: 560, lineHeight: 1.6, margin: "16px 0 0" }}>
             {bg
-              ? "Ученици, които решиха да не чакат разрешение да започнат нещо свое. Зад всяко барче стоят реални хора, реални отговорности и една обща кауза за Пловдив. Когато подкрепяш ТЕПЕ bite, подкрепяш нас."
-              : "Students who decided not to wait for permission to start something of their own. Behind every bar are real people, real responsibilities and one shared cause for Plovdiv. When you support ТЕПЕ bite, you support us."}
+              ? "Основателите ни са гимназисти — точно младите, на които ТЕПЕ bite иска да даде сцена."
+              : "Our founders are still in high school — the very youth ТЕПЕ bite sets out to give a stage."}
           </p>
           <div style={{ marginTop: 28 }}>
             <Link href="/about" className="btn btn-caramel">
-              {bg ? "Запознай се с екипа" : "Meet the team"}
+              {bg ? "Разбери повече за марката" : "Learn more about the brand"}
               <IconArrow />
             </Link>
           </div>

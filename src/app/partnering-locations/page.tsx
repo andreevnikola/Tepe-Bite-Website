@@ -10,7 +10,7 @@ import type { Location } from "@/sanity/types";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Партньорски локации — ТЕПЕ bite",
+  title: "Партниращи обекти — ТЕПЕ bite",
   description:
     "Намери ТЕПЕ bite в магазини из Пловдив. Разгледай нашите партньори на интерактивна карта.",
 };

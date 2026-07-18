@@ -6,7 +6,10 @@ import {
   IconLeaf,
   IconShop,
 } from "@/components/icons";
+import { PLEDGE_EUR, PledgeHeart } from "@/components/ImpactPledge";
+import StoreSectionContent from "@/components/StoreSectionContent";
 import { SITE_INFO } from "@/lib/config/site-info";
+import type { Location } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -1730,16 +1733,54 @@ function MissionSection({ lang }: { lang: Lang }) {
               ? "Когато избираш ТЕПЕ bite, не избираш само междинна закуска. Подкрепяш младежки инициативи, които развиваме, проследяваме и показваме прозрачно."
               : "When you choose ТЕПЕ bite, you are not just choosing a snack. You support youth initiatives that we develop, track, and share transparently."}
           </p>
-          <Link
-            href="/impact"
-            className="btn btn-caramel"
-            style={{ fontSize: "1rem", padding: "15px 36px" }}
+
+          {/* Fixed-pledge reminder, themed for the dark plum panel */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 12,
+              maxWidth: "100%",
+              padding: "10px 20px 10px 12px",
+              marginBottom: 30,
+              borderRadius: 100,
+              background: "oklch(40% 0.08 315)",
+              border: "1px solid oklch(52% 0.06 315)",
+              textAlign: "left",
+            }}
           >
-            {lang === "bg"
-              ? "Виж приноса ни към града"
-              : "See our impact in the city"}
-            <IconArrow />
-          </Link>
+            <PledgeHeart
+              size={38}
+              fill="var(--caramel)"
+              textColor="var(--plum)"
+            />
+            <p
+              style={{
+                margin: 0,
+                fontSize: "0.9rem",
+                fontWeight: 600,
+                lineHeight: 1.4,
+                color: "white",
+              }}
+            >
+              {lang === "bg"
+                ? `Всяка продажба добавя фиксираните ${PLEDGE_EUR.toFixed(2)} € към фонд ТЕПЕ bite Impact.`
+                : `Every sale adds the fixed ${PLEDGE_EUR.toFixed(2)} € to the ТЕПЕ bite Impact fund.`}
+            </p>
+          </div>
+
+          <div>
+            <Link
+              href="/impact"
+              className="btn btn-caramel"
+              style={{ fontSize: "1rem", padding: "15px 36px" }}
+            >
+              {lang === "bg"
+                ? "Виж приноса ни към града"
+                : "See our impact in the city"}
+              <IconArrow />
+            </Link>
+          </div>
         </div>
       </div>
     </section>
@@ -2113,7 +2154,11 @@ function FAQSection({ lang }: { lang: Lang }) {
 
 /* ─── ROOT EXPORT ────────────────────────────────────────────────────── */
 
-export default function ProductPageContent() {
+export default function ProductPageContent({
+  locations = [],
+}: {
+  locations?: Location[];
+}) {
   const lang = useAtomValue(langAtom);
 
   return (
@@ -2128,6 +2173,36 @@ export default function ProductPageContent() {
       <SustainabilitySection lang={lang} />
       <MissionSection lang={lang} />
       <OrderSection lang={lang} />
+      {locations.length > 0 && (
+        <>
+          {/* Bridge from "order online" to "buy in person" */}
+          <div
+            style={{
+              background: "var(--bg)",
+              textAlign: "center",
+              padding: "clamp(8px, 1.5vw, 20px) clamp(20px, 5vw, 80px) 0",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-head)",
+                fontSize: "clamp(1.15rem, 2.2vw, 1.55rem)",
+                fontWeight: 600,
+                color: "var(--plum)",
+                lineHeight: 1.35,
+                maxWidth: 560,
+                margin: "0 auto",
+                textWrap: "pretty",
+              }}
+            >
+              {lang === "bg"
+                ? "…или вземи барчето от нашите партниращи обекти"
+                : "…or grab a bar at our partnering locations"}
+            </p>
+          </div>
+          <StoreSectionContent locations={locations} />
+        </>
+      )}
       <FAQSection lang={lang} />
     </>
   );

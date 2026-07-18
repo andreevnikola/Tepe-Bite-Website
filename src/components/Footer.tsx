@@ -128,6 +128,7 @@ export default function Footer() {
                   fontWeight: 800,
                   fontSize: "0.82rem",
                   color: "var(--caramel)",
+                  whiteSpace: "nowrap",
                 }}
               >
                 0.15 €

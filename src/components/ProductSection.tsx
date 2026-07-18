@@ -1,8 +1,19 @@
 "use client";
-import { IconCheck, IconLink, IconShop } from "@/components/icons";
-import ImpactPledge from "@/components/ImpactPledge";
+import {
+  IconArrow,
+  IconBio,
+  IconCarbLow,
+  IconExternal,
+  IconFibre,
+  IconNoSugar,
+  IconShop,
+  IconSweetener,
+} from "@/components/icons";
+import { PledgeHeart, PLEDGE_EUR } from "@/components/ImpactPledge";
+import { MANUFACTURER } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
+import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,24 +26,31 @@ const nutr = [
   { bg: "Сол", en: "Salt", val: "0.24 g" },
 ];
 
-const highlights = {
-  bg: [
-    "Подсладено с еритритол",
-    "Съставки от естествен произход",
-    "Произведено в Пловдив",
-    "Произведено от сертифициран производител: BioStyle Ltd.",
-  ],
-  en: [
-    "Sweetened with erythritol",
-    "Natural origin ingredients",
-    "Manufactured in Plovdiv",
-    "Manufactured by certified manufacturer: BioStyle Ltd.",
-  ],
-};
+type Fact = { Icon: ComponentType; bg: string; en: string };
+
+const facts: Fact[] = [
+  {
+    Icon: IconBio,
+    bg: "Съставки от естествен произход",
+    en: "Natural-origin ingredients",
+  },
+  { Icon: IconNoSugar, bg: "Без добавена захар", en: "No added sugar" },
+  { Icon: IconFibre, bg: "Богат на фибри — 8 g", en: "High in fibre — 8 g" },
+  {
+    Icon: IconCarbLow,
+    bg: "Ниски въглехидрати — 5.7 g нетни",
+    en: "Low net carbs — 5.7 g",
+  },
+  {
+    Icon: IconSweetener,
+    bg: "Подсладено с еритритол",
+    en: "Sweetened with erythritol",
+  },
+];
 
 export default function ProductSection() {
   const lang = useAtomValue(langAtom);
-  const items = highlights[lang];
+  const cents = Math.round(PLEDGE_EUR * 100);
 
   return (
     <section
@@ -60,7 +78,7 @@ export default function ProductSection() {
             display: "grid",
             gridTemplateColumns: "minmax(260px, 1fr) minmax(320px, 1.5fr)",
             gap: "clamp(40px, 6vw, 80px)",
-            alignItems: "start",
+            alignItems: "stretch",
           }}
           className="product-grid"
         >
@@ -136,6 +154,32 @@ export default function ProductSection() {
                 </tbody>
               </table>
             </div>
+
+            {/* Ingredients */}
+            <div
+              style={{
+                background: "var(--caramel-lt)",
+                borderRadius: 16,
+                padding: "20px 24px",
+                width: "100%",
+                borderLeft: "3px solid var(--caramel)",
+              }}
+            >
+              <div className="label-tag" style={{ marginBottom: 8 }}>
+                {lang === "bg" ? "Съставки" : "Ingredients"}
+              </div>
+              <p
+                style={{
+                  fontSize: "0.88rem",
+                  color: "var(--text-mid)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {lang === "bg"
+                  ? "Бадеми, фибри от корен на цикория, слънчогледови семки, хрупкави протеинови хапки от слънчоглед, тиквени семки, еритритол, лукума, натурален карамелен аромат, морска сол."
+                  : "Almonds, chicory root fibre, sunflower seeds, crunchy sunflower protein bites, pumpkin seeds, erythritol, lucuma, natural caramel flavour, sea salt."}
+              </p>
+            </div>
           </div>
 
           {/* Right: product info */}
@@ -161,90 +205,90 @@ export default function ProductSection() {
                 : "A soft, balanced and distinctive salted caramel taste, combined with nuts, seeds, fibre and plant protein. Made for the moments when you want something sweet, but more thoughtful."}
             </p>
 
-            {/* Highlights grid */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 12,
-                marginBottom: 36,
-              }}
-            >
-              {items.map((h, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px 16px",
-                    borderRadius: 12,
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  <span style={{ color: "var(--caramel)", flexShrink: 0 }}>
-                    <IconCheck />
+            {/* Product fact cards */}
+            <div className="fact-grid" style={{ marginBottom: 36 }}>
+              {facts.map(({ Icon, bg, en }, i) => (
+                <div key={i} className="fact-card">
+                  <span className="fact-icon">
+                    <Icon />
                   </span>
-                  <span
-                    style={{
-                      fontSize: "0.88rem",
-                      color: "var(--text)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {h}
-                  </span>
+                  <span className="fact-text">{lang === "bg" ? bg : en}</span>
                 </div>
               ))}
-            </div>
 
-            {/* Ingredients */}
-            <div
-              style={{
-                background: "var(--caramel-lt)",
-                borderRadius: 16,
-                padding: "20px 24px",
-                marginBottom: 32,
-                borderLeft: "3px solid var(--caramel)",
-              }}
-            >
-              <div className="label-tag" style={{ marginBottom: 8 }}>
-                {lang === "bg" ? "Съставки" : "Ingredients"}
+              {/* Manufacturer — name links out to the maker */}
+              <div className="fact-card">
+                <span className="fact-icon">
+                  <IconExternal size={18} />
+                </span>
+                <span className="fact-text">
+                  {lang === "bg"
+                    ? "Сертифициран производител: "
+                    : "Certified manufacturer: "}
+                  <a
+                    href={MANUFACTURER.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "var(--caramel)",
+                      fontWeight: 600,
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {MANUFACTURER.name}
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        verticalAlign: "middle",
+                        marginLeft: 3,
+                      }}
+                    >
+                      <IconExternal size={12} />
+                    </span>
+                  </a>
+                </span>
               </div>
-              <p
-                style={{
-                  fontSize: "0.88rem",
-                  color: "var(--text-mid)",
-                  lineHeight: 1.6,
-                }}
-              >
-                {lang === "bg"
-                  ? "Бадеми, фибри от корен на цикория, слънчогледови семки, хрупкави протеинови хапки от слънчоглед, тиквени семки, еритритол, лукума, натурален карамелен аромат, морска сол."
-                  : "Almonds, chicory root fibre, sunflower seeds, crunchy sunflower protein bites, pumpkin seeds, erythritol, lucuma, natural caramel flavour, sea salt."}
-              </p>
             </div>
 
-            <div style={{ marginBottom: 20 }}>
-              <ImpactPledge variant="tag" />
+            {/* Impact pledge — understated, emphasis on the direct support */}
+            <div className="pledge-callout">
+              <PledgeHeart size={40} />
+              <p className="pledge-text">
+                {lang === "bg" ? (
+                  <>
+                    С всяко продадено барче добавяш{" "}
+                    <strong>{cents} цента директна подкрепа</strong> за видими
+                    инициативи в Пловдив.
+                  </>
+                ) : (
+                  <>
+                    Every bar you buy adds{" "}
+                    <strong>{cents} cents of direct support</strong> to visible
+                    initiatives in Plovdiv.
+                  </>
+                )}
+              </p>
             </div>
 
             <div className="w-full flex justify-start gap-3 max-sm:justify-stretch max-sm:flex-col">
               <Link
+                href="/product"
+                className="btn btn-primary justify-center"
+                style={{ fontSize: "1rem", padding: "15px 32px" }}
+              >
+                {lang === "bg"
+                  ? "Разбери повече за продукта"
+                  : "Learn more about the product"}
+                <IconArrow />
+              </Link>
+              <Link
                 href="/order"
-                className="btn btn-caramel justify-center"
+                className="btn btn-secondary justify-center"
                 style={{ fontSize: "1rem", padding: "15px 32px" }}
               >
                 <IconShop />
                 {lang === "bg" ? "Поръчай продукта" : "Order the Product"}
-              </Link>
-              <Link
-                href="/product"
-                className="btn btn-secondary justify-center"
-                style={{ fontSize: "1rem", padding: "15px 32px" }}
-              >
-                <IconLink />
-                {lang === "bg" ? "Разбери повече" : "Learn More"}
               </Link>
             </div>
           </div>
@@ -254,12 +298,19 @@ export default function ProductSection() {
         <div className="mfg-band">
           <Image
             src="/photos/manufacturing.jpg"
-            alt={lang === "bg" ? "Производство на ТЕПЕ bite в Пловдив" : "ТЕПЕ bite production in Plovdiv"}
+            alt={
+              lang === "bg"
+                ? "Производство на ТЕПЕ bite в Пловдив"
+                : "ТЕПЕ bite production in Plovdiv"
+            }
             fill
             style={{ objectFit: "cover", objectPosition: "center 30%" }}
           />
           <div className="mfg-overlay">
-            <div className="label-tag" style={{ color: "oklch(85% 0.08 55)", marginBottom: 10 }}>
+            <div
+              className="label-tag"
+              style={{ color: "oklch(85% 0.08 55)", marginBottom: 10 }}
+            >
               {lang === "bg" ? "Местно производство" : "Locally produced"}
             </div>
             <p className="mfg-text">
@@ -275,6 +326,69 @@ export default function ProductSection() {
         @media (max-width: 900px) {
           .product-grid {
             grid-template-columns: 1fr !important;
+          }
+        }
+        .fact-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+        }
+        .fact-card {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 16px;
+          border-radius: var(--r-md);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow);
+        }
+        .fact-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 12px;
+          flex-shrink: 0;
+          background: var(--caramel-lt);
+          color: var(--caramel);
+        }
+        .fact-text {
+          font-size: 0.88rem;
+          line-height: 1.3;
+          color: var(--text);
+          font-weight: 500;
+        }
+        .pledge-callout {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 28px;
+          padding: 18px 22px;
+          border-radius: var(--r-lg);
+          background: var(--sky-lt);
+          border: 1px solid oklch(85% 0.06 230);
+        }
+        .pledge-text {
+          font-size: 0.98rem;
+          font-weight: 500;
+          line-height: 1.5;
+          color: var(--text-mid);
+          margin: 0;
+        }
+        .pledge-text strong {
+          font-weight: 700;
+          color: var(--sky-dk);
+        }
+        @media (max-width: 560px) {
+          .fact-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 430px) {
+          .fact-grid {
+            grid-template-columns: 1fr;
           }
         }
         .mfg-band {

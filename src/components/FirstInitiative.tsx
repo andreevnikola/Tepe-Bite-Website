@@ -1,7 +1,8 @@
 "use client";
 import { IconArrow, IconCheck } from "@/components/icons";
+import { PLEDGE_EUR, PledgeHeart } from "@/components/ImpactPledge";
 import Gallery from "@/components/public/Gallery";
-import { pick, StatusBadge } from "@/components/public/impactUi";
+import { formatDate, pick, StatusBadge } from "@/components/public/impactUi";
 import type { InitiativeDetail } from "@/lib/public/initiatives";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
@@ -36,22 +37,24 @@ export default function FirstInitiative({
   const bg = lang === "bg";
 
   const initiative = reconnect?.initiative ?? null;
+  if (!initiative) return null;
 
-  // Progress + milestones come straight from the database (single source of
-  // truth — the same steps /initiatives and /about show), so the landing can
-  // never drift from the record.
-  const dbSteps = [...(initiative?.steps ?? [])].sort((a, b) => a.order - b.order);
+  // Milestones come straight from the database (single source of truth — the
+  // same steps /initiatives and /about show), so the landing can never drift
+  // from the record.
+  const dbSteps = [...initiative.steps].sort((a, b) => a.order - b.order);
   const doneCount = dbSteps.filter((s) => s.done).length;
-  const totalCount = dbSteps.length;
-  const pct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
-  const firstPendingIdx = dbSteps.findIndex((s) => !s.done);
+  const currentIdx = initiative.currentStepIndex;
+
   const cover =
-    initiative?.coverImage ??
-    (initiative && initiative.gallery.length > 0 ? initiative.gallery[0] : null);
-  const gallery = initiative?.gallery ?? [];
-  const initiativeHref = initiative?.slug
+    initiative.coverImage ??
+    (initiative.gallery.length > 0 ? initiative.gallery[0] : null);
+  const gallery = initiative.gallery;
+  const initiativeHref = initiative.slug
     ? `/initiatives/${initiative.slug}`
     : "/impact";
+
+  const pledge = PLEDGE_EUR.toFixed(2);
 
   return (
     <section
@@ -131,20 +134,17 @@ export default function FirstInitiative({
           </div>
 
           {/* ── Facts column ── */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             {/* Live status straight from the record */}
-            {initiative && (
-              <div style={{ marginBottom: 22, alignSelf: "flex-start" }}>
-                <StatusBadge status={initiative.status} lang={lang} />
-              </div>
-            )}
+            <div style={{ alignSelf: "flex-start" }}>
+              <StatusBadge status={initiative.status} lang={lang} />
+            </div>
 
             {/* What we're doing */}
             <p
               style={{
                 fontSize: "1rem",
                 lineHeight: 1.75,
-                marginBottom: 20,
                 borderLeft: "3px solid var(--caramel)",
                 paddingLeft: 18,
                 color: "var(--text-mid)",
@@ -156,7 +156,7 @@ export default function FirstInitiative({
             </p>
 
             {/* Location + format pills */}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 26 }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <span
                 style={{
                   display: "inline-flex",
@@ -191,166 +191,191 @@ export default function FirstInitiative({
               </span>
             </div>
 
-            {/* Progress + milestones — DB-driven */}
-            {totalCount > 0 && (
-              <div className="card" style={{ padding: "24px 24px", marginBottom: 24 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-                  <div>
-                    <span style={{ fontWeight: 600, color: "var(--text)", fontSize: "0.95rem" }}>
-                      {bg ? "Напредък" : "Progress"}
-                    </span>
-                    <span style={{ fontSize: "0.78rem", color: "var(--text-soft)", marginLeft: 8 }}>
-                      {doneCount}/{totalCount} {bg ? "стъпки" : "steps"}
-                    </span>
-                  </div>
-                  <span style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "1.5rem", color: "var(--plum)" }}>
-                    {pct}%
-                  </span>
-                </div>
-                <div className="progress-track">
-                  <div className="progress-fill" style={{ width: `${pct}%` }} />
-                </div>
-                <p style={{ marginTop: 8, marginBottom: 20, fontSize: "0.75rem", color: "var(--text-soft)", fontStyle: "italic" }}>
-                  {bg ? "Напредък по подготовката — не финално одобрение." : "Preparation progress — not final approval."}
-                </p>
-
-                {dbSteps.map((step, i) => {
-                  const active = i === firstPendingIdx;
-                  const detail = pick(lang, step.detailBg, step.detailEn);
-                  return (
-                    <div key={step.id} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: 26 }}>
-                        <div
-                          style={{
-                            width: 26,
-                            height: 26,
-                            borderRadius: "50%",
-                            flexShrink: 0,
-                            background: step.done ? "var(--caramel)" : "var(--plum-lt)",
-                            border: active ? "2px solid var(--plum)" : "none",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: step.done ? "white" : "var(--plum-mid)",
-                          }}
-                        >
-                          {step.done ? <IconCheck /> : <IconClock />}
-                        </div>
-                        {i < dbSteps.length - 1 && (
-                          <div
-                            style={{
-                              width: 2,
-                              flex: 1,
-                              minHeight: 16,
-                              background: step.done ? "oklch(76% 0.10 52)" : "var(--border)",
-                              margin: "3px 0",
-                            }}
-                          />
-                        )}
-                      </div>
-                      <div style={{ paddingBottom: i < dbSteps.length - 1 ? 16 : 0, flex: 1 }}>
-                        <div
-                          style={{
-                            fontWeight: active ? 700 : 600,
-                            fontSize: "0.88rem",
-                            color: step.done ? "var(--text)" : active ? "var(--plum)" : "var(--text-soft)",
-                            marginBottom: 2,
-                            paddingTop: 4,
-                          }}
-                        >
-                          {pick(lang, step.labelBg, step.labelEn)}
-                        </div>
-                        {detail && (
-                          <p style={{ fontSize: "0.78rem", color: "var(--text-soft)", margin: 0, lineHeight: 1.5 }}>
-                            {detail}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Why the hills */}
-            <div style={{ background: "var(--plum-lt)", borderRadius: "var(--r-md)", padding: "22px 24px", marginBottom: 24 }}>
-              <div className="label-tag" style={{ marginBottom: 10 }}>
-                {bg ? "Защо тепетата?" : "Why the hills?"}
-              </div>
-              <p style={{ fontSize: "0.92rem", lineHeight: 1.72, margin: 0, color: "var(--plum)" }}>
-                {bg
-                  ? "Тепетата са един от най-силните символи на Пловдив — природни и социални пространства, заслужаващи постоянна грижа. ТЕПЕ bite е създаден с идеята тази грижа да е вградена в самия бизнес модел: всяко барче е стъпка напред."
-                  : "The hills are one of Plovdiv's strongest symbols — natural and social spaces that deserve continuous care. ТЕПЕ bite was built with this idea embedded in the business model itself: every bar is a step forward."}
-              </p>
-            </div>
-
-            {/* Partner badge */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                background: "var(--bg)",
-                border: "1px solid var(--border)",
-                borderRadius: "var(--r-sm)",
-                padding: "14px 18px",
-                marginBottom: 28,
-              }}
-            >
-              <div
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: "50%",
-                  background: "var(--caramel)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  color: "white",
-                  fontSize: "1.1rem",
-                  fontWeight: 700,
-                  fontFamily: "var(--font-head)",
-                }}
-              >
-                O
-              </div>
+            {/* Steps — DB-driven, compact timeline (mirrors FocusDeepDive) */}
+            {dbSteps.length > 0 && (
               <div>
                 <div
                   style={{
-                    fontSize: "0.72rem",
-                    fontWeight: 600,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "var(--text-soft)",
-                    marginBottom: 2,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    marginBottom: 14,
                   }}
                 >
-                  {bg ? "Техническо партньорство" : "Technical partner"}
+                  <span
+                    style={{
+                      fontSize: "0.66rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.07em",
+                      textTransform: "uppercase",
+                      color: "var(--text-soft)",
+                    }}
+                  >
+                    {bg ? "Стъпки" : "Steps"}
+                  </span>
+                  <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--plum)" }}>
+                    {doneCount}/{dbSteps.length}
+                  </span>
                 </div>
-                <div style={{ fontWeight: 700, color: "var(--plum)", fontSize: "0.92rem" }}>Оргахим</div>
+
+                <div>
+                  {dbSteps.map((step, i) => {
+                    const isCurrent = i === currentIdx && !step.done;
+                    const label = pick(lang, step.labelBg, step.labelEn);
+                    return (
+                      <div key={step.id} style={{ display: "flex", gap: 12 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            flexShrink: 0,
+                            width: 26,
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 26,
+                              height: 26,
+                              borderRadius: "50%",
+                              flexShrink: 0,
+                              background: step.done
+                                ? "var(--caramel)"
+                                : isCurrent
+                                  ? "var(--plum)"
+                                  : "var(--surface2)",
+                              border:
+                                step.done || isCurrent
+                                  ? "none"
+                                  : "2px solid var(--plum-mid)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: step.done || isCurrent ? "white" : "var(--plum-mid)",
+                            }}
+                          >
+                            {step.done ? <IconCheck /> : <IconClock />}
+                          </div>
+                          {i < dbSteps.length - 1 && (
+                            <div
+                              style={{
+                                width: 2,
+                                flex: 1,
+                                minHeight: 14,
+                                background: step.done ? "oklch(76% 0.10 52)" : "var(--border)",
+                                margin: "2px 0",
+                              }}
+                            />
+                          )}
+                        </div>
+                        <div
+                          style={{
+                            paddingBottom: i < dbSteps.length - 1 ? 14 : 0,
+                            flex: 1,
+                            minWidth: 0,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              flexWrap: "wrap",
+                              paddingTop: 3,
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontWeight: 600,
+                                fontSize: "0.88rem",
+                                color: step.done || isCurrent ? "var(--text)" : "var(--plum-mid)",
+                              }}
+                            >
+                              {label}
+                            </span>
+                            {step.done && step.completedDateISO && (
+                              <span style={{ fontSize: "0.72rem", color: "var(--text-soft)" }}>
+                                {formatDate(step.completedDateISO, lang)}
+                              </span>
+                            )}
+                            {isCurrent && (
+                              <span
+                                style={{
+                                  background: "var(--plum-lt)",
+                                  color: "var(--plum)",
+                                  borderRadius: 100,
+                                  padding: "1px 8px",
+                                  fontSize: "0.62rem",
+                                  fontWeight: 700,
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.05em",
+                                }}
+                              >
+                                {bg ? "Текуща" : "Current"}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div style={{ marginLeft: "auto", fontSize: "0.72rem", color: "var(--text-soft)", textAlign: "right", lineHeight: 1.5, maxWidth: 140 }}>
-                {bg ? "Материали и инструменти за реализация" : "Materials & tools for execution"}
+            )}
+
+            {/* Impact pledge — the fixed 0.15 € behind this initiative */}
+            <div
+              style={{
+                display: "flex",
+                gap: 16,
+                alignItems: "flex-start",
+                background: "var(--sky-lt)",
+                border: "1px solid oklch(85% 0.06 230)",
+                borderRadius: "var(--r-lg)",
+                padding: "22px 24px",
+              }}
+            >
+              <PledgeHeart size={56} fill="var(--sky-mid)" textColor="white" />
+              <div>
+                <div className="label-tag" style={{ color: "var(--sky-dk)", marginBottom: 8 }}>
+                  {bg ? "Фондът зад инициативата" : "The fund behind it"}
+                </div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-head)",
+                    fontWeight: 700,
+                    fontSize: "1.15rem",
+                    color: "var(--plum)",
+                    lineHeight: 1.3,
+                    margin: "0 0 8px",
+                  }}
+                >
+                  {bg
+                    ? `Фиксирани ${pledge} € от всяко барче`
+                    : `A fixed ${pledge} € from every bar`}
+                </p>
+                <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "var(--sky-dk)", margin: 0 }}>
+                  {bg
+                    ? "влизат във фонд ТЕПЕ bite Impact — и директно захранват тази инициатива и по-широката ни социална мисия за Пловдив."
+                    : "goes to the ТЕПЕ bite Impact fund — directly powering this initiative and our broader social mission for Plovdiv."}
+                </p>
               </div>
             </div>
 
-            {/* Pledge quote + CTAs */}
-            <div style={{ background: "var(--plum)", borderRadius: "var(--r-sm)", padding: "18px 20px", marginBottom: 20 }}>
-              <p style={{ fontSize: "0.85rem", color: "oklch(94% 0.03 315)", fontStyle: "italic", margin: 0, lineHeight: 1.65 }}>
-                {bg
-                  ? '"Фиксирани 0.15 € от всяко барче отиват във фонд ТЕПЕ bite Impact — и директно захранват тази инициатива."'
-                  : '"A fixed 0.15 € from every bar goes to the ТЕПЕ bite Impact fund — directly powering this initiative."'}
-              </p>
-            </div>
-
-            <div className="flex gap-3 max-[560px]:flex-col">
-              <Link href={initiativeHref} className="btn btn-primary justify-center">
-                {bg ? "Виж пълната инициатива" : "See the full initiative"}
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3 max-[560px]:flex-col" style={{ marginTop: 2 }}>
+              <Link
+                href={initiativeHref}
+                className="btn btn-primary justify-center max-[560px]:w-full"
+              >
+                {bg ? "Научи повече за тази инициатива" : "Learn more about this initiative"}
                 <IconArrow />
               </Link>
-              <Link href="/order" className="btn btn-caramel justify-center">
-                {bg ? "Поръчай и подкрепи" : "Order & support"}
+              <Link
+                href="/initiatives"
+                className="btn btn-secondary justify-center max-[560px]:w-full"
+              >
+                {bg ? "Виж другите ни инициативи" : "See our other initiatives"}
                 <IconArrow />
               </Link>
             </div>

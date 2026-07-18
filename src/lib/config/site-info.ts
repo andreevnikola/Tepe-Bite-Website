@@ -26,3 +26,5 @@ export function mailtoHref(
 export const GENERAL_EMAIL = SITE_INFO.contact.generalEmail;
 export const IMPACT_EMAIL = SITE_INFO.contact.impactEmail;
 export const SITE_URL = SITE_INFO.website.url;
+/** Contract manufacturer of the product (name + external website). */
+export const MANUFACTURER = SITE_INFO.brand.manufacturer;

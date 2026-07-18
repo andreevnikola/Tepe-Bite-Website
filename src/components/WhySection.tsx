@@ -1,12 +1,13 @@
 "use client";
-import { IconArrow } from "@/components/icons";
-import { PledgeHeart } from "@/components/ImpactPledge";
+import { IconArrow, IconStar } from "@/components/icons";
+import { PledgeHeart, PLEDGE_EUR } from "@/components/ImpactPledge";
 import InitiativeCard from "@/components/public/InitiativeCard";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
-import { langAtom } from "@/store/lang";
+import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ── Engine-step icons (stroke, sky-tinted) — absorbed from the retired
    InitiativesPromo so the transparency pledge content is preserved. ── */
@@ -40,11 +41,296 @@ const IconReport = () => (
   </svg>
 );
 
-export default function MissionSection({ cards }: { cards: InitiativeDTO[] }) {
+type EngineStep = { icon: React.ReactNode; title: string; copy: string };
+
+/* Renders a single engine-step card. `cls` sets the grid-column span;
+   `align="right"` right-aligns the content on desktop (used for the
+   right-hand cards so they mirror inward toward the centred logo). */
+function StepCard({
+  s,
+  cls,
+  align = "left",
+}: {
+  s: EngineStep;
+  cls: string;
+  align?: "left" | "right";
+}) {
+  return (
+    <div
+      className={`${cls}${align === "right" ? " eng-right" : ""}`}
+      style={{
+        background: "oklch(38% 0.07 315 / 0.5)",
+        border: "1px solid oklch(74% 0.1 230 / 0.25)",
+        borderRadius: "var(--r-md)",
+        padding: "22px 20px",
+      }}
+    >
+      <div
+        className="step-icon-tile"
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: 12,
+          background: "oklch(74% 0.1 230 / 0.15)",
+          color: "oklch(85% 0.09 230)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 16,
+        }}
+      >
+        {s.icon}
+      </div>
+      <div style={{ fontFamily: "var(--font-head)", fontWeight: 600, fontSize: "1rem", color: "white", marginBottom: 6 }}>
+        {s.title}
+      </div>
+      <p style={{ color: "oklch(82% 0.03 310)", fontSize: "0.85rem", margin: 0, lineHeight: 1.55 }}>{s.copy}</p>
+    </div>
+  );
+}
+
+/* ── Portfolio rail — horizontal snap scroller mirroring MoreInitiativesSection ── */
+function PortfolioRail({
+  cards,
+  moreCount,
+  lang,
+}: {
+  cards: InitiativeDTO[];
+  moreCount: number;
+  lang: Lang;
+}) {
+  const bg = lang === "bg";
+  const scroller = useRef<HTMLDivElement>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+
+  const update = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    setAtStart(el.scrollLeft <= 2);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
+  }, []);
+
+  useEffect(() => {
+    update();
+    const el = scroller.current;
+    if (!el) return;
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [update]);
+
+  const scrollByCards = (dir: -1 | 1) =>
+    scroller.current?.scrollBy({ left: dir * 320 * 2, behavior: "smooth" });
+
+  const showArrows = !(atStart && atEnd);
+  const edgeMask = `linear-gradient(to right, ${atStart ? "black" : "transparent"} 0, black 32px, black calc(100% - 32px), ${atEnd ? "black" : "transparent"} 100%)`;
+
+  // Trailing card: prefer a "see more" link when more initiatives exist,
+  // otherwise a "coming soon" filler when only a single card is shown.
+  const showSeeMore = moreCount > 0;
+  const showFiller = !showSeeMore && cards.length === 1;
+
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          gap: 16,
+          marginBottom: 24,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          className="label-tag"
+          style={{ color: "oklch(82% 0.09 230)", margin: 0 }}
+        >
+          {bg ? "Нашето портфолио" : "Our portfolio"}
+        </div>
+        {showArrows && (
+          <div style={{ display: "flex", gap: 10 }}>
+            <RailArrow dir="prev" disabled={atStart} onClick={() => scrollByCards(-1)} label={bg ? "Назад" : "Back"} />
+            <RailArrow dir="next" disabled={atEnd} onClick={() => scrollByCards(1)} label={bg ? "Напред" : "Forward"} />
+          </div>
+        )}
+      </div>
+
+      <div
+        ref={scroller}
+        className="rail-scroller"
+        style={{
+          display: "flex",
+          gap: 20,
+          overflowX: "auto",
+          overflowY: "visible",
+          scrollSnapType: "x mandatory",
+          paddingBottom: 6,
+          scrollbarWidth: "none",
+          maskImage: edgeMask,
+          WebkitMaskImage: edgeMask,
+        }}
+      >
+        {cards.map((it) => (
+          <div key={it.id} style={{ flex: "0 0 300px", width: 300, scrollSnapAlign: "start" }}>
+            <InitiativeCard initiative={it} lang={lang} showPlannedBadge={it.status === "planned"} />
+          </div>
+        ))}
+
+        {showSeeMore && (
+          <Link
+            href="/initiatives"
+            className="rail-seemore"
+            style={{
+              flex: "0 0 300px",
+              width: 300,
+              scrollSnapAlign: "start",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              gap: 14,
+              padding: "32px 24px",
+              borderRadius: "var(--r-lg)",
+              background: "linear-gradient(145deg, var(--plum-lt) 0%, var(--caramel-lt) 100%)",
+              border: "1px dashed oklch(78% 0.06 52)",
+              textDecoration: "none",
+            }}
+          >
+            <span style={{ color: "var(--caramel)", transform: "scale(1.6)" }}>
+              <IconArrow />
+            </span>
+            <div
+              style={{
+                fontFamily: "var(--font-head)",
+                fontSize: "1.35rem",
+                fontWeight: 700,
+                color: "var(--plum)",
+                lineHeight: 1.15,
+              }}
+            >
+              {bg
+                ? `Още ${moreCount} ${moreCount === 1 ? "инициатива" : "инициативи"}`
+                : `+${moreCount} more ${moreCount === 1 ? "initiative" : "initiatives"}`}
+            </div>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                color: "var(--caramel)",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+              }}
+            >
+              {bg ? "Виж всички" : "See all"} →
+            </span>
+          </Link>
+        )}
+
+        {showFiller && (
+          <div
+            className="rail-filler"
+            style={{
+              flex: "1 1 300px",
+              minWidth: 300,
+              scrollSnapAlign: "start",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              gap: 12,
+              padding: "32px 24px",
+              borderRadius: "var(--r-lg)",
+              background: "linear-gradient(145deg, var(--plum-lt) 0%, var(--caramel-lt) 100%)",
+              border: "1px dashed oklch(78% 0.06 52)",
+            }}
+          >
+            <span style={{ color: "var(--caramel)", transform: "scale(1.8)" }}>
+              <IconStar />
+            </span>
+            <h3 style={{ fontFamily: "var(--font-head)", fontSize: "1.05rem", fontWeight: 700, color: "var(--plum)", margin: 0 }}>
+              {bg ? "Още инициативи предстоят" : "More initiatives on the way"}
+            </h3>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-mid)", margin: 0, maxWidth: 240 }}>
+              {bg
+                ? "Тепърва започваме — очаквайте нови проекти за Пловдив скоро."
+                : "We've just started — expect new projects for Plovdiv very soon."}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
+        <Link
+          href="/initiatives"
+          className="btn justify-center"
+          style={{ background: "transparent", color: "white", border: "2px solid oklch(100% 0 0 / 0.3)" }}
+        >
+          {bg ? "Виж всички инициативи" : "See all initiatives"}
+          <IconArrow />
+        </Link>
+      </div>
+    </>
+  );
+}
+
+function RailArrow({
+  dir,
+  disabled,
+  onClick,
+  label,
+}: {
+  dir: "prev" | "next";
+  disabled: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      style={{
+        width: 44,
+        height: 44,
+        borderRadius: "50%",
+        border: "1px solid var(--border)",
+        background: "var(--surface)",
+        color: disabled ? "var(--text-soft)" : "var(--plum)",
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.45 : 1,
+        fontSize: "1.3rem",
+        boxShadow: "var(--shadow)",
+        transition: "opacity 0.2s, transform 0.2s",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {dir === "prev" ? "‹" : "›"}
+    </button>
+  );
+}
+
+export default function MissionSection({
+  cards,
+  moreCount = 0,
+}: {
+  cards: InitiativeDTO[];
+  moreCount?: number;
+}) {
   const lang = useAtomValue(langAtom);
   const bg = lang === "bg";
 
-  const engine = bg
+  const engine: EngineStep[] = bg
     ? [
         { icon: <IconTarget />, title: "Избираме каузата", copy: "Свързана с Пловдив, тепетата и младите хора." },
         { icon: <IconPartners />, title: "Намираме партньори", copy: "Организации, които реализират на терен." },
@@ -126,45 +412,39 @@ export default function MissionSection({ cards }: { cards: InitiativeDTO[] }) {
             {bg ? "Нашата мисия" : "Our Mission"}
           </div>
 
+          <h2 className="heading-lg" style={{ color: "white", margin: "0 auto 18px", maxWidth: 720 }}>
+            {bg ? "Всяко барче захранва " : "Every bar powers "}
+            <span style={{ color: "var(--caramel)" }}>
+              ТЕПЕ bite{" "}
+              <span style={{ fontFamily: "var(--font-brush)", fontWeight: 1000, lineHeight: 1 }}>Impact</span>
+            </span>
+          </h2>
+
+          <p style={{ color: "oklch(90% 0.03 310)", fontSize: "1.08rem", margin: "0 auto", maxWidth: 700 }}>
+            {bg
+              ? "Под името ТЕПЕ bite Impact реализираме всяка социална инициатива за Пловдив — за градските пространства и тепетата, за общността и младите хора. Не спираме до дарение: избираме каузата, намираме партньори и съфинансиране и реализираме — за да извлечем максимума от всеки лев."
+              : "Under the name ТЕПЕ bite Impact we deliver every social initiative for Plovdiv — for its public spaces and hills, for the community and young people. We don't stop at a donation: we choose the cause, find partners and co-funding, and get it built — to get the most out of every lev."}
+          </p>
+        </div>
+
+        {/* ── The engine — 4 steps with the Impact logo centred among them ── */}
+        <div className="mission-engine">
+          <StepCard s={engine[0]} cls="eng-cell" />
+
           {/* Impact logo lockup on a light plate so it reads on plum */}
-          <div
-            style={{
-              display: "inline-flex",
-              background: "white",
-              borderRadius: "var(--r-md)",
-              padding: "16px 26px",
-              marginBottom: 24,
-              boxShadow: "var(--shadow-lg)",
-            }}
-          >
+          <div className="eng-logo">
             <Image
               src="/brand/TEPEbiteImpact-crop.png"
               alt="ТЕПЕ bite Impact"
               width={400}
               height={160}
-              style={{ height: "clamp(46px, 8vw, 64px)", width: "auto", display: "block" }}
+              style={{ height: "clamp(40px, 7vw, 56px)", width: "auto", display: "block" }}
             />
           </div>
 
-          <h2 className="heading-lg" style={{ color: "white", margin: "0 auto 18px", maxWidth: 720 }}>
-            {bg ? (
-              <>
-                Всяко барче захранва{" "}
-                <span style={{ color: "var(--caramel)" }}>ТЕПЕ bite Impact</span>
-              </>
-            ) : (
-              <>
-                Every bar powers{" "}
-                <span style={{ color: "var(--caramel)" }}>ТЕПЕ bite Impact</span>
-              </>
-            )}
-          </h2>
-
-          <p style={{ color: "oklch(90% 0.03 310)", fontSize: "1.08rem", margin: "0 auto", maxWidth: 700 }}>
-            {bg
-              ? "ТЕПЕ bite Impact е фондът, през който организираме всяка инициатива за Пловдив — за градските пространства и тепетата, за общността и за младите хора. Но ние не спираме до дарение: избираме каузата, намираме партньори и съфинансиране и реализираме — за да извлечем максимума от всеки лев."
-              : "ТЕПЕ bite Impact is the fund through which we organise every initiative for Plovdiv — for the city's public spaces and hills, for the community and for young people. But we don't stop at a donation: we choose the cause, find partners and co-funding, and get it built — to get the most out of every lev."}
-          </p>
+          <StepCard s={engine[1]} cls="eng-cell" align="right" />
+          <StepCard s={engine[2]} cls="eng-cell-wide" />
+          <StepCard s={engine[3]} cls="eng-cell-wide" align="right" />
         </div>
 
         {/* ── Pledge lockup ── */}
@@ -180,52 +460,15 @@ export default function MissionSection({ cards }: { cards: InitiativeDTO[] }) {
                 lineHeight: 1.1,
               }}
             >
-              {bg ? "0.15 € от всяко барче." : "0.15 € from every bar."}{" "}
-              <span style={{ color: "var(--caramel)" }}>
-                {bg ? "Фиксирано обещание." : "A fixed promise."}
-              </span>
+              {PLEDGE_EUR.toFixed(2)} €{" "}
+              <span style={{ color: "var(--caramel)" }}>{bg ? "от всяко барче" : "from every bar"}</span>
             </div>
-            <p style={{ color: "oklch(82% 0.03 310)", fontSize: "0.92rem", margin: "8px 0 0", maxWidth: 460 }}>
+            <p style={{ color: "oklch(82% 0.03 310)", fontSize: "0.98rem", margin: "8px 0 0", maxWidth: 480 }}>
               {bg
-                ? "Обединяваме средствата от всички продажби във фонда — открито и отчетено."
-                : "We pool the money from every sale into the fund — openly and accountably."}
+                ? "С всяка покупка допринасяш с 15 цента за видими социални инициативи в Пловдив."
+                : "Every purchase contributes 15 cents to visible social initiatives in Plovdiv."}
             </p>
           </div>
-        </div>
-
-        {/* ── The engine — 4 steps ── */}
-        <div className="mission-engine">
-          {engine.map((s, i) => (
-            <div
-              key={i}
-              style={{
-                background: "oklch(38% 0.07 315 / 0.5)",
-                border: "1px solid oklch(74% 0.1 230 / 0.25)",
-                borderRadius: "var(--r-md)",
-                padding: "22px 20px",
-              }}
-            >
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  background: "oklch(74% 0.1 230 / 0.15)",
-                  color: "oklch(85% 0.09 230)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 16,
-                }}
-              >
-                {s.icon}
-              </div>
-              <div style={{ fontFamily: "var(--font-head)", fontWeight: 600, fontSize: "1rem", color: "white", marginBottom: 6 }}>
-                {s.title}
-              </div>
-              <p style={{ color: "oklch(82% 0.03 310)", fontSize: "0.85rem", margin: 0, lineHeight: 1.55 }}>{s.copy}</p>
-            </div>
-          ))}
         </div>
 
         {/* ── Learn about the policy ── */}
@@ -236,35 +479,38 @@ export default function MissionSection({ cards }: { cards: InitiativeDTO[] }) {
           </Link>
         </div>
 
-        {/* ── Initiative cards ── */}
+        {/* ── Portfolio rail ── */}
         {cards.length > 0 && (
           <div style={{ marginTop: "clamp(48px, 7vw, 80px)" }}>
-            <div
-              className="label-tag"
-              style={{ color: "oklch(82% 0.09 230)", textAlign: "center", marginBottom: 24 }}
-            >
-              {bg ? "Инициативи през фонда" : "Initiatives through the fund"}
-            </div>
-            <div className="mission-cards">
-              {cards.map((i) => (
-                <InitiativeCard key={i.id} initiative={i} lang={lang} />
-              ))}
-            </div>
-            <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
-              <Link
-                href="/initiatives"
-                className="btn justify-center"
-                style={{ background: "transparent", color: "white", border: "2px solid oklch(100% 0 0 / 0.3)" }}
-              >
-                {bg ? "Виж всички инициативи" : "See all initiatives"}
-                <IconArrow />
-              </Link>
-            </div>
+            <PortfolioRail cards={cards} moreCount={moreCount} lang={lang} />
           </div>
         )}
       </div>
 
       <style>{`
+        .rail-scroller::-webkit-scrollbar { display: none; }
+        .mission-engine {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 20px;
+          align-items: stretch;
+          margin: clamp(36px, 5vw, 48px) auto 0;
+          max-width: 980px;
+        }
+        .eng-cell { grid-column: span 2; }
+        .eng-cell-wide { grid-column: span 3; }
+        .eng-right { text-align: right; }
+        .eng-right .step-icon-tile { margin-left: auto; }
+        .eng-logo {
+          grid-column: span 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: white;
+          border-radius: var(--r-md);
+          padding: 16px 22px;
+          box-shadow: var(--shadow-lg);
+        }
         .mission-pledge {
           display: flex;
           align-items: center;
@@ -273,29 +519,14 @@ export default function MissionSection({ cards }: { cards: InitiativeDTO[] }) {
           margin: clamp(40px, 6vw, 60px) auto 0;
           max-width: 720px;
         }
-        .mission-engine {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-          margin: clamp(36px, 5vw, 48px) auto 0;
-          max-width: 980px;
-        }
-        .mission-cards {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 24px;
-          max-width: 1080px;
-          margin: 0 auto;
-        }
-        @media (max-width: 900px) {
-          .mission-engine { grid-template-columns: repeat(2, 1fr) !important; }
-          .mission-cards { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: 720px; }
-        }
         @media (max-width: 560px) {
+          .mission-engine { grid-template-columns: 1fr !important; }
+          .eng-cell, .eng-cell-wide, .eng-logo { grid-column: span 1 !important; }
+          .eng-right { text-align: left; }
+          .eng-right .step-icon-tile { margin-left: 0; }
+          .eng-logo { order: -1; }
           .mission-pledge { flex-direction: column; text-align: center; gap: 14px; }
           .mission-pledge > div { text-align: center !important; }
-          .mission-engine { grid-template-columns: 1fr !important; }
-          .mission-cards { grid-template-columns: 1fr !important; max-width: 360px; }
         }
       `}</style>
     </section>

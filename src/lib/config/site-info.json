@@ -3,7 +3,11 @@
     "name": "ТЕПЕ bite",
     "legalEntity": "ФИВОРА ООД",
     "manager": "Георги Андреев",
-    "customerContact": "Никола Андреев"
+    "customerContact": "Никола Андреев",
+    "manufacturer": {
+      "name": "BioStyle Ltd.",
+      "url": "https://biostyle.bg/"
+    }
   },
   "website": {
     "url": "https://tepebite.eu"

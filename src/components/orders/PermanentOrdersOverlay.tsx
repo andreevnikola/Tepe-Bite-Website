@@ -1,74 +1,77 @@
-'use client'
+"use client";
 
-import { SITE_INFO } from '@/lib/config/site-info'
-import { langAtom } from '@/store/lang'
-import { useAtomValue } from 'jotai'
-import Link from 'next/link'
+import { SITE_INFO } from "@/lib/config/site-info";
+import { langAtom } from "@/store/lang";
+import { useAtomValue } from "jotai";
+import Link from "next/link";
 
 const T = {
   bg: {
-    eyebrow: 'Важно съобщение',
-    title: 'Онлайн поръчките са временно недостъпни',
-    body: 'В момента не приемаме поръчки през уебсайта. Можеш да се свържеш с нас на имейл или да намериш продуктите ни на партньорски локации в Пловдив.',
-    email: 'Поръчай по имейл',
-    locations: 'Партньорски локации',
+    eyebrow: "Важно съобщение",
+    title: "Онлайн поръчките са временно недостъпни",
+    body: "В момента не приемаме поръчки през уебсайта. Можеш да се свържеш с нас на имейл или да намериш продуктите ни на партниращи обекти в Пловдив.",
+    email: "Поръчай по имейл",
+    locations: "Партниращи обекти",
   },
   en: {
-    eyebrow: 'Important notice',
-    title: 'Online orders are currently unavailable',
+    eyebrow: "Important notice",
+    title: "Online orders are currently unavailable",
     body: "We're not accepting website orders at this time. You can reach us by email or find our products at partnering locations in Plovdiv.",
-    email: 'Order by email',
-    locations: 'Partnering locations',
+    email: "Order by email",
+    locations: "Partnering locations",
   },
-}
+};
 
-const webOrdersAvailable = process.env.NEXT_PUBLIC_WEB_ORDERS_AVAILABLE === 'true'
+const webOrdersAvailable =
+  process.env.NEXT_PUBLIC_WEB_ORDERS_AVAILABLE === "true";
 
 export default function PermanentOrdersOverlay() {
-  const lang = useAtomValue(langAtom)
-  const t = T[lang]
+  const lang = useAtomValue(langAtom);
+  const t = T[lang];
 
-  if (webOrdersAvailable) return null
+  if (webOrdersAvailable) return null;
 
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         inset: 0,
         zIndex: 9000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px',
-        background: 'oklch(32% 0.09 315 / 0.72)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+        background: "oklch(32% 0.09 315 / 0.72)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
       }}
     >
       <div
         style={{
-          background: 'var(--surface)',
-          borderRadius: 'var(--r-xl)',
+          background: "var(--surface)",
+          borderRadius: "var(--r-xl)",
           maxWidth: 520,
-          width: '100%',
-          overflow: 'hidden',
-          boxShadow: '0 24px 80px oklch(20% 0.08 315 / 0.4), 0 0 0 1px oklch(90% 0.02 315)',
+          width: "100%",
+          overflow: "hidden",
+          boxShadow:
+            "0 24px 80px oklch(20% 0.08 315 / 0.4), 0 0 0 1px oklch(90% 0.02 315)",
         }}
       >
         {/* Top accent bar */}
         <div
           style={{
             height: 4,
-            background: 'linear-gradient(90deg, var(--plum) 0%, var(--caramel) 100%)',
+            background:
+              "linear-gradient(90deg, var(--plum) 0%, var(--caramel) 100%)",
           }}
         />
 
         {/* Header */}
         <div
           style={{
-            background: 'var(--plum)',
-            padding: '32px 36px 28px',
-            textAlign: 'center',
+            background: "var(--plum)",
+            padding: "32px 36px 28px",
+            textAlign: "center",
           }}
         >
           {/* Icon circle */}
@@ -76,14 +79,14 @@ export default function PermanentOrdersOverlay() {
             style={{
               width: 64,
               height: 64,
-              borderRadius: '50%',
-              background: 'oklch(42% 0.09 315)',
-              border: '2px solid oklch(50% 0.09 315)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 20px',
-              fontSize: '1.8rem',
+              borderRadius: "50%",
+              background: "oklch(42% 0.09 315)",
+              border: "2px solid oklch(50% 0.09 315)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 20px",
+              fontSize: "1.8rem",
             }}
           >
             🏪
@@ -92,7 +95,7 @@ export default function PermanentOrdersOverlay() {
           <div
             className="label-tag"
             style={{
-              color: 'var(--caramel)',
+              color: "var(--caramel)",
               marginBottom: 12,
             }}
           >
@@ -101,14 +104,14 @@ export default function PermanentOrdersOverlay() {
 
           <h2
             style={{
-              fontFamily: 'var(--font-head)',
-              fontSize: 'clamp(1.2rem, 3vw, 1.55rem)',
+              fontFamily: "var(--font-head)",
+              fontSize: "clamp(1.2rem, 3vw, 1.55rem)",
               fontWeight: 700,
-              color: 'white',
+              color: "white",
               lineHeight: 1.25,
-              letterSpacing: '-0.01em',
+              letterSpacing: "-0.01em",
               margin: 0,
-              textWrap: 'balance',
+              textWrap: "balance",
             }}
           >
             {t.title}
@@ -116,14 +119,14 @@ export default function PermanentOrdersOverlay() {
         </div>
 
         {/* Body */}
-        <div style={{ padding: '28px 36px 36px' }}>
+        <div style={{ padding: "28px 36px 36px" }}>
           <p
             style={{
-              fontSize: '0.95rem',
+              fontSize: "0.95rem",
               lineHeight: 1.72,
-              color: 'var(--text-mid)',
+              color: "var(--text-mid)",
               marginBottom: 28,
-              textAlign: 'center',
+              textAlign: "center",
             }}
           >
             {t.body}
@@ -131,8 +134,8 @@ export default function PermanentOrdersOverlay() {
 
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
               gap: 12,
             }}
           >
@@ -140,9 +143,9 @@ export default function PermanentOrdersOverlay() {
               href={`mailto:${SITE_INFO.contact.generalEmail}`}
               className="btn btn-primary"
               style={{
-                justifyContent: 'center',
-                fontSize: '0.95rem',
-                textDecoration: 'none',
+                justifyContent: "center",
+                fontSize: "0.95rem",
+                textDecoration: "none",
               }}
             >
               ✉ {t.email}
@@ -152,8 +155,8 @@ export default function PermanentOrdersOverlay() {
               href="/partnering-locations"
               className="btn btn-caramel"
               style={{
-                justifyContent: 'center',
-                fontSize: '0.95rem',
+                justifyContent: "center",
+                fontSize: "0.95rem",
               }}
             >
               📍 {t.locations}
@@ -162,5 +165,5 @@ export default function PermanentOrdersOverlay() {
         </div>
       </div>
     </div>
-  )
+  );
 }
