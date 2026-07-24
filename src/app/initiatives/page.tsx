@@ -4,37 +4,48 @@ import {
   getPublicOverviewData,
   type OverviewData,
 } from "@/lib/public/initiatives";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+  ogLocale,
+} from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
 // ISR: cache the derived overview and refresh every 5 minutes.
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "Нашите инициативи | ТЕПЕ bite",
-  description:
-    "Прозрачен преглед на инициативите на ТЕПЕ bite за Пловдив — вложени средства, партньори, напредък и всяко постъпление.",
-  keywords: [
-    "ТЕПЕ bite",
-    "ТЕПЕ bite Impact",
-    "инициативи",
-    "Пловдив",
-    "прозрачност",
-    "партньори",
-    "социално въздействие",
-  ],
-  openGraph: {
-    title: "Нашите инициативи | ТЕПЕ bite",
-    description:
-      "Прозрачен преглед на социалните инициативи на ТЕПЕ bite за Пловдив.",
-    type: "website",
-  },
-  alternates: {
-    languages: {
-      bg: "/initiatives",
-      en: "/initiatives",
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getRequestLang();
+  const en = lang === "en";
+  const title = en ? "Our initiatives | ТЕПЕ bite" : "Нашите инициативи | ТЕПЕ bite";
+  const description = en
+    ? "A transparent overview of ТЕПЕ bite's initiatives for Plovdiv — money invested, partners, progress and every inflow."
+    : "Прозрачен преглед на инициативите на ТЕПЕ bite за Пловдив — вложени средства, партньори, напредък и всяко постъпление.";
+  return {
+    title,
+    description,
+    keywords: [
+      "ТЕПЕ bite",
+      "ТЕПЕ bite Impact",
+      en ? "initiatives" : "инициативи",
+      "Пловдив",
+      en ? "transparency" : "прозрачност",
+      en ? "partners" : "партньори",
+      en ? "social impact" : "социално въздействие",
+    ],
+    alternates: languageAlternates("/initiatives"),
+    openGraph: {
+      title,
+      description: en
+        ? "A transparent overview of ТЕПЕ bite's social initiatives for Plovdiv."
+        : "Прозрачен преглед на социалните инициативи на ТЕПЕ bite за Пловдив.",
+      type: "website",
+      locale: ogLocale(lang),
     },
-  },
-};
+    other: contentMeta(lang, "page", { topic: "initiatives" }),
+  };
+}
 
 const EMPTY_OVERVIEW: OverviewData = {
   stats: {

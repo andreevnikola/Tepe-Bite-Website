@@ -1,6 +1,12 @@
 import Footer from "@/components/Footer";
 import InitiativeDetail from "@/components/public/InitiativeDetail";
 import { getPublicInitiativeBySlug } from "@/lib/public/initiatives";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+  ogLocale,
+} from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -13,18 +19,27 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const detail = await getPublicInitiativeBySlug(slug);
+    const [detail, lang] = await Promise.all([
+      getPublicInitiativeBySlug(slug),
+      getRequestLang(),
+    ]);
     if (!detail) return {};
     const i = detail.initiative;
+    const en = lang === "en";
+    const title = `${(en && i.titleEn) || i.titleBg} | ТЕПЕ bite`;
+    const description = ((en && i.descriptionEn) || i.descriptionBg).slice(0, 160);
     return {
-      title: `${i.titleBg} | ТЕПЕ bite`,
-      description: i.descriptionBg.slice(0, 160),
+      title,
+      description,
+      alternates: languageAlternates(`/initiatives/${slug}`),
       openGraph: {
-        title: `${i.titleBg} | ТЕПЕ bite`,
-        description: i.descriptionBg.slice(0, 160),
+        title,
+        description,
         images: i.coverImage ? [{ url: i.coverImage.url }] : [],
         type: "article",
+        locale: ogLocale(lang),
       },
+      other: contentMeta(lang, "initiative", { "initiative-status": i.status }),
     };
   } catch {
     return {};

@@ -2,28 +2,45 @@ import Footer from "@/components/Footer";
 import ProductPageContent from "@/components/ProductPageContent";
 import { getAllLocations } from "@/sanity/queries";
 import type { Location } from "@/sanity/types";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+  ogLocale,
+} from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "ТЕПЕ bite — Солен карамел | Здравословно барче с кауза",
-  description:
-    "ТЕПЕ bite е нисковъглехидратно барче със солен карамел, създадено в Пловдив — с фибри, растителен протеин и мисия зад всяка покупка.",
-  keywords: [
-    "ТЕПЕ bite",
-    "солен карамел",
-    "кето барче",
-    "нисковъглехидратно",
-    "Пловдив",
-    "BioStyle",
-    "протеинова закуска",
-  ],
-  openGraph: {
-    title: "ТЕПЕ bite — Солен карамел | Здравословно барче с кауза",
-    description:
-      "ТЕПЕ bite е нисковъглехидратно барче със солен карамел, създадено в Пловдив — с фибри, растителен протеин и мисия зад всяка покупка.",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getRequestLang();
+  const en = lang === "en";
+  const title = en
+    ? "ТЕПЕ bite — Salted caramel | A wholesome bar with a cause"
+    : "ТЕПЕ bite — Солен карамел | Здравословно барче с кауза";
+  const description = en
+    ? "ТЕПЕ bite is a low-carb salted-caramel bar created in Plovdiv — with fibre, plant protein and a mission behind every purchase."
+    : "ТЕПЕ bite е нисковъглехидратно барче със солен карамел, създадено в Пловдив — с фибри, растителен протеин и мисия зад всяка покупка.";
+  return {
+    title,
+    description,
+    keywords: [
+      "ТЕПЕ bite",
+      en ? "salted caramel" : "солен карамел",
+      en ? "keto bar" : "кето барче",
+      en ? "low carb" : "нисковъглехидратно",
+      "Пловдив",
+      "BioStyle",
+      en ? "protein snack" : "протеинова закуска",
+    ],
+    alternates: languageAlternates("/product"),
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      locale: ogLocale(lang),
+    },
+    other: contentMeta(lang, "page", { topic: "product" }),
+  };
+}
 
 const jsonLd = {
   "@context": "https://schema.org",
