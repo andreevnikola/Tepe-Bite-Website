@@ -21,7 +21,23 @@ import {
   type PartnerCarouselItem,
 } from "@/lib/public/initiatives";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+} from "@/lib/i18n/metadata";
 import { getAllNewsPosts } from "@/sanity/queries";
+import type { Metadata } from "next";
+
+// The title/description come from the root layout's localized defaults; here we
+// add the homepage's own canonical + hreflang alternates and retrieval taxonomy.
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getRequestLang();
+  return {
+    alternates: languageAlternates("/"),
+    other: contentMeta(lang, "page", { topic: "home" }),
+  };
+}
 
 // ISR: the landing now derives Impact-fund initiatives, the pinned first
 // initiative and the youth partners from the datastore. Cache the work and

@@ -7,13 +7,31 @@ import LocationOrderBridge from "@/components/locations/LocationOrderBridge";
 import PartnerCTA from "@/components/locations/PartnerCTA";
 import { getAllLocations } from "@/sanity/queries";
 import type { Location } from "@/sanity/types";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+  ogLocale,
+} from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Партниращи обекти — ТЕПЕ bite",
-  description:
-    "Намери ТЕПЕ bite в магазини из Пловдив. Разгледай нашите партньори на интерактивна карта.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getRequestLang();
+  const en = lang === "en";
+  const title = en
+    ? "Partnering locations — ТЕПЕ bite"
+    : "Партниращи обекти — ТЕПЕ bite";
+  const description = en
+    ? "Find ТЕПЕ bite in shops across Plovdiv. Explore our partners on an interactive map."
+    : "Намери ТЕПЕ bite в магазини из Пловдив. Разгледай нашите партньори на интерактивна карта.";
+  return {
+    title,
+    description,
+    alternates: languageAlternates("/partnering-locations"),
+    openGraph: { title, description, type: "website", locale: ogLocale(lang) },
+    other: contentMeta(lang, "page", { topic: "locations" }),
+  };
+}
 
 function EmptyState() {
   return (

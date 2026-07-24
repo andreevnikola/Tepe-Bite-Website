@@ -1,6 +1,12 @@
 import Footer from "@/components/Footer";
 import PartnerDetail from "@/components/public/PartnerDetail";
 import { getPublicPartnerBySlug } from "@/lib/public/initiatives";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+  ogLocale,
+} from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -13,14 +19,29 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const detail = await getPublicPartnerBySlug(slug);
+    const [detail, lang] = await Promise.all([
+      getPublicPartnerBySlug(slug),
+      getRequestLang(),
+    ]);
     if (!detail) return {};
     const p = detail.partner;
+    const en = lang === "en";
+    const name = (en && p.nameEn) || p.nameBg;
+    const desc = (en && p.descriptionEn) || p.descriptionBg;
+    const title = en
+      ? `${name} — partner | ТЕПЕ bite`
+      : `${name} — партньор | ТЕПЕ bite`;
+    const description = desc
+      ? desc.slice(0, 160)
+      : en
+        ? `${name} — a partner in ТЕПЕ bite's initiatives.`
+        : `${name} — партньор на инициативите на ТЕПЕ bite.`;
     return {
-      title: `${p.nameBg} — партньор | ТЕПЕ bite`,
-      description: p.descriptionBg
-        ? p.descriptionBg.slice(0, 160)
-        : `${p.nameBg} — партньор на инициативите на ТЕПЕ bite.`,
+      title,
+      description,
+      alternates: languageAlternates(`/initiatives/partners/${slug}`),
+      openGraph: { title, description, locale: ogLocale(lang) },
+      other: contentMeta(lang, "partner"),
     };
   } catch {
     return {};

@@ -3,6 +3,12 @@ import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { urlFor } from "@/sanity/image";
 import { getAllNewsSlugs, getNewsPostBySlug } from "@/sanity/queries";
+import {
+  contentMeta,
+  getRequestLang,
+  languageAlternates,
+  ogLocale,
+} from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,18 +32,28 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const post = await getNewsPostBySlug(slug);
+    const [post, lang] = await Promise.all([
+      getNewsPostBySlug(slug),
+      getRequestLang(),
+    ]);
     if (!post) return {};
+    const en = lang === "en";
+    const heading = (en && post.titleEn) || post.titleBg;
+    const title = `${heading} | ТЕПЕ bite`;
+    const description = (en && post.excerptEn) || post.excerptBg || heading;
     return {
-      title: `${post.titleBg} | ТЕПЕ bite`,
-      description: post.excerptBg || post.titleBg,
+      title,
+      description,
+      alternates: languageAlternates(`/news/${slug}`),
       openGraph: {
-        title: `${post.titleBg} | ТЕПЕ bite`,
-        description: post.excerptBg || post.titleBg,
+        title,
+        description,
         images: post.image ? [{ url: urlFor(post.image).width(1200).url() }] : [],
         type: "article",
         publishedTime: post.publishedAt,
+        locale: ogLocale(lang),
       },
+      other: contentMeta(lang, "news"),
     };
   } catch {
     return {};
