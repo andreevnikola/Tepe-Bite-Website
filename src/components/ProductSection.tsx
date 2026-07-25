@@ -154,32 +154,6 @@ export default function ProductSection() {
                 </tbody>
               </table>
             </div>
-
-            {/* Ingredients */}
-            <div
-              style={{
-                background: "var(--caramel-lt)",
-                borderRadius: 16,
-                padding: "20px 24px",
-                width: "100%",
-                borderLeft: "3px solid var(--caramel)",
-              }}
-            >
-              <div className="label-tag" style={{ marginBottom: 8 }}>
-                {lang === "bg" ? "Съставки" : "Ingredients"}
-              </div>
-              <p
-                style={{
-                  fontSize: "0.88rem",
-                  color: "var(--text-mid)",
-                  lineHeight: 1.6,
-                }}
-              >
-                {lang === "bg"
-                  ? "Бадеми, фибри от корен на цикория, слънчогледови семки, хрупкави протеинови хапки от слънчоглед, тиквени семки, еритритол, лукума, натурален карамелен аромат, морска сол."
-                  : "Almonds, chicory root fibre, sunflower seeds, crunchy sunflower protein bites, pumpkin seeds, erythritol, lucuma, natural caramel flavour, sea salt."}
-              </p>
-            </div>
           </div>
 
           {/* Right: product info */}
@@ -198,7 +172,7 @@ export default function ProductSection() {
             </h3>
             <p
               className="text-justify"
-              style={{ fontSize: "1.05rem", marginBottom: 32 }}
+              style={{ fontSize: "1.05rem", marginBottom: 25 }}
             >
               {lang === "bg"
                 ? "Мек, балансиран и характерен вкус на солен карамел, съчетан с ядки, семена, фибри и растителен протеин. Създаден за моментите, в които искаш нещо сладко, но по-обмислено."
@@ -206,7 +180,7 @@ export default function ProductSection() {
             </p>
 
             {/* Product fact cards */}
-            <div className="fact-grid" style={{ marginBottom: 36 }}>
+            <div className="fact-grid" style={{ marginBottom: 12 }}>
               {facts.map(({ Icon, bg, en }, i) => (
                 <div key={i} className="fact-card">
                   <span className="fact-icon">
@@ -251,8 +225,35 @@ export default function ProductSection() {
               </div>
             </div>
 
+            {/* Ingredients */}
+            <div
+              style={{
+                background: "var(--caramel-lt)",
+                borderRadius: 16,
+                padding: "20px 24px",
+                width: "100%",
+                borderLeft: "3px solid var(--caramel)",
+                marginBottom: 25,
+              }}
+            >
+              <div className="label-tag" style={{ marginBottom: 8 }}>
+                {lang === "bg" ? "Съставки" : "Ingredients"}
+              </div>
+              <p
+                style={{
+                  fontSize: "0.88rem",
+                  color: "var(--text-mid)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {lang === "bg"
+                  ? "Бадеми, фибри от корен на цикория, слънчогледови семки, хрупкави протеинови хапки от слънчоглед, тиквени семки, еритритол, лукума, натурален карамелен аромат, морска сол."
+                  : "Almonds, chicory root fibre, sunflower seeds, crunchy sunflower protein bites, pumpkin seeds, erythritol, lucuma, natural caramel flavour, sea salt."}
+              </p>
+            </div>
+
             {/* Impact pledge — understated, emphasis on the direct support */}
-            <div className="pledge-callout">
+            <div className="pledge-callout mb-[25]!">
               <PledgeHeart size={40} />
               <p className="pledge-text">
                 {lang === "bg" ? (
@@ -274,7 +275,7 @@ export default function ProductSection() {
             <div className="w-full flex justify-start gap-3 max-sm:justify-stretch max-sm:flex-col">
               <Link
                 href="/product"
-                className="btn btn-primary justify-center"
+                className="btn btn-primary justify-center max-[1120px]:text-[0.75rem]! max-[1120px]:px-5!"
                 style={{ fontSize: "1rem", padding: "15px 32px" }}
               >
                 {lang === "bg"
@@ -284,7 +285,7 @@ export default function ProductSection() {
               </Link>
               <Link
                 href="/order"
-                className="btn btn-secondary justify-center"
+                className="btn btn-secondary justify-center max-[1120px]:text-[0.75rem]! max-[1120px]:px-5!"
                 style={{ fontSize: "1rem", padding: "15px 32px" }}
               >
                 <IconShop />
@@ -326,6 +327,14 @@ export default function ProductSection() {
         @media (max-width: 900px) {
           .product-grid {
             grid-template-columns: 1fr !important;
+          }
+          .fact-grid {
+            grid-template-columns: repeat(3, 1fr) !important !important;
+          }
+        }
+        @media (max-width: 1120px) {
+          .fact-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
           }
         }
         .fact-grid {
