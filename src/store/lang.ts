@@ -1,11 +1,14 @@
 import { atom } from "jotai";
 
 export type Lang = "bg" | "en";
+/** Every supported language, in display order. Single source of truth for
+ * anything that needs to enumerate languages (e.g. the AI Search sitemap). */
+export const LANGS = ["bg", "en"] as const satisfies readonly Lang[];
 export const DEFAULT_LANG: Lang = "bg";
 export const LANG_COOKIE = "tepe-bite-lang";
 
 export const isLang = (value: string | null | undefined): value is Lang =>
-  value === "bg" || value === "en";
+  LANGS.includes(value as Lang);
 
 export const normalizeLang = (value: string | null | undefined): Lang =>
   isLang(value) ? value : DEFAULT_LANG;

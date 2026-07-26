@@ -4,8 +4,9 @@ import type { MetadataRoute } from "next";
 /**
  * Allow public content; keep crawlers (and Cloudflare AI Search) out of admin,
  * the Sanity Studio, API routes, and the transactional cart/checkout/order
- * flows. Points at the single sitemap, which carries the bg/en hreflang
- * alternates.
+ * flows. Points at both sitemaps: `/sitemap.xml` (clean canonical URLs for
+ * normal SEO) and `/ai-sitemap.xml` (explicit ?lang= variants for AI Search
+ * retrieval).
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -14,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/studio", "/api", "/cart", "/checkout", "/order"],
     },
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    sitemap: [`${SITE_URL}/sitemap.xml`],
     host: SITE_URL,
   };
 }
