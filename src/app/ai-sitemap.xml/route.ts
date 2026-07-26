@@ -18,7 +18,9 @@ import { LANGS, type Lang } from "@/store/lang";
  * so the crawler can tell the two variants are translations of one another
  * rather than unrelated pages.
  */
-export const revalidate = 3600;
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /** Escape the five XML predefined entities. URLs here carry a `?lang=` query,
  * so `&` would break the document if a path ever gained a second parameter. */
