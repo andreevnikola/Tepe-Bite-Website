@@ -46,6 +46,27 @@ export function validateCheckoutConfig(): CheckoutConfigResult {
     try { getPricingConfig(); return true } catch { return false }
   })()
 
+  // The NEXT_PUBLIC_ copies are inlined into the client bundle at build time;
+  // the bare vars are read at runtime from /etc/tepebite.env. If they drift,
+  // the client-side progress bar / surcharge preview silently disagrees with
+  // what checkout actually charges.
+  const pairs: Array<[string, string]> = [
+    ['NEXT_PUBLIC_TEPE_DELIVERY_BASE_LOCKER_CENTS', 'TEPE_DELIVERY_BASE_LOCKER_CENTS'],
+    ['NEXT_PUBLIC_TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS', 'TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS'],
+    ['NEXT_PUBLIC_TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS', 'TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS'],
+    ['NEXT_PUBLIC_TEPE_FREE_DELIVERY_THRESHOLD_CENTS', 'TEPE_FREE_DELIVERY_THRESHOLD_CENTS'],
+  ]
+  for (const [publicName, serverName] of pairs) {
+    const publicRaw = process.env[publicName]
+    const serverRaw = process.env[serverName]
+    if (publicRaw !== undefined && serverRaw !== undefined && publicRaw.trim() !== serverRaw.trim()) {
+      issues.push({
+        envVar: publicName,
+        message: `${publicName} ("${publicRaw}") does not match ${serverName} ("${serverRaw}") — the public build value and server runtime value must be identical`,
+      })
+    }
+  }
+
   return {
     valid: issues.length === 0,
     issues,

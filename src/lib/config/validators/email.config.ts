@@ -8,9 +8,8 @@ export type EmailConfigResult = {
 export function validateEmailConfig(): EmailConfigResult {
   const issues: string[] = []
 
-  if (!process.env.SMTP_USER) issues.push('SMTP_USER is missing')
-  if (!process.env.SMTP_PASSWORD) issues.push('SMTP_PASSWORD is missing')
-  if (!process.env.SMTP_FROM_EMAIL) issues.push('SMTP_FROM_EMAIL is missing')
+  if (!process.env.RESEND_API_KEY) issues.push('RESEND_API_KEY is missing')
+  if (!process.env.EMAIL_FROM_ADDRESS) issues.push('EMAIL_FROM_ADDRESS is missing')
 
   const appBaseUrl = process.env.APP_BASE_URL ?? null
   let appBaseUrlValid = false

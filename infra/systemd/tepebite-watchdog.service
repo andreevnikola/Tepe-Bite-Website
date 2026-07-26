@@ -1,0 +1,11 @@
+[Unit]
+Description=TEPE bite health watchdog (restart tepebite.service if it stops answering)
+After=tepebite.service
+
+[Service]
+Type=oneshot
+# Curl the internal health endpoint. -f fails on non-2xx, --max-time bounds a
+# hung/unresponsive process instead of waiting forever. On any failure, force
+# a restart of the main service — covers "process alive but not answering",
+# which plain systemd Restart=on-failure cannot detect on its own.
+ExecStart=/bin/sh -c '/usr/bin/curl -fsS --max-time 5 http://127.0.0.1:3000/api/health >/dev/null || /usr/bin/systemctl restart tepebite.service'

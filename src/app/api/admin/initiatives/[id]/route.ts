@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import mongoose from 'mongoose'
 import { requireAdmin } from '@/lib/auth/require-admin'
 import { getMongoose } from '@/lib/mongo'
 import { Initiative } from '@/lib/mongo/models/Initiative'
+import { PUBLIC_CONTENT_CACHE_TAG } from '@/lib/public/initiatives'
 import { serializeInitiative } from '@/lib/dashboard/serialize'
 import { composeInitiativeFields } from '@/lib/dashboard/initiative-writer'
 import { writeAudit } from '@/lib/dashboard/audit'
@@ -97,6 +99,13 @@ export async function PATCH(
     ipAddress: getIp(req),
   })
 
+  revalidateTag(PUBLIC_CONTENT_CACHE_TAG, 'max')
+  revalidatePath('/')
+  revalidatePath('/about')
+  revalidatePath('/impact')
+  revalidatePath('/initiatives')
+  revalidatePath(`/initiatives/${doc.slug}`)
+
   return NextResponse.json({ initiative: serializeInitiative(doc.toObject()) })
 }
 
@@ -114,6 +123,7 @@ export async function DELETE(
   if (!doc) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   const keys = imageKeys(doc)
+  const slug = doc.slug
   await doc.deleteOne()
   if (keys.length) await deleteUploads(keys)
 
@@ -126,6 +136,13 @@ export async function DELETE(
     before: { titleBg: doc.titleBg },
     ipAddress: getIp(req),
   })
+
+  revalidateTag(PUBLIC_CONTENT_CACHE_TAG, 'max')
+  revalidatePath('/')
+  revalidatePath('/about')
+  revalidatePath('/impact')
+  revalidatePath('/initiatives')
+  revalidatePath(`/initiatives/${slug}`)
 
   return NextResponse.json({ ok: true })
 }

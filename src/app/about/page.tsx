@@ -15,10 +15,6 @@ import {
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
-// ISR: the youth partners + first initiative are derived once and refreshed
-// every 5 minutes, matching the other data-driven public pages.
-export const revalidate = 300;
-
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";

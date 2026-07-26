@@ -1,4 +1,5 @@
 import 'server-only'
+import { unstable_cache } from 'next/cache'
 import { isValidObjectId } from 'mongoose'
 import { getMongoose } from '@/lib/mongo'
 import { Initiative } from '@/lib/mongo/models/Initiative'
@@ -12,10 +13,26 @@ import type { InitiativeStatus } from '@/lib/dashboard/constants'
  *
  * Design note: we deliberately do NOT keep a denormalized summary document
  * (drift risk). The overview fetches all published initiatives once + all
- * partners once, then derives every stat/section in memory. Pages using these
- * helpers should set `export const revalidate = 300` (ISR) so the work is
- * cached, not recomputed per request.
+ * partners once, then derives every stat/section in memory.
+ *
+ * Caching: `/`, `/about`, `/impact` and `/initiatives` all read cookies/headers
+ * for language resolution (see src/lib/i18n/metadata.ts), which forces Next.js
+ * to render them dynamically on every request — `export const revalidate` on
+ * those pages has no effect on route-level caching. Instead, the three read
+ * functions below that those pages call are individually wrapped in
+ * `unstable_cache` with a 300s TTL, so a dynamic request still hits MongoDB
+ * only on a cache miss or explicit invalidation. Every DTO here carries both
+ * `*Bg` and `*En` fields (see serialize.ts) — the query/transform layer never
+ * branches on language, so a single shared cache entry is correct for both.
  */
+
+/**
+ * Shared cache tag for the public overview/youth-partners/by-id reads. All
+ * three depend on both the Initiative and Partner collections, so admin
+ * mutations to either must invalidate this same tag via `revalidateTag`.
+ */
+export const PUBLIC_CONTENT_CACHE_TAG = 'public-content'
+const PUBLIC_CACHE_TTL_SECONDS = 300
 
 export type OverviewStats = {
   /** Realized (available-phase) money from the ТЕПЕ bite Impact fund, in cents. */
@@ -103,7 +120,8 @@ function sumInflows(initiatives: InitiativeDTO[], pred: (f: InflowDTO) => boolea
   return total
 }
 
-export async function getPublicOverviewData(): Promise<OverviewData> {
+async function getPublicOverviewDataUncached(): Promise<OverviewData> {
+  console.log('[cache-miss] getPublicOverviewData: querying MongoDB')
   await getMongoose()
 
   const [rawInitiatives, rawPartners] = await Promise.all([
@@ -202,16 +220,26 @@ export async function getPublicOverviewData(): Promise<OverviewData> {
 }
 
 /**
+ * Cached, request-deduplicated overview read — see the module-level caching
+ * note above. Backs `/`, `/impact` and `/initiatives`.
+ */
+export const getPublicOverviewData = unstable_cache(
+  getPublicOverviewDataUncached,
+  ['public-overview-data'],
+  { revalidate: PUBLIC_CACHE_TTL_SECONDS, tags: [PUBLIC_CONTENT_CACHE_TAG] },
+)
+
+/**
  * All youth-led partners in the datastore, enriched with the same per-partner
  * stats the overview carousel uses (how many published initiatives they are
  * linked to + their money across those initiatives, by phase). Unlike the
  * overview's `partners`, this returns EVERY youth-led organisation — including
  * ones not yet linked to a published initiative — because the /about "youth
  * power" section is about the movement, not only who has already contributed.
- * Sorted star-first, then by initiative involvement, then name. Pages should
- * set ISR revalidate.
+ * Sorted star-first, then by initiative involvement, then name.
  */
-export async function getYouthLedPartnersEnriched(): Promise<PartnerCarouselItem[]> {
+async function getYouthLedPartnersEnrichedUncached(): Promise<PartnerCarouselItem[]> {
+  console.log('[cache-miss] getYouthLedPartnersEnriched: querying MongoDB')
   await getMongoose()
 
   const [rawInitiatives, rawPartners] = await Promise.all([
@@ -235,6 +263,13 @@ export async function getYouthLedPartnersEnriched(): Promise<PartnerCarouselItem
       return a.partner.nameBg.localeCompare(b.partner.nameBg, 'bg')
     })
 }
+
+/** Cached, request-deduplicated read — see the module-level caching note above. Backs `/`, `/about`. */
+export const getYouthLedPartnersEnriched = unstable_cache(
+  getYouthLedPartnersEnrichedUncached,
+  ['public-youth-led-partners'],
+  { revalidate: PUBLIC_CACHE_TTL_SECONDS, tags: [PUBLIC_CONTENT_CACHE_TAG] },
+)
 
 /**
  * Just the single spotlighted initiative — a light read for surfaces that only
@@ -284,7 +319,8 @@ export async function getPublicInitiativeBySlug(slug: string): Promise<Initiativ
  * `RECONNECT_INITIATIVE_ID`). Guards invalid ids so a bad/removed id returns
  * null instead of throwing a CastError.
  */
-export async function getPublicInitiativeById(id: string): Promise<InitiativeDetail | null> {
+async function getPublicInitiativeByIdUncached(id: string): Promise<InitiativeDetail | null> {
+  console.log('[cache-miss] getPublicInitiativeById: querying MongoDB', id)
   if (!isValidObjectId(id)) return null
   await getMongoose()
   const raw = await Initiative.findOne({ _id: id, isPublished: true }).lean()
@@ -307,6 +343,13 @@ export async function getPublicInitiativeById(id: string): Promise<InitiativeDet
 
   return { initiative, partnersById }
 }
+
+/** Cached, request-deduplicated read — see the module-level caching note above. Backs `/`, `/about`, `/impact`. */
+export const getPublicInitiativeById = unstable_cache(
+  getPublicInitiativeByIdUncached,
+  ['public-initiative-by-id'],
+  { revalidate: PUBLIC_CACHE_TTL_SECONDS, tags: [PUBLIC_CONTENT_CACHE_TAG] },
+)
 
 export type PartnerInitiativeLink = {
   initiative: InitiativeDTO

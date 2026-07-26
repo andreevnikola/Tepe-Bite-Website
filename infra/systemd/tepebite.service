@@ -1,0 +1,38 @@
+[Unit]
+Description=TEPE bite Next.js standalone server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/srv/tepebite/current
+ExecStart=/usr/bin/node server.js
+EnvironmentFile=/etc/tepebite.env
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3000
+Environment=NEXT_TELEMETRY_DISABLED=1
+Environment=NODE_OPTIONS=--max-old-space-size=512
+
+Restart=always
+RestartSec=3
+TimeoutStopSec=15
+
+# Hardening. /srv/tepebite/releases stays writable so Next's on-disk ISR
+# cache (.next/cache under whichever release "current" points to) can write;
+# ReadWritePaths targets the parent so it still resolves after activate-
+# release.sh swaps the "current" symlink to a new release directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/tepebite/releases
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

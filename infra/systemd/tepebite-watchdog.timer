@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the TEPE bite health watchdog every 2 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=2min
+Unit=tepebite-watchdog.service
+AccuracySec=10s
+
+[Install]
+WantedBy=timers.target

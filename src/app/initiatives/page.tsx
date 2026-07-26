@@ -12,9 +12,6 @@ import {
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
-// ISR: cache the derived overview and refresh every 5 minutes.
-export const revalidate = 300;
-
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";

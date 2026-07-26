@@ -39,11 +39,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// ISR: the landing now derives Impact-fund initiatives, the pinned first
-// initiative and the youth partners from the datastore. Cache the work and
-// refresh every 5 minutes, matching the other data-driven public pages.
-export const revalidate = 300;
-
 const EMPTY_OVERVIEW: OverviewData = {
   stats: {
     investedImpactCents: 0,

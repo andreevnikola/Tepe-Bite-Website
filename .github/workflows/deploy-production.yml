@@ -1,0 +1,104 @@
+name: Deploy production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read Node version
+        id: node-version
+        run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.node-version.outputs.version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # No database credentials are needed at build time: every route in this
+      # app (including the pages that export `revalidate`) is forced into
+      # per-request dynamic rendering by generateMetadata's use of headers()/
+      # cookies() for language resolution (see docs/deployment.md). `next
+      # build` never executes their data-fetching code, so nothing here talks
+      # to MongoDB or Postgres — only NEXT_PUBLIC_* values are needed to bake
+      # into the client bundle.
+      - name: Build (Next.js standalone)
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_TEPE_DELIVERY_BASE_LOCKER_CENTS: ${{ vars.NEXT_PUBLIC_TEPE_DELIVERY_BASE_LOCKER_CENTS }}
+          NEXT_PUBLIC_TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS: ${{ vars.NEXT_PUBLIC_TEPE_DELIVERY_OFFICE_SURCHARGE_CENTS }}
+          NEXT_PUBLIC_TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS: ${{ vars.NEXT_PUBLIC_TEPE_DELIVERY_ADDRESS_SURCHARGE_CENTS }}
+          NEXT_PUBLIC_TEPE_FREE_DELIVERY_THRESHOLD_CENTS: ${{ vars.NEXT_PUBLIC_TEPE_FREE_DELIVERY_THRESHOLD_CENTS }}
+          NEXT_PUBLIC_WEB_ORDERS_AVAILABLE: ${{ vars.NEXT_PUBLIC_WEB_ORDERS_AVAILABLE }}
+          NEXT_PUBLIC_IMPACT_FORM_URL: ${{ vars.NEXT_PUBLIC_IMPACT_FORM_URL }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+        run: npm run build
+
+      - name: Assemble standalone package
+        run: |
+          set -euo pipefail
+          rm -rf release_pkg
+          mkdir -p release_pkg
+          cp -r .next/standalone/. release_pkg/
+          mkdir -p release_pkg/.next
+          cp -r .next/static release_pkg/.next/static
+          cp -r public release_pkg/public
+          VERSION="$(date -u +%Y%m%d%H%M%S)-${GITHUB_SHA::12}"
+          echo "version=$VERSION" >> "$GITHUB_ENV"
+          tar -czf "${VERSION}.tar.gz" -C release_pkg .
+
+      - name: Configure SSH
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Upload release archive
+        run: |
+          set -euo pipefail
+          scp -i ~/.ssh/deploy_key -o UserKnownHostsFile=~/.ssh/known_hosts \
+            -P "${{ secrets.VPS_PORT }}" \
+            "${{ env.version }}.tar.gz" \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/srv/tepebite/incoming/${{ env.version }}.tar.gz"
+
+      - name: Activate release
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/deploy_key -o UserKnownHostsFile=~/.ssh/known_hosts \
+            -p "${{ secrets.VPS_PORT }}" \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "sudo /usr/local/bin/activate-release.sh '${{ env.version }}'"
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

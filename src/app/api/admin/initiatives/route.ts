@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { requireAdmin } from '@/lib/auth/require-admin'
 import { getMongoose } from '@/lib/mongo'
 import { Initiative } from '@/lib/mongo/models/Initiative'
+import { PUBLIC_CONTENT_CACHE_TAG } from '@/lib/public/initiatives'
 import { serializeInitiative } from '@/lib/dashboard/serialize'
 import { composeInitiativeFields, slugify } from '@/lib/dashboard/initiative-writer'
 import { writeAudit } from '@/lib/dashboard/audit'
@@ -76,6 +78,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     after: { titleBg: created.titleBg, status: created.status },
     ipAddress: getIp(req),
   })
+
+  revalidateTag(PUBLIC_CONTENT_CACHE_TAG, 'max')
+  revalidatePath('/')
+  revalidatePath('/about')
+  revalidatePath('/impact')
+  revalidatePath('/initiatives')
+  revalidatePath(`/initiatives/${created.slug}`)
 
   return NextResponse.json({ initiative: serializeInitiative(created.toObject()) }, { status: 201 })
 }

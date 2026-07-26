@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { requireAdmin } from '@/lib/auth/require-admin'
 import { getMongoose } from '@/lib/mongo'
 import { Partner } from '@/lib/mongo/models/Partner'
+import { PUBLIC_CONTENT_CACHE_TAG } from '@/lib/public/initiatives'
 import { translateFields } from '@/lib/translate'
 import { serializePartner } from '@/lib/dashboard/serialize'
 import { uniquePartnerSlug } from '@/lib/dashboard/partner-slug'
@@ -73,6 +75,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     after: { nameBg: created.nameBg },
     ipAddress: getIp(req),
   })
+
+  revalidateTag(PUBLIC_CONTENT_CACHE_TAG, 'max')
+  revalidatePath('/')
+  revalidatePath('/about')
+  revalidatePath('/impact')
+  revalidatePath('/initiatives')
+  revalidatePath(`/initiatives/partners/${created.slug}`)
 
   return NextResponse.json({ partner: serializePartner(created.toObject()) }, { status: 201 })
 }
