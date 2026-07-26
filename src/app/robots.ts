@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/studio", "/api", "/cart", "/checkout", "/order"],
     },
-    sitemap: `${process.env.APP_BASE_URL}/sitemap.xml`,
-    host: process.env.APP_BASE_URL,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }
