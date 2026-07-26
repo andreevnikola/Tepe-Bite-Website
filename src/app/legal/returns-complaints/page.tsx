@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -26,13 +27,7 @@ export default function ReturnsComplaintsPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Връщане, отказ и рекламации"
-        titleEn="Returns, Withdrawal and Complaints"
-        subtitleBg="Вашите права при отказ от договор, условия за връщане и процедура за рекламации."
-        subtitleEn="Your rights on withdrawal from contract, return conditions and complaints procedure."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["returns-complaints"].copy} sections={sections}>
         {/* 1. Withdrawal */}
         <LegalSectionCard id="withdrawal" title={bg ? "1. Право на отказ от договор от разстояние" : "1. Right of Withdrawal from a Distance Contract"}>
           <p style={bodyText}>

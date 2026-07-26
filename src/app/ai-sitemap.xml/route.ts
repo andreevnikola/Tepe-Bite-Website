@@ -1,5 +1,8 @@
 import { SITE_URL } from "@/lib/config/site-info";
-import { getPublicPages, type PublicPage } from "@/lib/public/public-pages";
+import {
+  getPublicPagesResult,
+  type PublicPage,
+} from "@/lib/public/public-pages";
 import { LANGS, type Lang } from "@/store/lang";
 
 /**
@@ -59,7 +62,7 @@ function urlEntry(page: PublicPage, lang: Lang): string {
 }
 
 export async function GET(): Promise<Response> {
-  const pages = await getPublicPages();
+  const { pages, degraded } = await getPublicPagesResult();
 
   // Group by page so both language variants of a page sit next to each other.
   const body = pages
@@ -75,7 +78,14 @@ ${body}
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+      // A degraded feed is missing a whole content type (a datastore read
+      // failed), so it must never be cached: one transient MongoDB failure
+      // previously pinned an incomplete feed for an hour and every initiative
+      // and partner URL disappeared from the AI Search index.
+      "Cache-Control": degraded
+        ? "no-store"
+        : "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+      ...(degraded ? { "X-Sitemap-Degraded": "1" } : {}),
     },
   });
 }

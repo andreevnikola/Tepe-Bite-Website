@@ -3,10 +3,10 @@ import ProductPageContent from "@/components/ProductPageContent";
 import { getAllLocations } from "@/sanity/queries";
 import type { Location } from "@/sanity/types";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
   ogLocale,
+  retrievalMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
@@ -14,8 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";
   const title = en
-    ? "ТЕПЕ bite — Salted caramel | A wholesome bar with a cause"
-    : "ТЕПЕ bite — Солен карамел | Здравословно барче с кауза";
+    ? "Salted caramel — a wholesome bar with a cause"
+    : "Солен карамел — здравословно барче с кауза";
   const description = en
     ? "ТЕПЕ bite is a low-carb salted-caramel bar created in Plovdiv — with fibre, plant protein and a mission behind every purchase."
     : "ТЕПЕ bite е нисковъглехидратно барче със солен карамел, създадено в Пловдив — с фибри, растителен протеин и мисия зад всяка покупка.";
@@ -33,12 +33,14 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     alternates: languageAlternates("/product"),
     openGraph: {
-      title,
+      title: en
+        ? "ТЕПЕ bite — Salted caramel | A wholesome bar with a cause"
+        : "ТЕПЕ bite — Солен карамел | Здравословно барче с кауза",
       description,
       type: "website",
       locale: ogLocale(lang),
     },
-    other: contentMeta(lang, "page", { topic: "product" }),
+    other: retrievalMeta({ lang, pageType: "product", topic: "product" }),
   };
 }
 

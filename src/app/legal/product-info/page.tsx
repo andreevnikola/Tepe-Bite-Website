@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -32,13 +33,7 @@ export default function ProductInfoPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Информация за продукта и безопасност на храните"
-        titleEn="Product Information and Food Safety Notice"
-        subtitleBg="Пълна информация за ТЕПЕ bite барчето — съставки, алергени, хранителни стойности и условия за съхранение."
-        subtitleEn="Full information for the ТЕПЕ bite bar — ingredients, allergens, nutritional values and storage conditions."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["product-info"].copy} sections={sections}>
         <LegalNote>
           {bg
             ? "Тази страница отразява информацията от опаковката. Проверете съставките, алергените, условията за съхранение, срока на годност и партидния номер върху опаковката преди консумация."

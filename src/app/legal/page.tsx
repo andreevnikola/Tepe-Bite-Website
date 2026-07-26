@@ -2,6 +2,7 @@
 import Footer from "@/components/Footer";
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -104,13 +105,7 @@ export default function LegalIndexPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Правна информация"
-        titleEn="Legal Center"
-        subtitleBg="Всичко, което трябва да знаете за вашите права, нашите задължения и правилата за работа на ТЕПЕ bite."
-        subtitleEn="Everything you need to know about your rights, our obligations and how ТЕПЕ bite operates."
-        isIndex
-      >
+      <LegalPageLayout {...LEGAL_PAGES["index"].copy} isIndex>
         {/* Intro */}
         <p
           style={{

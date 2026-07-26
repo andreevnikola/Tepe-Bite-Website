@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -29,13 +30,7 @@ export default function DeliveryPaymentPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Доставка и плащане"
-        titleEn="Delivery and Payment"
-        subtitleBg="Информация за доставка чрез Speedy, цени, срокове и наложен платеж."
-        subtitleEn="Information about delivery via Speedy, prices, timelines and cash on delivery."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["delivery-payment"].copy} sections={sections}>
         {/* 1. Area */}
         <LegalSectionCard id="area" title={bg ? "1. Зона на доставка" : "1. Delivery Area"}>
           <p style={bodyText}>

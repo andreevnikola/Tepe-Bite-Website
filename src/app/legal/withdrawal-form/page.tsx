@@ -6,6 +6,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -15,12 +16,7 @@ export default function WithdrawalFormPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Стандартен формуляр за отказ"
-        titleEn="Standard Withdrawal Form"
-        subtitleBg="Можете да копирате и изпратите този формуляр по имейл или да го разпечатате."
-        subtitleEn="You may copy and send this form by email or print it."
-      >
+      <LegalPageLayout {...LEGAL_PAGES["withdrawal-form"].copy}>
         <LegalNote>
           {bg
             ? "Връщането на продукт е предмет на условията за връщане и приложимите правила за хранителни/хигиенни продукти. Вижте нашата страница Връщане, отказ и рекламации."

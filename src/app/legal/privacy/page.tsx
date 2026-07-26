@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -29,13 +30,7 @@ export default function PrivacyPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Политика за поверителност"
-        titleEn="Privacy Policy"
-        subtitleBg="Как събираме, използваме и защитаваме вашите лични данни при използване на сайта и при поръчка."
-        subtitleEn="How we collect, use and protect your personal data when using the website and placing an order."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["privacy"].copy} sections={sections}>
         {/* 1. Controller */}
         <LegalSectionCard id="controller" title={bg ? "1. Администратор на лични данни" : "1. Data Controller"}>
           <p style={bodyText}>

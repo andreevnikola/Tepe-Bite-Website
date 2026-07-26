@@ -22,20 +22,42 @@ import {
 } from "@/lib/public/initiatives";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
+  ogLocale,
+  retrievalMeta,
 } from "@/lib/i18n/metadata";
 import { getAllNewsPosts } from "@/sanity/queries";
 import type { Metadata } from "next";
 
-// The title/description come from the root layout's localized defaults; here we
-// add the homepage's own canonical + hreflang alternates and retrieval taxonomy.
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
+  const en = lang === "en";
+  // Same copy as the root layout's defaults, but stated explicitly here so the
+  // homepage carries its own title/description instead of inheriting silently.
+  // The title is written out in full: a `template` applies to child segments
+  // only, so the homepage — the root layout's own segment — never gets one.
+  const title = en
+    ? "ТЕПЕ bite — A snack bar with character from Plovdiv"
+    : "ТЕПЕ bite — Барче с характер от Пловдив";
+  const description = en
+    ? "ТЕПЕ bite is a salted-caramel snack bar created in Plovdiv — low in net carbs, high in fibre, with a mission behind every purchase."
+    : "ТЕПЕ bite е барче със солен карамел, създадено в Пловдив — с ниско съдържание на нетни въглехидрати, високо съдържание на фибри и мисия зад всяка покупка.";
   return {
+    title,
+    description,
     alternates: languageAlternates("/"),
-    other: contentMeta(lang, "page", { topic: "home" }),
+    openGraph: {
+      title: en
+        ? "ТЕПЕ bite — A snack bar with character from Plovdiv"
+        : "ТЕПЕ bite — Барче с характер от Пловдив",
+      description: en
+        ? "Delicious for you. Meaningful for the community."
+        : "Вкусно за теб. Смислено за общността.",
+      type: "website",
+      locale: ogLocale(lang),
+    },
+    other: retrievalMeta({ lang, pageType: "home", topic: "brand" }),
   };
 }
 

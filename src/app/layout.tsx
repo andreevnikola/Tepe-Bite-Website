@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import Providers from "@/components/Providers";
 import { SITE_URL } from "@/lib/config/site-info";
-import { getRequestLang, ogLocale } from "@/lib/i18n/metadata";
+import { getRequestLang, ogLocale, TITLE_TEMPLATE } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import { Caveat, DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -54,7 +54,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(SITE_URL),
-    title,
+    // `default` is the homepage title; `template` normalises every page title
+    // to one brand suffix, so pages below supply only their own subject.
+    title: { default: title, template: TITLE_TEMPLATE },
     description,
     keywords,
     openGraph: {

@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -34,13 +35,7 @@ export default function TermsPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Общи условия"
-        titleEn="Terms and Conditions"
-        subtitleBg="Условия за използване на уебсайта tepebite.com и за поръчка на продуктите на ТЕПЕ bite."
-        subtitleEn="Terms for using the ТЕПЕ bite website and ordering ТЕПЕ bite products."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["terms"].copy} sections={sections}>
         {/* 1. Merchant */}
         <LegalSectionCard
           id="merchant"

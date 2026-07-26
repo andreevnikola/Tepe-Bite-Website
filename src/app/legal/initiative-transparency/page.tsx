@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -33,13 +34,7 @@ export default function InitiativeTransparencyPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Прозрачност на инициативите"
-        titleEn="Initiative Transparency"
-        subtitleBg="Как ТЕПЕ bite подкрепя градски инициативи и какво обещаваме за прозрачност."
-        subtitleEn="How ТЕПЕ bite supports local urban initiatives and what we promise on transparency."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["initiative-transparency"].copy} sections={sections}>
         {/* 1. Why */}
         <LegalSectionCard
           id="why"

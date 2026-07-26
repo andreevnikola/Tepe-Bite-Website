@@ -7,6 +7,7 @@ import LegalPageLayout, {
   bodyText,
 } from "@/components/legal/LegalPageLayout";
 import { SITE_INFO } from "@/lib/config/site-info";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 
@@ -41,12 +42,7 @@ export default function TraderInfoPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Данни за търговеца"
-        titleEn="Trader Information / Legal Notice"
-        subtitleBg={`Идентификационни и регистрационни данни на ${SITE_INFO.brand.legalEntity} — търговска марка ТЕПЕ bite.`}
-        subtitleEn={`Identification and registration details of ${SITE_INFO.brand.legalEntity} — trading as ТЕПЕ bite.`}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["trader-info"].copy}>
         {/* Identity */}
         <LegalSectionCard title={bg ? "Идентификация на търговеца" : "Trader Identity"}>
           <Row label={bg ? "Търговска марка" : "Brand"} value={<strong>{SITE_INFO.brand.name}</strong>} />

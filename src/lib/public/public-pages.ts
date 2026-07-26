@@ -41,37 +41,65 @@ export const STATIC_PATHS = [
   "/legal/withdrawal-form",
 ] as const;
 
+export type PublicPagesResult = {
+  pages: PublicPage[];
+  /**
+   * True when at least one dynamic source failed to load, so the list is
+   * missing a whole content type rather than genuinely being empty. Callers
+   * must not cache a degraded list: a single transient MongoDB failure once
+   * pinned an hour-long sitemap with zero initiative URLs, which silently
+   * removed every initiative from the AI Search index.
+   */
+  degraded: boolean;
+};
+
 /**
  * Every public page, static first then dynamic (Mongo initiatives/partners,
  * Sanity news/locations). Transactional and private routes (`/cart`,
  * `/checkout`, `/order*`, `/admin/*`, `/studio/*`, `/api/*`) are deliberately
  * absent — they are also disallowed in robots.txt.
  */
-export async function getPublicPages(): Promise<PublicPage[]> {
+export async function getPublicPagesResult(): Promise<PublicPagesResult> {
   const [initiatives, partners, news, locations] = await Promise.all([
     getPublishedInitiativeSlugs(),
     getPublicPartnerSlugs(),
-    getAllNewsPosts(),
-    getAllLocations(),
+    getAllNewsPosts().catch((err) => {
+      console.error("sitemap: failed to load news posts:", err);
+      return null;
+    }),
+    getAllLocations().catch((err) => {
+      console.error("sitemap: failed to load locations:", err);
+      return null;
+    }),
   ]);
 
-  return [
+  const pages = [
     ...STATIC_PATHS.map((path) => ({ path })),
-    ...initiatives.map((i) => ({
+    ...(initiatives ?? []).map((i) => ({
       path: `/initiatives/${i.slug}`,
       lastModified: i.updatedAt,
     })),
-    ...partners.map((p) => ({
+    ...(partners ?? []).map((p) => ({
       path: `/initiatives/partners/${p.slug}`,
       lastModified: p.updatedAt,
     })),
-    ...news.map((n) => ({
+    ...(news ?? []).map((n) => ({
       path: `/news/${n.slug.current}`,
       lastModified: n.publishedAt,
     })),
-    ...locations.map((l) => ({
+    ...(locations ?? []).map((l) => ({
       path: `/partnering-locations/${l.slug.current}`,
       lastModified: l._createdAt,
     })),
   ];
+
+  return {
+    pages,
+    degraded: [initiatives, partners, news, locations].some((r) => r === null),
+  };
+}
+
+/** Convenience wrapper for callers that cannot react to degradation. */
+export async function getPublicPages(): Promise<PublicPage[]> {
+  return (await getPublicPagesResult()).pages;
 }

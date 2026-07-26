@@ -5,17 +5,17 @@ import {
   type OverviewData,
 } from "@/lib/public/initiatives";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
   ogLocale,
+  retrievalMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";
-  const title = en ? "Our initiatives | ТЕПЕ bite" : "Нашите инициативи | ТЕПЕ bite";
+  const title = en ? "Our initiatives" : "Нашите инициативи";
   const description = en
     ? "A transparent overview of ТЕПЕ bite's initiatives for Plovdiv — money invested, partners, progress and every inflow."
     : "Прозрачен преглед на инициативите на ТЕПЕ bite за Пловдив — вложени средства, партньори, напредък и всяко постъпление.";
@@ -33,14 +33,16 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     alternates: languageAlternates("/initiatives"),
     openGraph: {
-      title,
+      title: en
+        ? "Our initiatives | ТЕПЕ bite"
+        : "Нашите инициативи | ТЕПЕ bite",
       description: en
         ? "A transparent overview of ТЕПЕ bite's social initiatives for Plovdiv."
         : "Прозрачен преглед на социалните инициативи на ТЕПЕ bite за Пловдив.",
       type: "website",
       locale: ogLocale(lang),
     },
-    other: contentMeta(lang, "page", { topic: "initiatives" }),
+    other: retrievalMeta({ lang, pageType: "listing", topic: "initiatives" }),
   };
 }
 

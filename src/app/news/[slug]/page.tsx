@@ -4,10 +4,11 @@ import Nav from "@/components/Nav";
 import { urlFor } from "@/sanity/image";
 import { getAllNewsSlugs, getNewsPostBySlug } from "@/sanity/queries";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
   ogLocale,
+  retrievalMeta,
+  truncateForMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -25,6 +26,28 @@ export async function generateStaticParams() {
   }
 }
 
+/**
+ * Article bodies are Markdown (rendered by `ArticleBody` with react-markdown).
+ * Strip the syntax so a body-derived description reads as prose instead of
+ * leaking `##`, links and image tags into the search snippet.
+ */
+function markdownToPlainText(md: string): string {
+  return md
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]*)`/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^\s{0,3}#{1,6}\s+/gm, " ")
+    .replace(/^\s{0,3}>\s?/gm, " ")
+    .replace(/^\s{0,3}([-*_]\s*){3,}$/gm, " ")
+    .replace(/^\s{0,3}[-*+]\s+/gm, " ")
+    .replace(/^\s{0,3}\d+[.)]\s+/gm, " ")
+    .replace(/(\*\*\*|\*\*|\*|~~|__)/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -39,8 +62,16 @@ export async function generateMetadata({
     if (!post) return {};
     const en = lang === "en";
     const heading = (en && post.titleEn) || post.titleBg;
-    const title = `${heading} | ТЕПЕ bite`;
-    const description = (en && post.excerptEn) || post.excerptBg || heading;
+    const title = heading;
+
+    // Excerpt first; otherwise the opening of the article body the page shows;
+    // the heading only as a last resort (a post with neither excerpt nor body).
+    const excerpt = ((en && post.excerptEn) || post.excerptBg || "").trim();
+    const body = ((en && post.bodyEn) || post.bodyBg || "").trim();
+    const description = truncateForMeta(
+      excerpt || (body && markdownToPlainText(body)) || heading,
+    );
+
     return {
       title,
       description,
@@ -53,7 +84,7 @@ export async function generateMetadata({
         publishedTime: post.publishedAt,
         locale: ogLocale(lang),
       },
-      other: contentMeta(lang, "news"),
+      other: retrievalMeta({ lang, pageType: "news", topic: "news" }),
     };
   } catch {
     return {};

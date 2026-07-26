@@ -8,10 +8,10 @@ import {
   type PartnerCarouselItem,
 } from "@/lib/public/initiatives";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
   ogLocale,
+  retrievalMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
@@ -19,8 +19,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";
   const title = en
-    ? "About us | ТЕПЕ bite — the young people behind the bar with a cause"
-    : "За нас | ТЕПЕ bite — младежите зад барчето с кауза";
+    ? "About us — the young people behind the bar with a cause"
+    : "За нас — младежите зад барчето с кауза";
   const description = en
     ? "The ТЕПЕ bite story: a student team from Plovdiv building a real brand with a cause. Our path from Teenovator to our first initiative, the team, our partners and the support of Fantastico."
     : "Историята на ТЕПЕ bite: ученически екип от Пловдив, който изгражда истински бранд с кауза. Пътят ни от Teenovator до първата инициатива, екипът, партньорите и подкрепата на Fantastico.";
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [{ url: "/photos/team.jpg" }],
       locale: ogLocale(lang),
     },
-    other: contentMeta(lang, "page", { topic: "about" }),
+    other: retrievalMeta({ lang, pageType: "about", topic: "team-story" }),
   };
 }
 

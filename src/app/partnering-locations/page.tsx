@@ -8,19 +8,17 @@ import PartnerCTA from "@/components/locations/PartnerCTA";
 import { getAllLocations } from "@/sanity/queries";
 import type { Location } from "@/sanity/types";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
   ogLocale,
+  retrievalMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";
-  const title = en
-    ? "Partnering locations — ТЕПЕ bite"
-    : "Партниращи обекти — ТЕПЕ bite";
+  const title = en ? "Partnering locations" : "Партниращи обекти";
   const description = en
     ? "Find ТЕПЕ bite in shops across Plovdiv. Explore our partners on an interactive map."
     : "Намери ТЕПЕ bite в магазини из Пловдив. Разгледай нашите партньори на интерактивна карта.";
@@ -28,8 +26,15 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: languageAlternates("/partnering-locations"),
-    openGraph: { title, description, type: "website", locale: ogLocale(lang) },
-    other: contentMeta(lang, "page", { topic: "locations" }),
+    openGraph: {
+      title: en
+        ? "Partnering locations — ТЕПЕ bite"
+        : "Партниращи обекти — ТЕПЕ bite",
+      description,
+      type: "website",
+      locale: ogLocale(lang),
+    },
+    other: retrievalMeta({ lang, pageType: "listing", topic: "stores" }),
   };
 }
 

@@ -9,10 +9,10 @@ import {
 } from "@/lib/public/initiatives";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import {
-  contentMeta,
   getRequestLang,
   languageAlternates,
   ogLocale,
+  retrievalMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 
@@ -20,11 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const lang = await getRequestLang();
   const en = lang === "en";
   const title = en
-    ? "ТЕПЕ bite Impact | Initiatives for Plovdiv"
-    : "ТЕПЕ bite Impact | Инициативи за Пловдив";
+    ? "ТЕПЕ bite Impact — Initiatives for Plovdiv"
+    : "ТЕПЕ bite Impact — Инициативи за Пловдив";
   const description = en
-    ? "ТЕПЕ bite Impact is our social work for Plovdiv: we pick visible initiatives, work with partners, municipalities and external funding, and the fixed €0.15 from every bar feeds the fund. All of it — open and accounted for."
-    : "ТЕПЕ bite Impact е социалната ни дейност за Пловдив: избираме видими инициативи, работим с партньори, общини и външно финансиране, а фиксираните 0.15 € от всяко барче захранват фонда. Всичко — открито и отчетено.";
+    ? "ТЕПЕ bite Impact is our social work for Plovdiv: visible initiatives with partners, municipalities and external funding, fed by the fixed €0.15 from every bar — open and accounted for."
+    : "ТЕПЕ bite Impact е социалната ни дейност за Пловдив: видими инициативи с партньори, общини и външно финансиране, захранвани от фиксираните 0.15 € от всяко барче — открито и отчетено.";
   return {
     title,
     description,
@@ -40,7 +40,9 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     alternates: languageAlternates("/impact"),
     openGraph: {
-      title,
+      title: en
+        ? "ТЕПЕ bite Impact | Initiatives for Plovdiv"
+        : "ТЕПЕ bite Impact | Инициативи за Пловдив",
       description: en
         ? "Visible initiatives for Plovdiv through ТЕПЕ bite Impact — partners, external funding and the fixed €0.15 from every bar, accounted for openly."
         : "Видими инициативи за Пловдив през ТЕПЕ bite Impact — партньори, външно финансиране и фиксираните 0.15 € от всяко барче, отчетени открито.",
@@ -48,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [{ url: "/brand/TEPEbiteImpact.png" }],
       locale: ogLocale(lang),
     },
-    other: contentMeta(lang, "page", { topic: "impact" }),
+    other: retrievalMeta({ lang, pageType: "impact", topic: "impact-fund" }),
   };
 }
 

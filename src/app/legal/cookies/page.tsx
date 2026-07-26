@@ -6,6 +6,7 @@ import LegalPageLayout, {
   LegalTodo,
   bodyText,
 } from "@/components/legal/LegalPageLayout";
+import { LEGAL_PAGES } from "@/lib/legal/pages";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
@@ -23,13 +24,7 @@ export default function CookiesPage() {
 
   return (
     <>
-      <LegalPageLayout
-        titleBg="Политика за бисквитки"
-        titleEn="Cookie Policy"
-        subtitleBg="Какви бисквитки и технологии за локално съхранение използваме и защо."
-        subtitleEn="What cookies and local storage technologies we use and why."
-        sections={sections}
-      >
+      <LegalPageLayout {...LEGAL_PAGES["cookies"].copy} sections={sections}>
         {/* 1. What are cookies */}
         <LegalSectionCard id="what-are-cookies" title={bg ? "1. Какво са бисквитки?" : "1. What Are Cookies?"}>
           <p style={bodyText}>
