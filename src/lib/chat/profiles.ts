@@ -45,6 +45,16 @@ export type RetrievalProfile = {
   targetSources: number;
   /** Upper bound on search calls per visitor message, across all stages. */
   maxQueries: number;
+  /**
+   * Source characters handed to the answer model for this kind of question.
+   *
+   * The dominant term in the token bill, and it should not be one number for
+   * every question: a price lookup is answered from one short passage, while a
+   * ranking is only honest if it sees several initiatives. Bulgarian runs about
+   * 2.8 characters per token, so these are roughly 1050 / 1250 / 2150 prompt
+   * tokens of evidence. Capped by `MAX_CONTEXT_CHARS`.
+   */
+  contextChars: number;
 };
 
 /**
@@ -63,6 +73,7 @@ export const RETRIEVAL_PROFILE_SETTINGS: Record<
     maxResults: 6,
     targetSources: 3,
     maxQueries: 3,
+    contextChars: 3000,
   },
   broad: {
     minScore: 0.34,
@@ -70,6 +81,7 @@ export const RETRIEVAL_PROFILE_SETTINGS: Record<
     maxResults: 8,
     targetSources: 4,
     maxQueries: 4,
+    contextChars: 3500,
   },
   comparative: {
     minScore: 0.3,
@@ -77,6 +89,7 @@ export const RETRIEVAL_PROFILE_SETTINGS: Record<
     maxResults: 10,
     targetSources: 6,
     maxQueries: 5,
+    contextChars: 6000,
   },
   follow_up: {
     minScore: 0.38,
@@ -84,6 +97,7 @@ export const RETRIEVAL_PROFILE_SETTINGS: Record<
     maxResults: 8,
     targetSources: 4,
     maxQueries: 3,
+    contextChars: 3200,
   },
   future_unverified: {
     minScore: 0.38,
@@ -91,6 +105,7 @@ export const RETRIEVAL_PROFILE_SETTINGS: Record<
     maxResults: 8,
     targetSources: 3,
     maxQueries: 3,
+    contextChars: 2600,
   },
 };
 

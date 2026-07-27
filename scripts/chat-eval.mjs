@@ -331,6 +331,8 @@ for (const testCase of cases) {
     queries: debug?.queries ?? null,
     retrievalStage: debug?.stage ?? null,
     plannerOrigin: debug?.plannerOrigin ?? null,
+    tokens: debug?.tokens ?? null,
+    contextChars: debug?.contextChars ?? null,
     directRetrieval: retrieval,
     failures,
   };
@@ -376,6 +378,15 @@ for (const testCase of cases) {
       `     ${C.dim}timings planner=${timings.plannerMs}ms retrieval=${timings.retrievalMs}ms answer=${timings.answerMs}ms total=${timings.totalMs}ms${C.reset}`,
     );
   }
+  if (debug?.tokens) {
+    const t = debug.tokens;
+    console.log(
+      `     ${C.cyan}tokens${C.reset} planner=${t.planner} answer=${t.answer}` +
+        (t.answerPrompt != null ? ` (prompt=${t.answerPrompt}+completion=${t.answerCompletion})` : "") +
+        ` ${C.bold}total=${t.total}${C.reset}` +
+        (debug.contextChars != null ? ` ${C.dim}context=${debug.contextChars} chars${C.reset}` : ""),
+    );
+  }
   for (const f of failures) console.log(`     ${C.red}✗ ${f}${C.reset}`);
   console.log();
 }
@@ -384,6 +395,32 @@ console.log(
   `${C.bold}${passed} passed, ${failed} failed${C.reset}` +
     (criticalFailed ? ` ${C.red}(${criticalFailed} critical)${C.reset}` : ""),
 );
+
+/**
+ * Token accounting. The free tier's daily allowance is what decides how many
+ * questions the assistant can serve, so the average per message is a headline
+ * result of every run, not a footnote — reported alongside how many messages a
+ * day it implies.
+ */
+const GROQ_DAILY_TOKEN_ALLOWANCE = 200_000;
+const measured = results.filter((r) => r.tokens?.total != null);
+if (measured.length > 0) {
+  const sum = (pick) => measured.reduce((n, r) => n + (pick(r) ?? 0), 0);
+  const avg = (pick) => Math.round(sum(pick) / measured.length);
+  const totals = measured.map((r) => r.tokens.total).sort((a, b) => a - b);
+  const avgTotal = avg((r) => r.tokens.total);
+  const skipped = measured.filter((r) => r.plannerOrigin === "shortcut").length;
+
+  console.log(
+    `${C.bold}tokens${C.reset} avg/message ${C.bold}${avgTotal}${C.reset}` +
+      ` (planner ${avg((r) => r.tokens.planner)}, answer ${avg((r) => r.tokens.answer)})` +
+      ` · median ${totals[Math.floor(totals.length / 2)]} · max ${totals[totals.length - 1]}` +
+      ` · planner skipped on ${skipped}/${measured.length}`,
+  );
+  console.log(
+    `${C.dim}       ≈ ${Math.floor(GROQ_DAILY_TOKEN_ALLOWANCE / Math.max(1, avgTotal))} messages/day at the 200k daily allowance${C.reset}`,
+  );
+}
 
 if (JSON_OUT) {
   writeFileSync(JSON_OUT, JSON.stringify({ base: BASE, at: new Date().toISOString(), results }, null, 2));

@@ -63,8 +63,14 @@ export function getGroqConfig(): { config: GroqConfig | null; missing: string[] 
       plannerTemperature: num("GROQ_PLANNER_TEMPERATURE", 0.4),
       answerTemperature: num("GROQ_ANSWER_TEMPERATURE", 0.4),
       reasoningEffort: process.env.GROQ_REASONING_EFFORT || "none",
-      plannerMaxTokens: num("GROQ_PLANNER_MAX_TOKENS", 400),
-      answerMaxTokens: num("GROQ_ANSWER_MAX_TOKENS", 900),
+      // Completion caps, not targets. The planner emits a fixed nine-key object
+      // that measures ~120 tokens; the answer prompt asks for two to four
+      // sentences, which is ~200 in Bulgarian. Both are set to roughly double
+      // the expected output — enough headroom that a legitimately longer answer
+      // is never truncated mid-sentence, tight enough that a model that starts
+      // rambling is cut off before it costs a second answer's worth of quota.
+      plannerMaxTokens: num("GROQ_PLANNER_MAX_TOKENS", 300),
+      answerMaxTokens: num("GROQ_ANSWER_MAX_TOKENS", 550),
       timeoutMs: num("GROQ_REQUEST_TIMEOUT_MS", 8000),
     },
     missing,
@@ -126,10 +132,17 @@ export function isChatFlagEnabled(): boolean {
 
 /** Longest single visitor message accepted, in characters. */
 export const MAX_MESSAGE_CHARS = 1000;
-/** Prior turns kept for follow-up resolution. Older turns are dropped. */
+/**
+ * Prior turns the browser may send. Only a compressed summary of them ever
+ * reaches a model — see `history.ts` — so this bounds the request, not the cost.
+ */
 export const MAX_HISTORY_TURNS = 8;
-/** Chunk characters handed to the answer model, across all sources. */
-export const MAX_CONTEXT_CHARS = 9000;
+/**
+ * Ceiling on chunk characters handed to the answer model, across all sources.
+ * The per-question budget is the retrieval profile's `contextChars`; this is the
+ * cap none of them may exceed.
+ */
+export const MAX_CONTEXT_CHARS = 6000;
 /** Distinct source pages handed to the answer model. */
 export const MAX_CONTEXT_SOURCES = 6;
 /** Source cards rendered to the visitor. */

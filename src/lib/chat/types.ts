@@ -69,8 +69,12 @@ export type PlannerResult = {
   allowCrossLanguageFallback: boolean;
 };
 
-/** How the plan was produced — surfaced in diagnostics, never to the visitor. */
-export type PlannerOrigin = "groq" | "groq_retry" | "fallback";
+/**
+ * How the plan was produced — surfaced in diagnostics, never to the visitor.
+ * `shortcut` is a deliberate skip on a question the deterministic router already
+ * classifies unambiguously; `fallback` is the same plan after Groq failed.
+ */
+export type PlannerOrigin = "groq" | "groq_retry" | "fallback" | "shortcut";
 
 export type PlannedQuery = {
   plan: PlannerResult;

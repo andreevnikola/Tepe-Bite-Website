@@ -1,6 +1,5 @@
 import "server-only";
-import { GROQ_CHAT_COMPLETIONS_URL, MAX_HISTORY_TURNS } from "@/lib/chat/config";
-import type { ChatTurn } from "@/lib/chat/types";
+import { GROQ_CHAT_COMPLETIONS_URL } from "@/lib/chat/config";
 import {
   ProviderError,
   providerErrorFromResponse,
@@ -39,6 +38,33 @@ export type GroqJsonCompletionOptions = {
   label: string;
 };
 
+/**
+ * What the call actually cost, as the provider counted it — not as we estimated
+ * it. On a free tier the daily token allowance is the binding constraint on how
+ * many questions the assistant can answer, so every stage reports its real cost
+ * and the route sums them; guessing from character counts is off by the ratio
+ * between Cyrillic and Latin tokenisation, which is nearly 1.5×.
+ */
+export type GroqUsage = {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+};
+
+export const ZERO_USAGE: GroqUsage = {
+  promptTokens: 0,
+  completionTokens: 0,
+  totalTokens: 0,
+};
+
+export function addUsage(a: GroqUsage, b: GroqUsage): GroqUsage {
+  return {
+    promptTokens: a.promptTokens + b.promptTokens,
+    completionTokens: a.completionTokens + b.completionTokens,
+    totalTokens: a.totalTokens + b.totalTokens,
+  };
+}
+
 export type GroqJsonCompletionResult<T> = {
   /**
    * The exact JSON text the model produced. Kept even when it parses, because
@@ -55,6 +81,8 @@ export type GroqJsonCompletionResult<T> = {
   data?: T;
   /** Short reason `data` is missing. Safe to log. */
   parseError?: string;
+  /** Provider-reported cost of this one call. Zero if it did not report any. */
+  usage: GroqUsage;
 };
 
 /** Only the fields we actually consume. Everything else is ignored. */
@@ -70,7 +98,24 @@ type GroqCompletionEnvelope = {
       reasoning?: unknown;
     };
   }>;
+  usage?: {
+    prompt_tokens?: unknown;
+    completion_tokens?: unknown;
+    total_tokens?: unknown;
+  };
 };
+
+function readUsage(envelope: GroqCompletionEnvelope): GroqUsage {
+  const n = (value: unknown): number =>
+    typeof value === "number" && Number.isFinite(value) ? value : 0;
+  const promptTokens = n(envelope.usage?.prompt_tokens);
+  const completionTokens = n(envelope.usage?.completion_tokens);
+  return {
+    promptTokens,
+    completionTokens,
+    totalTokens: n(envelope.usage?.total_tokens) || promptTokens + completionTokens,
+  };
+}
 
 export async function groqJsonCompletion<T = unknown>(
   opts: GroqJsonCompletionOptions,
@@ -147,6 +192,7 @@ export async function groqJsonCompletion<T = unknown>(
 
     const content = typeof message?.content === "string" ? message.content : "";
     const latencyMs = Date.now() - startedAt;
+    const usage = readUsage(envelope);
 
     if (!content.trim()) {
       throw logged(
@@ -157,51 +203,15 @@ export async function groqJsonCompletion<T = unknown>(
     }
 
     try {
-      return { raw: content, latencyMs, data: JSON.parse(content) as T };
+      return { raw: content, latencyMs, usage, data: JSON.parse(content) as T };
     } catch {
       // Not a provider failure: the transport worked and the model simply wrote
       // something unusable. The caller decides whether to spend a retry on it.
-      return { raw: content, latencyMs, parseError: "content is not valid json" };
+      return { raw: content, latencyMs, usage, parseError: "content is not valid json" };
     }
   } finally {
     clearTimeout(timer);
   }
-}
-
-/**
- * Longest prior turn we replay. Our own answers may be up to 4000 characters,
- * and eight of those would dwarf the retrieved sources in the answer prompt —
- * history exists to resolve "it"/"тя", not to be re-read in full.
- */
-const HISTORY_TURN_MAX_CHARS = 1200;
-
-/**
- * Adapt stored conversation turns into provider messages.
- *
- * Prior turns are replayed with their real roles rather than flattened into a
- * transcript blob: both prompts need the model to treat earlier visitor text as
- * visitor text, and an assistant turn we generated as our own prior answer.
- * Shared by the planner and the answer generator so the two cannot drift.
- */
-export function toGroqHistory(
-  history: readonly ChatTurn[],
-  maxTurns: number = MAX_HISTORY_TURNS,
-): GroqMessage[] {
-  // A "turn" is a visitor message plus our reply, hence the doubling.
-  return history
-    .slice(-maxTurns * 2)
-    .map((turn) => ({
-      role: turn.role,
-      content: clampTurn(turn.content),
-    }))
-    .filter((turn) => turn.content.length > 0);
-}
-
-function clampTurn(content: string): string {
-  const text = content.trim();
-  return text.length <= HISTORY_TURN_MAX_CHARS
-    ? text
-    : `${text.slice(0, HISTORY_TURN_MAX_CHARS)}…`;
 }
 
 /**

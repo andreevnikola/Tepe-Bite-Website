@@ -114,6 +114,7 @@ export async function retrieve({
   // ── Shared chunk pool ──────────────────────────────────────────────────────
   const pool: RetrievedChunk[] = [];
   const pooledChunkIds = new Set<string>();
+  const pooledTexts = new Set<string>();
   const ranQueries = new Set<string>();
   const queries: string[] = [];
   let rawChunkCount = 0;
@@ -140,7 +141,16 @@ export async function retrieve({
     rawChunkCount += chunks.length;
     for (const chunk of applyScoreFloors(chunks, profile)) {
       if (pooledChunkIds.has(chunk.chunkId)) continue;
+      // The id catches the same chunk returned by two queries. It does not catch
+      // the same TEXT stored twice — a paragraph that appears on both the
+      // listing page and the detail page, or overlapping chunk windows — and
+      // that duplicate would be paid for twice in the answer prompt while adding
+      // no evidence. Best-scoring copy wins, since chunks arrive score-ordered.
+      const fingerprint = textFingerprint(chunk.text);
+      if (fingerprint && pooledTexts.has(fingerprint)) continue;
+
       pooledChunkIds.add(chunk.chunkId);
+      if (fingerprint) pooledTexts.add(fingerprint);
       pool.push(chunk);
     }
   };
@@ -381,6 +391,16 @@ function roundRobinByPage(
     }
   }
   return out;
+}
+
+/**
+ * Identity of a chunk's text for de-duplication. The opening is enough: two
+ * chunks that begin with the same 240 normalised characters are the same
+ * passage, and comparing the whole text would miss the common case where one
+ * copy is truncated differently from the other.
+ */
+function textFingerprint(text: string): string {
+  return text.replace(/\s+/g, " ").trim().toLowerCase().slice(0, 240);
 }
 
 function isAggregate(chunk: RetrievedChunk): boolean {

@@ -8,10 +8,16 @@ import {
 } from "@/lib/chat/profiles";
 import { PlannerOutputSchema, type PlannerOutput } from "@/lib/chat/schemas";
 import type { ChatTurn, PlannedQuery, PlannerResult } from "@/lib/chat/types";
-import { groqJsonCompletion, type GroqMessage } from "@/lib/chat/groq/client";
+import {
+  ZERO_USAGE,
+  addUsage,
+  groqJsonCompletion,
+  type GroqMessage,
+  type GroqUsage,
+} from "@/lib/chat/groq/client";
 import { isProviderError, type GroqErrorKind } from "@/lib/chat/groq/errors";
 import { buildPlannerMessages } from "./prompt";
-import { deterministicPlan } from "./fallback";
+import { canSkipPlanner, deterministicPlan } from "./fallback";
 
 /**
  * Stage 1 of the pipeline: turn a visitor message into a retrieval plan.
@@ -45,6 +51,8 @@ export type PlannerRun = PlannedQuery & {
    * cooldown, which can hide the assistant for hours after it would have worked.
    */
   plannerRetryAfterSeconds?: number;
+  /** Provider-counted cost of this stage, retries included. */
+  tokens: GroqUsage;
 };
 
 export async function runPlanner({
@@ -53,6 +61,19 @@ export async function runPlanner({
   uiLang,
 }: RunPlannerInput): Promise<PlannerRun> {
   const startedAt = Date.now();
+
+  // Cheapest possible plan: none at all. A short, self-contained, unambiguously
+  // classified question gets the deterministic plan and the Groq call is never
+  // made — see `canSkipPlanner`.
+  if (canSkipPlanner(message, history)) {
+    return {
+      plan: deterministicPlan(message, history, uiLang),
+      origin: "shortcut",
+      latencyMs: Date.now() - startedAt,
+      tokens: ZERO_USAGE,
+    };
+  }
+
   const { config, missing } = getGroqConfig();
 
   if (!config) {
@@ -62,14 +83,17 @@ export async function runPlanner({
   }
 
   const messages = buildPlannerMessages(message, history, uiLang);
+  let tokens = ZERO_USAGE;
 
   try {
     const first = await callPlanner(config, messages);
+    tokens = addUsage(tokens, first.usage);
     if (first.output) {
       return {
         plan: normalise(first.output),
         origin: "groq",
         latencyMs: Date.now() - startedAt,
+        tokens,
       };
     }
 
@@ -83,16 +107,18 @@ export async function runPlanner({
     ];
 
     const second = await callPlanner(config, retryMessages);
+    tokens = addUsage(tokens, second.usage);
     if (second.output) {
       return {
         plan: normalise(second.output),
         origin: "groq_retry",
         latencyMs: Date.now() - startedAt,
+        tokens,
       };
     }
 
     console.warn(`[chat] planner invalid twice, using fallback: ${second.problem}`);
-    return fallbackRun(message, history, uiLang, startedAt, "bad_response");
+    return fallbackRun(message, history, uiLang, startedAt, "bad_response", undefined, tokens);
   } catch (err) {
     if (!isProviderError(err)) throw err;
 
@@ -102,7 +128,15 @@ export async function runPlanner({
     //   rate_limit — an immediate retry deepens the limit we just hit.
     //   timeout / server / network — the request budget is already spent and
     //     the visitor is waiting; the deterministic plan costs microseconds.
-    return fallbackRun(message, history, uiLang, startedAt, err.kind, err.retryAfterSeconds);
+    return fallbackRun(
+      message,
+      history,
+      uiLang,
+      startedAt,
+      err.kind,
+      err.retryAfterSeconds,
+      tokens,
+    );
   }
 }
 
@@ -115,13 +149,14 @@ type PlannerAttempt = {
   raw: string;
   /** Short description of what was wrong, for the retry and the log. */
   problem: string;
+  usage: GroqUsage;
 };
 
 async function callPlanner(
   config: GroqConfig,
   messages: GroqMessage[],
 ): Promise<PlannerAttempt> {
-  const { raw, data, parseError } = await groqJsonCompletion<unknown>({
+  const { raw, data, parseError, usage } = await groqJsonCompletion<unknown>({
     apiKey: config.apiKey,
     model: config.plannerModel,
     messages,
@@ -132,12 +167,14 @@ async function callPlanner(
     label: "planner",
   });
 
-  if (parseError) return { raw, problem: parseError };
+  if (parseError) return { raw, problem: parseError, usage };
 
   const parsed = PlannerOutputSchema.safeParse(data);
-  if (!parsed.success) return { raw, problem: describeIssues(parsed.error.issues) };
+  if (!parsed.success) {
+    return { raw, problem: describeIssues(parsed.error.issues), usage };
+  }
 
-  return { output: parsed.data, raw, problem: "" };
+  return { output: parsed.data, raw, problem: "", usage };
 }
 
 /** zod issues, flattened to something short enough to put back in the prompt. */
@@ -195,11 +232,13 @@ function fallbackRun(
   startedAt: number,
   plannerFailure: GroqErrorKind,
   plannerRetryAfterSeconds?: number,
+  tokens: GroqUsage = ZERO_USAGE,
 ): PlannerRun {
   return {
     plan: deterministicPlan(message, history, uiLang),
     origin: "fallback",
     latencyMs: Date.now() - startedAt,
+    tokens,
     plannerFailure,
     ...(plannerRetryAfterSeconds !== undefined ? { plannerRetryAfterSeconds } : {}),
   };

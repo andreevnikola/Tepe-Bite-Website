@@ -184,6 +184,11 @@ export async function POST(
         stage: retrievalStage,
         queries,
         sourceCount: 0,
+        tokens: {
+          planner: planned.tokens.totalTokens,
+          answer: 0,
+          total: planned.tokens.totalTokens,
+        },
       }),
     });
   }
@@ -192,10 +197,11 @@ export async function POST(
   let answerMs = 0;
   let cards: SourceCard[] = [];
   try {
-    const { result, latencyMs } = await generateAnswer({
+    const { result, latencyMs, tokens, contextChars } = await generateAnswer({
       question: message,
       history,
       language: plan.language,
+      profile: plan.retrievalProfile,
       sources,
     });
     answerMs = latencyMs;
@@ -237,6 +243,16 @@ export async function POST(
         sourceCount: sources.length,
         sourceUrls: sources.map((s) => `${s.id} ${s.url}`),
         confidenceReason: result.confidenceReason,
+        contextChars,
+        tokens: {
+          plannerPrompt: planned.tokens.promptTokens,
+          plannerCompletion: planned.tokens.completionTokens,
+          planner: planned.tokens.totalTokens,
+          answerPrompt: tokens.promptTokens,
+          answerCompletion: tokens.completionTokens,
+          answer: tokens.totalTokens,
+          total: planned.tokens.totalTokens + tokens.totalTokens,
+        },
       }),
     });
   } catch (err) {

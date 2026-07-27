@@ -258,6 +258,78 @@ function pickProfile(
   return EXACT_INTENTS.has(intent) ? "exact" : "broad";
 }
 
+// ─── Skipping the model ──────────────────────────────────────────────────────
+
+/**
+ * Beyond this a message usually carries several questions or a story around the
+ * question, and a keyword match stops being evidence that we understood it.
+ */
+const CONFIDENT_MAX_CHARS = 180;
+
+/**
+ * Is the deterministic plan good enough that calling the model would buy
+ * nothing?
+ *
+ * The planner exists to do two things a regex cannot: resolve what a follow-up
+ * refers to, and enrich a vague question into a query worth searching. A short,
+ * self-contained question that lands in exactly one keyword family needs
+ * neither — "Какви са съставките?" is already the query, and the retriever is
+ * hybrid and reranked, so the visitor's own words routinely beat a reformulation
+ * (measured: a padded brand-heavy rewrite pushed the matching initiative page
+ * out of the results entirely, while the raw question returned it).
+ *
+ * Every skip is one fewer Groq call on a daily allowance that decides how many
+ * questions the assistant can answer at all, so the bar is deliberately narrow
+ * rather than clever:
+ *
+ *   - no history — anything with a prior turn may be a follow-up;
+ *   - short;
+ *   - at most two topic families matched, so `pickIntent`'s first-match rule is
+ *     resolving an overlap rather than guessing between unrelated readings;
+ *   - not a comparison and not an unannounced future, the two cases where the
+ *     plan changes what the answer is *allowed* to say. Both are regex-detected
+ *     here too, but a false positive on either would make the assistant refuse a
+ *     question it could have answered, so those keep going to the model.
+ *
+ * A wrong "yes" here is not a wrong answer: it is an unenriched query, which
+ * retrieval's staged fallback already handles.
+ */
+export function canSkipPlanner(
+  userMessage: string,
+  history: readonly ChatTurn[],
+): boolean {
+  if (history.length > 0) return false;
+
+  const message = userMessage.replace(/\s+/g, " ").trim();
+  if (message.length === 0 || message.length > CONFIDENT_MAX_CHARS) return false;
+  if (COMPARISON.test(message) || FUTURE.test(message) || RETAIL.test(message)) {
+    return false;
+  }
+
+  return countTopicFamilies(message) > 0;
+}
+
+/**
+ * How many families a message matches, ignoring overlaps that carry no
+ * ambiguity — and returning 0 for anything genuinely ambiguous.
+ *
+ * Requiring a single family was too strict to fire in practice: real questions
+ * name the subject twice ("колко от всяко **барче** отива за **фонда**" is
+ * PRODUCT + IMPACT), and `FAMILIES` is already ordered so that the first match
+ * is the right intent for exactly these overlaps. Two families are therefore
+ * accepted; three or more means the message is carrying several questions.
+ *
+ * BRAND is discounted when anything else matched: "ТЕПЕ" and "Пловдив" appear in
+ * questions about every topic, so counting them would veto the skip on the
+ * phrasing visitors use most.
+ */
+function countTopicFamilies(message: string): number {
+  const matched = FAMILIES.filter(({ pattern }) => pattern.test(message));
+  const topical = matched.filter(({ pattern }) => pattern !== BRAND);
+  const count = topical.length > 0 ? topical.length : matched.length;
+  return count <= 2 ? count : 0;
+}
+
 /** Used only when the message carries no searchable text at all. */
 function brandFallbackQuery(language: Lang): string {
   return language === "bg" ? "ТЕПЕ bite" : "TEPE bite";

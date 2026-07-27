@@ -6,9 +6,20 @@ import {
   getGroqConfig,
   type GroqConfig,
 } from "@/lib/chat/config";
+import { RETRIEVAL_PROFILE_SETTINGS } from "@/lib/chat/profiles";
 import { AnswerOutputSchema, type AnswerOutput } from "@/lib/chat/schemas";
-import type { AnswerResult, ChatSource, ChatTurn } from "@/lib/chat/types";
-import { groqJsonCompletion, type GroqMessage } from "@/lib/chat/groq/client";
+import type {
+  AnswerResult,
+  ChatSource,
+  ChatTurn,
+  RetrievalProfileName,
+} from "@/lib/chat/types";
+import {
+  addUsage,
+  groqJsonCompletion,
+  type GroqMessage,
+  type GroqUsage,
+} from "@/lib/chat/groq/client";
 import { ProviderError } from "@/lib/chat/groq/errors";
 import { buildAnswerMessages } from "./prompt";
 
@@ -28,6 +39,8 @@ export type GenerateAnswerInput = {
   history: readonly ChatTurn[];
   /** Language of the latest visitor message, as decided by the planner. */
   language: Lang;
+  /** Decides how much evidence this kind of question is worth paying for. */
+  profile: RetrievalProfileName;
   /** Retrieval output, best source first. Trimmed to budget in here. */
   sources: readonly ChatSource[];
 };
@@ -35,12 +48,17 @@ export type GenerateAnswerInput = {
 export type GenerateAnswerOutput = {
   result: AnswerResult;
   latencyMs: number;
+  /** Provider-counted cost of this stage, retries included. */
+  tokens: GroqUsage;
+  /** Characters of source text actually sent, for the token budget report. */
+  contextChars: number;
 };
 
 export async function generateAnswer({
   question,
   history,
   language,
+  profile,
   sources,
 }: GenerateAnswerInput): Promise<GenerateAnswerOutput> {
   const startedAt = Date.now();
@@ -50,15 +68,22 @@ export async function generateAnswer({
     throw new ProviderError("auth", `not configured (${missing.join(",")})`);
   }
 
-  const { context, messages, first } = await callWithinTokenLimit({
+  const { context, messages, first, contextChars } = await callWithinTokenLimit({
     config,
     question,
     history,
     language,
+    profile,
     sources,
   });
+  let tokens = first.usage;
   if (first.output) {
-    return { result: finalise(first.output, context), latencyMs: Date.now() - startedAt };
+    return {
+      result: finalise(first.output, context),
+      latencyMs: Date.now() - startedAt,
+      tokens,
+      contextChars,
+    };
   }
 
   // Exactly one corrective retry, same policy as the planner: tell the model
@@ -71,8 +96,14 @@ export async function generateAnswer({
   ];
 
   const second = await callAnswer(config, retryMessages);
+  tokens = addUsage(tokens, second.usage);
   if (second.output) {
-    return { result: finalise(second.output, context), latencyMs: Date.now() - startedAt };
+    return {
+      result: finalise(second.output, context),
+      latencyMs: Date.now() - startedAt,
+      tokens,
+      contextChars,
+    };
   }
 
   // Twice-invalid output is a provider failure from the caller's point of view:
@@ -85,7 +116,7 @@ export async function generateAnswer({
 // ─── Fitting the prompt inside the provider's per-minute token allowance ─────
 
 /**
- * Shrinking retry ladder, as fractions of `MAX_CONTEXT_CHARS`.
+ * Shrinking retry ladder, as fractions of the profile's context budget.
  *
  * A tier whose per-minute token allowance is smaller than one full prompt
  * rejects that prompt forever, not for a while: the same question re-asked in
@@ -94,18 +125,22 @@ export async function generateAnswer({
  * question — comparisons, which deliberately retrieve the most sources, are hit
  * first and hardest.
  *
- * So we re-ask immediately with less evidence. Each rung is a real loss of
- * grounding, which is why there are only two of them and the first is generous:
- * a thinner answer that cites real sources is worth having, an answer built on
- * one surviving passage is not, and below that the honest outcome is the
- * caller's "here are the sources, ask the team" degradation.
+ * So we re-ask immediately with less evidence. There is exactly one rung. Each
+ * rung is both a real loss of grounding and a second full prompt charged to the
+ * daily allowance, and the profile budgets are now small enough that a rejected
+ * prompt is a rare accident rather than the routine cost of a comparison — a
+ * ladder of three attempts would spend more on the failure than on the answer.
+ * Below the rung the honest outcome is the caller's "here are the sources, ask
+ * the team" degradation.
  */
-const CONTEXT_RETRY_FRACTIONS = [0.55, 0.3] as const;
+const CONTEXT_RETRY_FRACTIONS = [0.5] as const;
 
 type FittedCall = {
   context: ChatSource[];
   messages: GroqMessage[];
   first: AnswerAttempt;
+  /** Source characters that survived trimming — the stage's dominant cost. */
+  contextChars: number;
 };
 
 async function callWithinTokenLimit({
@@ -113,11 +148,18 @@ async function callWithinTokenLimit({
   question,
   history,
   language,
+  profile,
   sources,
 }: GenerateAnswerInput & { config: GroqConfig }): Promise<FittedCall> {
-  const budgets = [
+  // The profile decides what this question is worth; `MAX_CONTEXT_CHARS` is the
+  // ceiling no profile may exceed.
+  const budget0 = Math.min(
+    RETRIEVAL_PROFILE_SETTINGS[profile].contextChars,
     MAX_CONTEXT_CHARS,
-    ...CONTEXT_RETRY_FRACTIONS.map((f) => Math.round(MAX_CONTEXT_CHARS * f)),
+  );
+  const budgets = [
+    budget0,
+    ...CONTEXT_RETRY_FRACTIONS.map((f) => Math.round(budget0 * f)),
   ];
 
   let lastError: ProviderError | null = null;
@@ -125,8 +167,12 @@ async function callWithinTokenLimit({
   for (const budget of budgets) {
     const context = trimToContextBudget(sources, budget);
     const messages = buildAnswerMessages({ question, history, language, sources: context });
+    const contextChars = context.reduce(
+      (sum, source) => sum + source.passages.reduce((n, p) => n + p.length, 0),
+      0,
+    );
     try {
-      return { context, messages, first: await callAnswer(config, messages) };
+      return { context, messages, contextChars, first: await callAnswer(config, messages) };
     } catch (err) {
       if (!(err instanceof ProviderError) || err.kind !== "request_too_large") throw err;
       lastError = err;
@@ -224,13 +270,14 @@ type AnswerAttempt = {
   /** The model's literal output, replayed into the corrective retry. */
   raw: string;
   problem: string;
+  usage: GroqUsage;
 };
 
 async function callAnswer(
   config: GroqConfig,
   messages: GroqMessage[],
 ): Promise<AnswerAttempt> {
-  const { raw, data, parseError } = await groqJsonCompletion<unknown>({
+  const { raw, data, parseError, usage } = await groqJsonCompletion<unknown>({
     apiKey: config.apiKey,
     model: config.answerModel,
     messages,
@@ -241,12 +288,14 @@ async function callAnswer(
     label: "answer",
   });
 
-  if (parseError) return { raw, problem: parseError };
+  if (parseError) return { raw, problem: parseError, usage };
 
   const parsed = AnswerOutputSchema.safeParse(data);
-  if (!parsed.success) return { raw, problem: describeIssues(parsed.error.issues) };
+  if (!parsed.success) {
+    return { raw, problem: describeIssues(parsed.error.issues), usage };
+  }
 
-  return { output: parsed.data, raw, problem: "" };
+  return { output: parsed.data, raw, problem: "", usage };
 }
 
 function describeIssues(
