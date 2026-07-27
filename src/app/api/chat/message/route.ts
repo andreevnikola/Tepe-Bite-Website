@@ -134,7 +134,9 @@ export async function POST(
   if (planned.plannerFailure) {
     // Recorded so a real Groq outage still opens the breaker, even though a
     // failed plan on its own does not block the answer.
-    await recordFailure("groq", planned.plannerFailure);
+    await recordFailure("groq", planned.plannerFailure, {
+      retryAfterSeconds: planned.plannerRetryAfterSeconds,
+    });
   }
   const plan = planned.plan;
 
@@ -239,7 +241,12 @@ export async function POST(
     });
   } catch (err) {
     const kind = isProviderError(err) ? err.kind : "network";
-    await recordFailure("groq", kind);
+    // Forward the provider's own reset hint: on a quota failure it is the
+    // difference between parking the assistant for the minutes Groq asked for
+    // and parking it until midnight UTC.
+    await recordFailure("groq", kind, {
+      retryAfterSeconds: isProviderError(err) ? err.retryAfterSeconds : undefined,
+    });
 
     // Retrieval worked, so the visitor still gets something trustworthy: the
     // pages we found, and the contact route. We do not invent an answer.

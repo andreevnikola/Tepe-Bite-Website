@@ -38,6 +38,13 @@ export type RunPlannerInput = {
 export type PlannerRun = PlannedQuery & {
   /** Set only when the plan came from the fallback because Groq failed. */
   plannerFailure?: GroqErrorKind;
+  /**
+   * The provider's own "come back in N seconds", when it gave one. Carried out
+   * of here so the breaker parks us for as long as the provider actually asked
+   * and no longer — without it a quota failure falls back to a whole-day
+   * cooldown, which can hide the assistant for hours after it would have worked.
+   */
+  plannerRetryAfterSeconds?: number;
 };
 
 export async function runPlanner({
@@ -95,7 +102,7 @@ export async function runPlanner({
     //   rate_limit — an immediate retry deepens the limit we just hit.
     //   timeout / server / network — the request budget is already spent and
     //     the visitor is waiting; the deterministic plan costs microseconds.
-    return fallbackRun(message, history, uiLang, startedAt, err.kind);
+    return fallbackRun(message, history, uiLang, startedAt, err.kind, err.retryAfterSeconds);
   }
 }
 
@@ -187,11 +194,13 @@ function fallbackRun(
   uiLang: Lang,
   startedAt: number,
   plannerFailure: GroqErrorKind,
+  plannerRetryAfterSeconds?: number,
 ): PlannerRun {
   return {
     plan: deterministicPlan(message, history, uiLang),
     origin: "fallback",
     latencyMs: Date.now() - startedAt,
     plannerFailure,
+    ...(plannerRetryAfterSeconds !== undefined ? { plannerRetryAfterSeconds } : {}),
   };
 }
