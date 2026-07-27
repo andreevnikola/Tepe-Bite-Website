@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/config/site-info";
 import type { SourceCard } from "@/lib/chat/types";
@@ -81,7 +81,7 @@ export default function ChatSourceCard({
     <>
       <span className="tb-src-thumb" aria-hidden="true">
         {image ? (
-          <Image
+          <SmartImage
             src={image}
             alt=""
             fill

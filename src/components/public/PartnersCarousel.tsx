@@ -5,7 +5,7 @@ import { pick, YouthBadge } from "@/components/public/impactUi";
 import { PhaseBarMini } from "@/components/public/PhaseBreakdown";
 import type { PartnerCarouselItem } from "@/lib/public/initiatives";
 import type { Lang } from "@/store/lang";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -131,7 +131,7 @@ export default function PartnersCarousel({
                     }}
                   >
                     {partner.image ? (
-                      <Image src={partner.image.url} alt={name} fill sizes="52px" style={{ objectFit: "cover" }} />
+                      <SmartImage src={partner.image.url} alt={name} fill sizes="52px" style={{ objectFit: "cover" }} />
                     ) : (
                       <span style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "1.3rem", color: "var(--plum)" }}>
                         {name.slice(0, 1)}

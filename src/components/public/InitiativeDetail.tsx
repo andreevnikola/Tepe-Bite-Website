@@ -35,7 +35,7 @@ import { SITE_INFO } from "@/lib/config/site-info";
 import { formatDualMoney, formatMoneyEUR } from "@/lib/money";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -77,7 +77,7 @@ function Hero({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
       }}
     >
       {i.coverImage ? (
-        <Image
+        <SmartImage
           src={i.coverImage.url}
           alt={title}
           fill
@@ -699,7 +699,7 @@ function Partners({
                     }}
                   >
                     {partner!.image ? (
-                      <Image
+                      <SmartImage
                         src={partner!.image.url}
                         alt={name}
                         fill
@@ -1025,7 +1025,7 @@ function ExpenseRow({ e, lang }: { e: ExpenseDTO; lang: Lang }) {
             style={{ flexShrink: 0, display: "inline-flex" }}
             aria-label={bg ? "Виж доказателството" : "View proof"}
           >
-            <Image
+            <SmartImage
               src={e.proof.url}
               alt={bg ? "Доказателство за разход" : "Expense proof"}
               width={44}

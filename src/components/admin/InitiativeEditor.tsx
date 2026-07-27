@@ -3,7 +3,7 @@
 import '@uploadthing/react/styles.css'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import SmartImage from '@/components/SmartImage'
 import { Card, Field, TextInput, TextArea, Select } from '@/components/admin/ui'
 import ImageUploader from '@/components/admin/ImageUploader'
 import ProofUploader from '@/components/admin/ProofUploader'
@@ -1134,7 +1134,7 @@ export default function InitiativeEditor({
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {gallery.map((g, idx) => (
                 <div key={g.key} className="flex flex-col gap-1">
-                  <Image
+                  <SmartImage
                     src={g.url}
                     alt=""
                     width={160}

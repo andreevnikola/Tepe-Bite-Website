@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { IconMap } from "@/components/icons";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
@@ -77,7 +77,7 @@ export default function InitiativeCard({
         }}
       >
         {initiative.coverImage ? (
-          <Image
+          <SmartImage
             src={initiative.coverImage.url}
             alt={title}
             fill

@@ -4,7 +4,7 @@ import { urlFor } from "@/sanity/image";
 import type { NewsPost } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function FeaturedPost({ post }: { post: NewsPost }) {
@@ -80,7 +80,7 @@ export default function FeaturedPost({ post }: { post: NewsPost }) {
 
           <div className="card featured-card">
             <div className="featured-image">
-              <Image
+              <SmartImage
                 src={urlFor(post.image).width(900).url()}
                 alt={alt || title}
                 fill

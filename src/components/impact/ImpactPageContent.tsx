@@ -19,7 +19,7 @@ import { formatMoneyEUR } from "@/lib/money";
 import type { InitiativeDetail, OverviewData } from "@/lib/public/initiatives";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -764,7 +764,7 @@ function WhatWeChooseSection({
                 paddingTop: 8,
               }}
             >
-              <Image
+              <SmartImage
                 src="/brand/TEPEbiteImpact-crop.png"
                 alt="ТЕПЕ bite Impact"
                 width={600}

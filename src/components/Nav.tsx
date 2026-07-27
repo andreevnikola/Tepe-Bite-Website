@@ -3,7 +3,7 @@ import CartNavIcon from "@/components/cart/CartNavIcon";
 import { IconArrow, IconClose, IconMenu, IconShop } from "@/components/icons";
 import { langAtom, writeLangCookie, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -133,7 +133,7 @@ export default function Nav() {
               cursor: "pointer",
             }}
           >
-            <Image
+            <SmartImage
               src="/brand/logo-nav.png"
               alt="ТЕПЕ bite лого"
               width={38}

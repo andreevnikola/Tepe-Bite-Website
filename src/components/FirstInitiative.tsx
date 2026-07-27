@@ -6,7 +6,7 @@ import { formatDate, pick, StatusBadge } from "@/components/public/impactUi";
 import type { InitiativeDetail } from "@/lib/public/initiatives";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 const IconClock = () => (
@@ -102,7 +102,7 @@ export default function FirstInitiative({
               }}
             >
               {cover ? (
-                <Image
+                <SmartImage
                   src={cover.url}
                   alt={bg ? "RE-CONNECT Бунарджика" : "RE-CONNECT Bunardzhika"}
                   fill

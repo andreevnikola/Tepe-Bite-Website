@@ -8,7 +8,7 @@ import { formatDualMoney, formatMoneyEUR } from '@/lib/money'
 import { useAddToCart, useShowCartToast } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
-import Image from 'next/image'
+import SmartImage from '@/components/SmartImage'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -147,7 +147,7 @@ export default function PackDetailClient({ plan }: Props) {
               boxShadow: 'var(--shadow-lg)',
             }}
           >
-            <Image
+            <SmartImage
               src="/photos/bar-product.png"
               alt={`ТЕПЕ bite — ${title}`}
               fill

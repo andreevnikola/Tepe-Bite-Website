@@ -4,7 +4,7 @@ import { IconStar } from "@/components/icons";
 import { pick, YouthBadge } from "@/components/public/impactUi";
 import type { PartnerCarouselItem } from "@/lib/public/initiatives";
 import type { Lang } from "@/store/lang";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useState } from "react";
@@ -252,7 +252,7 @@ function PartnerCard({
           }}
         >
           {partner.image ? (
-            <Image src={partner.image.url} alt={name} fill sizes="64px" style={{ objectFit: "cover" }} />
+            <SmartImage src={partner.image.url} alt={name} fill sizes="64px" style={{ objectFit: "cover" }} />
           ) : (
             <span
               style={{

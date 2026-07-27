@@ -4,7 +4,7 @@ import { urlFor } from "@/sanity/image";
 import type { NewsPost } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
@@ -126,7 +126,7 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
                   }}
                 >
                   <div className="news-strip-card-img">
-                    <Image
+                    <SmartImage
                       src={urlFor(post.image).width(420).url()}
                       alt={alt || title}
                       fill

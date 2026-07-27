@@ -13,7 +13,7 @@ import type {
 } from "@/lib/public/initiatives";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function AboutPageContent({
@@ -52,7 +52,7 @@ function Hero({ lang }: { lang: "bg" | "en" }) {
         overflow: "hidden",
       }}
     >
-      <Image
+      <SmartImage
         src="/photos/team.jpg"
         alt={bg ? "Екипът на ТЕПЕ bite" : "The ТЕПЕ bite team"}
         fill
@@ -203,7 +203,7 @@ function TeamSection({ lang }: { lang: "bg" | "en" }) {
                   {TEAM_ICONS[i % TEAM_ICONS.length]}
                 </span>
                 <div className="team-photo">
-                  <Image
+                  <SmartImage
                     src={m.photo}
                     alt={m.name}
                     fill
@@ -434,7 +434,7 @@ function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
           </header>
 
           <div className="grat-logo-plate">
-            <Image
+            <SmartImage
               src="/partners/FantasticoGroupLongLogo.png"
               alt="Fantastico Group"
               width={261}
@@ -449,7 +449,7 @@ function GratitudeSection({ lang }: { lang: "bg" | "en" }) {
 
         <div className="grat-grid">
           <div className="grat-photo">
-            <Image
+            <SmartImage
               src="/photos/FantastikoWithOurTeam.jpg"
               alt={bg ? "Екипът ни с Fantastico" : "Our team with Fantastico"}
               fill
@@ -1111,7 +1111,7 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
                   padding: "8px 0",
                 }}
               >
-                <Image
+                <SmartImage
                   src={p.logo}
                   alt={p.name}
                   width={p.w}

@@ -5,7 +5,7 @@ import InitiativeCard from "@/components/public/InitiativeCard";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -370,7 +370,7 @@ export default function MissionSection({
           pointerEvents: "none",
           userSelect: "none",
           zIndex: 0,
-          maskImage: "url(/logo-nav.png)",
+          maskImage: "url(/brand/logo-nav.png)",
           maskSize: "contain",
           maskPosition: "center",
           maskRepeat: "no-repeat",
@@ -433,7 +433,7 @@ export default function MissionSection({
 
           {/* Impact logo lockup on a light plate so it reads on plum */}
           <div className="eng-logo">
-            <Image
+            <SmartImage
               src="/brand/TEPEbiteImpact-crop.png"
               alt="ТЕПЕ bite Impact"
               width={400}

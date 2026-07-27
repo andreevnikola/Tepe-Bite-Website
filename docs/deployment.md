@@ -85,6 +85,43 @@ Not configured yet. `infra/nginx/tepebite.conf` is HTTP-only on purpose —
 adding a 443 server block and running certbot is a separate future step that
 requires DNS for tepebite.eu to already point at the VPS.
 
+## Nginx: rate limiting, compression, upstream keep-alive
+
+`infra/nginx/tepebite.conf` is the source of truth and **includes the 443
+blocks**. `bootstrap-vps.sh nginx` overwrites
+`/etc/nginx/sites-available/tepebite.conf` wholesale, so that file must never be
+allowed to drift back to an HTTP-only version — doing so takes TLS down on the
+next run of that stage.
+
+Three problems were found and fixed here after mobile users reported slow and
+occasionally failing navigation:
+
+1. **Rate limiting applied to static assets.** `limit_req` sat at `server`
+   level (`20r/s`, `burst=40`), so it covered `/_next/static/` and
+   `/_next/image` as well as the app. One cold page load requests ~44 files in
+   a single burst; a measured 60-request burst returned **16× 503**. Mobile
+   carriers also place many subscribers behind one CGNAT address, so they share
+   a single bucket. `limit_req` now lives per-location: `tepebite_dynamic`
+   (30r/s, burst 60) guards the app, `tepebite_assets` (200r/s, burst 100–200)
+   effectively lets content-hashed assets through. `= /api/health` is
+   deliberately unthrottled so a traffic burst can never make the watchdog
+   believe the app is down and force-restart it.
+
+2. **Static JS/CSS served uncompressed.** The Next standalone server gzips only
+   what it *renders* (HTML/RSC), not files under `.next/static`. Ubuntu's stock
+   `nginx.conf` has `gzip on` but leaves `gzip_types` at `text/html` and
+   `gzip_proxied` at `off` ("never compress a proxied response"), so every
+   bundle crossed the wire raw — ~350 KB per cold load. The app server block now
+   sets `gzip_proxied any` plus explicit `gzip_types`. Measured: the main CSS
+   file went **44,352 → 8,317 bytes**.
+
+3. **`Connection: "upgrade"` sent unconditionally**, which defeated keep-alive to
+   Node on every request. Replaced with the standard `$connection_upgrade` map
+   plus an `upstream` block with `keepalive 32`.
+
+Note that nginx on Ubuntu 24.04 is 1.24, which predates the separate `http2 on;`
+directive — keep `listen 443 ssl http2;`.
+
 ## Why there's no build-time database credential
 
 Four public pages (`/`, `/about`, `/impact`, `/initiatives`) export
@@ -112,6 +149,32 @@ If static ISR generation for these 4 pages is wanted later, it requires
 restructuring language resolution so `generateMetadata`/layout don't call
 `headers()`/`cookies()` for them — a separate, larger change, not part of
 this deployment setup.
+
+### Measured: ISR is not worth that change
+
+Before attempting the restructure, the per-request render cost was measured on
+the VPS itself (`curl` against `127.0.0.1:3000`, so no network in the numbers):
+
+| request | warm render |
+|---|---|
+| RSC navigation payload for `/product`, `/impact`, `/about` | **7 ms** |
+| full HTML for `/about`, `/cart`, `/initiatives`, `/legal` | 14–26 ms |
+| full HTML for `/`, `/product`, `/news`, `/order` | 60–115 ms |
+
+The public data layer is already memoised: `src/lib/public/initiatives.ts`
+wraps every MongoDB query in `unstable_cache` with a 300 s TTL and a shared
+`revalidateTag` tag, and the Sanity client uses the CDN in production. A
+"dynamic" request therefore does **not** talk to Atlas or Sanity — it only
+re-runs the React render.
+
+So converting these routes to ISR would remove ~7 ms from a client-side
+navigation, in exchange for restructuring i18n into path segments (`/[lang]/…`
+with `generateStaticParams` and a proxy rewrite) so that `<html lang>` and
+`generateMetadata` stop needing per-request data. That is a large refactor with
+real hydration and SEO risk, for a saving that is invisible next to mobile
+round-trip time. **Not recommended.** The navigation latency users actually feel
+came from asset compression, the rate limiter, and the absence of any prefetch
+or loading boundary — all addressed directly instead.
 
 ## Release layout on the VPS
 

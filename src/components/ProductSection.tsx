@@ -14,7 +14,7 @@ import { MANUFACTURER } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import type { ComponentType } from "react";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 const nutr = [
@@ -102,7 +102,7 @@ export default function ProductSection() {
                 width: "100%",
               }}
             >
-              <Image
+              <SmartImage
                 src="/photos/bar-product.png"
                 alt="ТЕПЕ bite — Солен карамел"
                 width={280}
@@ -297,7 +297,7 @@ export default function ProductSection() {
 
         {/* Locally made — production fact + photo, presented as a full-width band */}
         <div className="mfg-band">
-          <Image
+          <SmartImage
             src="/photos/manufacturing.jpg"
             alt={
               lang === "bg"

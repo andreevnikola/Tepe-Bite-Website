@@ -3,7 +3,7 @@ import { IconFb, IconInsta, IconLink, IconTiktok } from "@/components/icons";
 import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function Footer() {
@@ -81,7 +81,7 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <div style={{ marginBottom: 20 }}>
-              <Image
+              <SmartImage
                 src="/brand/logo-full.png"
                 alt="ТЕПЕ bite"
                 width={120}

@@ -5,7 +5,7 @@ import { renderWithFund } from "@/components/about/ImpactWord";
 import { pick, StatusBadge, StepsProgress } from "@/components/public/impactUi";
 import type { InitiativeDetail } from "@/lib/public/initiatives";
 import type { Lang } from "@/store/lang";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -231,7 +231,7 @@ function GroupBlock({
 
                         {step.logo && (
                           <div style={{ marginTop: 16 }}>
-                            <Image
+                            <SmartImage
                               src={step.logo.src}
                               alt={step.logo.alt}
                               width={916}
@@ -323,7 +323,7 @@ function ChapterExtras({ group, lang }: { group: TimelineGroup; lang: Lang }) {
             padding: "16px 20px",
           }}
         >
-          <Image
+          <SmartImage
             src="/partners/FantasticoGroupLongLogo.png"
             alt="Fantastico Group"
             width={261}
@@ -358,7 +358,7 @@ function ChapterExtras({ group, lang }: { group: TimelineGroup; lang: Lang }) {
           padding: "16px 18px",
         }}
       >
-        <Image
+        <SmartImage
           src="/partners/Teenovator Logo.jpg"
           alt="Teenovator"
           width={64}
@@ -376,7 +376,7 @@ function ChapterExtras({ group, lang }: { group: TimelineGroup; lang: Lang }) {
           {MENTORS.map((m) => (
             <div key={m.name}>
               <div className="mentor-photo">
-                <Image src={m.photo} alt={m.name} fill sizes="240px" style={{ objectFit: "cover" }} />
+                <SmartImage src={m.photo} alt={m.name} fill sizes="240px" style={{ objectFit: "cover" }} />
               </div>
               <div
                 style={{
@@ -510,7 +510,7 @@ function FirstInitiativePanel({
           }}
           className="fi-cover"
         >
-          <Image
+          <SmartImage
             src={i.coverImage.url}
             alt={pick(lang, i.titleBg, i.titleEn)}
             fill

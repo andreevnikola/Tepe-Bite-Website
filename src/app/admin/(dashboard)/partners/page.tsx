@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImage from '@/components/SmartImage'
 import { getMongoose } from '@/lib/mongo'
 import { Partner } from '@/lib/mongo/models/Partner'
 import { serializePartner } from '@/lib/dashboard/serialize'
@@ -32,7 +32,7 @@ export default async function PartnersPage() {
               className="flex items-center gap-3 rounded-[var(--r-md)] border border-[var(--border)] bg-[var(--surface)] p-4 hover:border-[var(--plum)]"
             >
               {p.image ? (
-                <Image
+                <SmartImage
                   src={p.image.url}
                   alt=""
                   width={48}

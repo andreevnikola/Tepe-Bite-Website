@@ -366,6 +366,28 @@
   }
 }
 
+/* Route-skeleton sheen — a warm cream wash drifting across a recessed fill.
+   Used by `PageLoading` (public `loading.tsx` files). */
+@keyframes skeleton-sheen {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-block {
+  background: linear-gradient(
+    100deg,
+    var(--border) 0%,
+    var(--surface2) 50%,
+    var(--border) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sheen 1.8s ease-in-out infinite;
+}
+
 .animate-pulse-dot {
   animation: pulse-dot 2s infinite;
 }
@@ -390,6 +412,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+    background: var(--border);
+  }
   ::view-transition-old(*),
   ::view-transition-new(*),
   ::view-transition-group(*) {

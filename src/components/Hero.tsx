@@ -3,7 +3,7 @@ import { IconArrow, IconShop } from "@/components/icons";
 import ImpactPledge from "@/components/ImpactPledge";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 const HERO_HEADLINE_BG = ["Вкусно за теб.", "Смислено за общността."];
@@ -292,7 +292,7 @@ export default function Hero() {
               }}
             />
             {/* Faded logo behind bar */}
-            <Image
+            <SmartImage
               src="/brand/logo-nav.png"
               alt=""
               aria-hidden="true"
@@ -310,7 +310,7 @@ export default function Hero() {
               }}
             />
             {/* Product bar photo */}
-            <Image
+            <SmartImage
               src="/photos/bar-product.png"
               alt="ТЕПЕ bite — Солен карамел"
               width={500}

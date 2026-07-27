@@ -2,7 +2,7 @@
 import { IconArrow } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function AboutTeaser() {
@@ -12,7 +12,7 @@ export default function AboutTeaser() {
   return (
     <section style={{ position: "relative", overflow: "hidden" }}>
       <div className="at-inner">
-        <Image
+        <SmartImage
           src="/photos/team.jpg"
           alt={bg ? "Екипът на ТЕПЕ bite" : "The ТЕПЕ bite team"}
           fill

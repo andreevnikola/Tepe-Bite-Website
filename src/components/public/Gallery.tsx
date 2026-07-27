@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import { useCallback, useEffect, useState } from "react";
 import { pick } from "@/components/public/impactUi";
 import type { GalleryItemDTO } from "@/lib/dashboard/dto";
@@ -98,7 +98,7 @@ export default function Gallery({
               (bg ? `Снимка ${idx + 1}` : `Photo ${idx + 1}`)
             }
           >
-            <Image
+            <SmartImage
               src={g.url}
               alt={pick(lang, g.captionBg, g.captionEn)}
               fill
@@ -194,7 +194,7 @@ export default function Gallery({
               }}
             >
               <div style={{ position: "relative", width: "100%", flex: 1, minHeight: 0 }}>
-                <Image
+                <SmartImage
                   src={current.url}
                   alt={pick(lang, current.captionBg, current.captionEn)}
                   fill
@@ -260,7 +260,7 @@ export default function Gallery({
                     background: "rgba(255,255,255,0.1)",
                   }}
                 >
-                  <Image src={g.url} alt="" fill sizes="68px" style={{ objectFit: "cover" }} />
+                  <SmartImage src={g.url} alt="" fill sizes="68px" style={{ objectFit: "cover" }} />
                 </button>
               ))}
             </div>

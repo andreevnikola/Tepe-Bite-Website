@@ -4,7 +4,7 @@ import type { Location } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
 import { transliterateAddress } from "@/utils/transliterate";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function LocationCard({ loc }: { loc: Location }) {
@@ -33,7 +33,7 @@ export default function LocationCard({ loc }: { loc: Location }) {
           flexShrink: 0,
         }}
       >
-        <Image
+        <SmartImage
           src={imgSrc}
           alt={loc.image.alt ?? name}
           fill

@@ -5,7 +5,7 @@ import { formatDualMoney } from '@/lib/money'
 import { useAddToCart } from '@/store/cart'
 import { langAtom } from '@/store/lang'
 import { useAtomValue } from 'jotai'
-import Image from 'next/image'
+import SmartImage from '@/components/SmartImage'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -50,7 +50,7 @@ export default function PackCard({ plan }: Props) {
     >
       {/* Product image strip */}
       <div style={{ position: 'relative', height: 160, background: isAvailable ? 'var(--plum)' : 'var(--surface2)', overflow: 'hidden' }}>
-        <Image
+        <SmartImage
           src="/photos/bar-product.png"
           alt={`ТЕПЕ bite — ${title}`}
           fill

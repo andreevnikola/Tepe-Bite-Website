@@ -4,7 +4,7 @@ import { urlFor } from "@/sanity/image";
 import type { NewsPost } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function PostCard({ post }: { post: NewsPost }) {
@@ -39,7 +39,7 @@ export default function PostCard({ post }: { post: NewsPost }) {
           background: "var(--surface2)",
         }}
       >
-        <Image
+        <SmartImage
           src={urlFor(post.image).width(600).url()}
           alt={alt || title}
           fill

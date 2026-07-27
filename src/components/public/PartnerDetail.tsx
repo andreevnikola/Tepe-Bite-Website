@@ -22,7 +22,7 @@ import { formatDualMoney, formatMoneyEUR } from "@/lib/money";
 import type { PartnerDetail as PartnerDetailData } from "@/lib/public/initiatives";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 const LINK_META = [
@@ -126,7 +126,7 @@ export default function PartnerDetail({
                 }}
               >
                 {partner.image ? (
-                  <Image
+                  <SmartImage
                     src={partner.image.url}
                     alt={name}
                     fill

@@ -2,7 +2,7 @@
 import { IconArrow } from "@/components/icons";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 export default function FantasticoTrust() {
@@ -38,7 +38,7 @@ export default function FantasticoTrust() {
       <div className="ft-note" style={{ zIndex: 1 }}>
         {/* Fantastico logo plate, standing on its own */}
         <div className="ft-logo-plate">
-          <Image
+          <SmartImage
             src="/partners/FantasticoGroupLongLogo.png"
             alt="Fantastico Group"
             width={261}

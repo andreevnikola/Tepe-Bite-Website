@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { IconArrow, IconCheck, IconInfo, IconMap } from "@/components/icons";
 import Gallery from "@/components/public/Gallery";
@@ -276,7 +276,7 @@ export default function FocusDeepDive({
               }}
             >
               {cover ? (
-                <Image
+                <SmartImage
                   src={cover.url}
                   alt={title}
                   fill

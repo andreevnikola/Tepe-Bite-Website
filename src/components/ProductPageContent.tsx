@@ -12,7 +12,7 @@ import { SITE_INFO } from "@/lib/config/site-info";
 import type { Location } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 type Lang = "bg" | "en";
@@ -206,7 +206,7 @@ function ProductHero({ lang }: { lang: Lang }) {
                 pointerEvents: "none",
               }}
             />
-            <Image
+            <SmartImage
               src="/brand/logo-nav.png"
               alt=""
               aria-hidden="true"
@@ -223,7 +223,7 @@ function ProductHero({ lang }: { lang: Lang }) {
                 transform: "translateY(-10%)",
               }}
             />
-            <Image
+            <SmartImage
               src="/photos/bar-product.png"
               alt="ТЕПЕ bite — Солен карамел"
               width={500}
@@ -438,7 +438,7 @@ function TasteSection({ lang }: { lang: Lang }) {
               }}
             >
               {/* TODO: Replace with /assets/images/product/tepe-bite-bar-closeup.jpg when available */}
-              <Image
+              <SmartImage
                 src="/photos/bar-product.png"
                 alt="ТЕПЕ bite — Солен карамел отблизо"
                 width={320}
@@ -1298,7 +1298,7 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
           }}
         >
           {/* TODO: Replace with /assets/images/product/tepe-bite-production.jpg when available */}
-          <Image
+          <SmartImage
             src="/photos/manufacturing.jpg"
             alt={
               lang === "bg"
@@ -1382,7 +1382,7 @@ function ManufacturerSection({ lang }: { lang: Lang }) {
                     flexShrink: 0,
                   }}
                 >
-                  <Image
+                  <SmartImage
                     src={img}
                     alt={title}
                     width={44}

@@ -7,7 +7,7 @@ import { transliterateAddress } from "@/utils/transliterate";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { useAtomValue } from "jotai";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 
 const LocationMiniMap = dynamic(() => import("./LocationMiniMap"), {
@@ -157,7 +157,7 @@ export default function LocationDetail({ location }: { location: Location }) {
           overflow: "hidden",
         }}
       >
-        <Image
+        <SmartImage
           src={imgSrc}
           alt={location.image.alt ?? name}
           fill

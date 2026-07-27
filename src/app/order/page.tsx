@@ -6,7 +6,7 @@ import PackCard from "@/components/order/PackCard";
 import DismissibleOrdersGate from "@/components/orders/DismissibleOrdersGate";
 import { getAllProductPlans } from "@/lib/db/product-plans";
 import type { Metadata } from "next";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { Fragment } from "react";
 import StoreSection from "@/components/StoresSection";
@@ -72,7 +72,7 @@ export default async function OrderPage() {
               boxShadow: "var(--shadow-lg)",
             }}
           >
-            <Image
+            <SmartImage
               src="/photos/manufacturing.jpg"
               alt="Производство на ТЕПЕ bite в Пловдив"
               fill

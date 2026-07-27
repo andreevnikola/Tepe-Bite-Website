@@ -14,7 +14,7 @@ import { formatMoneyBGN, formatMoneyEUR } from "@/lib/money";
 import type { OverviewData } from "@/lib/public/initiatives";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -163,7 +163,7 @@ function HeroBackground({
           }}
         >
           {it.coverImage ? (
-            <Image
+            <SmartImage
               src={it.coverImage.url}
               alt=""
               fill
@@ -762,7 +762,7 @@ function Spotlight({
             }}
           >
             {f.coverImage ? (
-              <Image
+              <SmartImage
                 src={f.coverImage.url}
                 alt={title}
                 fill

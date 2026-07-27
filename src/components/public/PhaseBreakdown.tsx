@@ -5,7 +5,7 @@ import { INFLOW_PHASE_LABELS } from "@/lib/dashboard/constants";
 import type { InflowDTO } from "@/lib/dashboard/dto";
 import { formatMoneyEUR } from "@/lib/money";
 import type { Lang } from "@/store/lang";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import { useEffect, useRef, useState } from "react";
 
 /* Plain-language explanation of each phase, for the info popover — written for
@@ -409,7 +409,7 @@ export function FundingSplitBar({
               flexShrink: 0,
             }}
           >
-            <Image
+            <SmartImage
               src="/brand/TEPEbiteImpact-crop.png"
               alt="ТЕПЕ bite Impact"
               width={90}

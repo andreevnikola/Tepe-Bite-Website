@@ -1,7 +1,7 @@
 'use client'
 
 import '@uploadthing/react/styles.css'
-import Image from 'next/image'
+import SmartImage from '@/components/SmartImage'
 import { UploadButton } from '@/lib/uploadthing/client'
 import type { ImageDTO } from '@/lib/dashboard/dto'
 
@@ -31,7 +31,7 @@ export default function ImageUploader({
   if (value) {
     return (
       <div className="inline-flex flex-col items-start gap-2">
-        <Image
+        <SmartImage
           src={value.url}
           alt=""
           width={size}

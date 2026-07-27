@@ -11,7 +11,7 @@ import {
   truncateForMeta,
 } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -116,7 +116,7 @@ export default async function ArticlePage({
             background: "var(--plum)",
           }}
         >
-          <Image
+          <SmartImage
             src={imageUrl}
             alt={post.image.altBg || post.titleBg}
             fill

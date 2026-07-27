@@ -7,7 +7,7 @@ import type { InitiativeDTO } from "@/lib/dashboard/dto";
 import { SITE_INFO } from "@/lib/config/site-info";
 import { langAtom, writeLangCookie, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
-import Image from "next/image";
+import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 
@@ -466,7 +466,7 @@ export default function LinksClient({
           style={{ ["--d" as string]: "0ms" }}
         >
           <div className="lk-brand">
-            <Image
+            <SmartImage
               src="/brand/logo-nav.png"
               alt="ТЕПЕ bite"
               width={64}
