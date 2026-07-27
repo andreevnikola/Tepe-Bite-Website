@@ -1,5 +1,8 @@
 "use client";
+import { IconArrow } from "@/components/icons";
 import { isRecent } from "@/lib/date/recent";
+import { useScrollRail } from "@/lib/hooks/useScrollRail";
+import RailProgress from "@/components/rail/RailProgress";
 import { urlFor } from "@/sanity/image";
 import type { NewsPost } from "@/sanity/types";
 import { langAtom } from "@/store/lang";
@@ -9,6 +12,8 @@ import Link from "next/link";
 
 export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
   const lang = useAtomValue(langAtom);
+  const { ref: scroller, atStart, atEnd, scrollByVisible, maskImage, progress, overflows } =
+    useScrollRail<HTMLDivElement>();
 
   return (
     <>
@@ -44,6 +49,10 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
           background: var(--plum-lt);
           border-radius: var(--r-sm) var(--r-sm) 0 0;
         }
+        @media (max-width: 640px) {
+          .news-strip-scroll { scroll-padding-inline: clamp(16px, 6vw, 32px); }
+          .news-strip-row > a { scroll-snap-align: center !important; }
+        }
       `}</style>
 
       <section
@@ -54,7 +63,12 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
           borderBottom: "1px solid var(--border)",
         }}
       >
-        <div className="news-strip-scroll">
+        <div style={{ position: "relative" }}>
+          <div
+            ref={scroller}
+            className="news-strip-scroll"
+            style={{ scrollSnapType: "x mandatory", maskImage, WebkitMaskImage: maskImage }}
+          >
           <div className="news-strip-row">
             {/* Heading */}
             <div
@@ -123,6 +137,7 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
                     textDecoration: "none",
                     color: "inherit",
                     background: "var(--surface)",
+                    scrollSnapAlign: "start",
                   }}
                 >
                   <div className="news-strip-card-img">
@@ -218,6 +233,7 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
                 background: "var(--plum)",
                 border: "none",
                 textAlign: "center",
+                scrollSnapAlign: "start",
               }}
             >
               <span
@@ -242,8 +258,76 @@ export default function NewsStrip({ posts }: { posts: NewsPost[] }) {
               </span>
             </Link>
           </div>
+          </div>
+
+          {!atStart && (
+            <NewsRailBlob
+              dir="prev"
+              onClick={() => scrollByVisible(-1)}
+              label={lang === "bg" ? "Назад" : "Back"}
+            />
+          )}
+          {!atEnd && (
+            <NewsRailBlob
+              dir="next"
+              onClick={() => scrollByVisible(1)}
+              label={lang === "bg" ? "Напред" : "Forward"}
+            />
+          )}
         </div>
+
+        <RailProgress progress={progress} overflows={overflows} />
       </section>
     </>
+  );
+}
+
+/* Compact overlay control for NewsStrip — a small blob rather than the
+   header-row RailArrow used by the other rails, since this strip has no
+   header-controls row and needs to stay space-efficient. Shown only on the
+   end(s) where more content exists, overlaid on the fade-mask area. */
+function NewsRailBlob({
+  dir,
+  onClick,
+  label,
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      style={{
+        position: "absolute",
+        top: "50%",
+        [dir === "prev" ? "left" : "right"]: 6,
+        transform: "translateY(-50%)",
+        width: 34,
+        height: 34,
+        borderRadius: "50%",
+        border: "1px solid var(--border)",
+        background: "oklch(99% 0.01 78 / 0.9)",
+        boxShadow: "var(--shadow)",
+        color: "var(--plum)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        zIndex: 2,
+        transition: "opacity 0.2s, transform 0.2s",
+      }}
+    >
+      <span
+        style={{
+          display: "inline-flex",
+          transform: dir === "prev" ? "scaleX(-1)" : undefined,
+        }}
+      >
+        <IconArrow />
+      </span>
+    </button>
   );
 }

@@ -13,15 +13,17 @@ import {
   pick,
   PARTNERSHIP_TYPE_LABELS,
 } from "@/components/public/impactUi";
+import RailArrow from "@/components/rail/RailArrow";
+import RailProgress from "@/components/rail/RailProgress";
 import { IMPACT } from "@/lib/config/impact";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
+import { useScrollRail } from "@/lib/hooks/useScrollRail";
 import { formatMoneyEUR } from "@/lib/money";
 import type { InitiativeDetail, OverviewData } from "@/lib/public/initiatives";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/tepe.bite/";
 const proposeHref = IMPACT.formUrl || `mailto:${IMPACT.contactEmail}`;
@@ -1251,34 +1253,10 @@ function MoreInitiativesSection({
   lang: Lang;
 }) {
   const bg = lang === "bg";
-  const scroller = useRef<HTMLDivElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
-
-  const update = useCallback(() => {
-    const el = scroller.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 2);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
-  }, []);
-
-  useEffect(() => {
-    update();
-    const el = scroller.current;
-    if (!el) return;
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [update]);
-
-  const scrollByCards = (dir: -1 | 1) =>
-    scroller.current?.scrollBy({ left: dir * 320 * 2, behavior: "smooth" });
+  const { ref: scroller, atStart, atEnd, scrollByVisible, maskImage, progress, overflows } =
+    useScrollRail<HTMLDivElement>();
 
   const showArrows = !(atStart && atEnd);
-  const edgeMask = `linear-gradient(to right, ${atStart ? "black" : "transparent"} 0, black 32px, black calc(100% - 32px), ${atEnd ? "black" : "transparent"} 100%)`;
 
   return (
     <section
@@ -1323,13 +1301,13 @@ function MoreInitiativesSection({
               <RailArrow
                 dir="prev"
                 disabled={atStart}
-                onClick={() => scrollByCards(-1)}
+                onClick={() => scrollByVisible(-1)}
                 label={bg ? "Назад" : "Back"}
               />
               <RailArrow
                 dir="next"
                 disabled={atEnd}
-                onClick={() => scrollByCards(1)}
+                onClick={() => scrollByVisible(1)}
                 label={bg ? "Напред" : "Forward"}
               />
             </div>
@@ -1347,8 +1325,8 @@ function MoreInitiativesSection({
             scrollSnapType: "x mandatory",
             paddingBottom: 6,
             scrollbarWidth: "none",
-            maskImage: edgeMask,
-            WebkitMaskImage: edgeMask,
+            maskImage,
+            WebkitMaskImage: maskImage,
           }}
         >
           {items.map((it) => (
@@ -1368,6 +1346,8 @@ function MoreInitiativesSection({
             </div>
           ))}
         </div>
+
+        <RailProgress progress={progress} overflows={overflows} />
 
         <div style={{ marginTop: 24 }}>
           <Link
@@ -1395,47 +1375,12 @@ function MoreInitiativesSection({
 
       <style>{`
         .rail-scroller::-webkit-scrollbar { display: none; }
+        @media (max-width: 640px) {
+          .rail-scroller { scroll-padding-inline: clamp(16px, 6vw, 32px); }
+          .rail-scroller > div { scroll-snap-align: center !important; }
+        }
       `}</style>
     </section>
-  );
-}
-
-function RailArrow({
-  dir,
-  disabled,
-  onClick,
-  label,
-}: {
-  dir: "prev" | "next";
-  disabled: boolean;
-  onClick: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      style={{
-        width: 44,
-        height: 44,
-        borderRadius: "50%",
-        border: "1px solid var(--border)",
-        background: "var(--surface)",
-        color: disabled ? "var(--text-soft)" : "var(--plum)",
-        cursor: disabled ? "default" : "pointer",
-        opacity: disabled ? 0.45 : 1,
-        fontSize: "1.3rem",
-        boxShadow: "var(--shadow)",
-        transition: "opacity 0.2s, transform 0.2s",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {dir === "prev" ? "‹" : "›"}
-    </button>
   );
 }
 

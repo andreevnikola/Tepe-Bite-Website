@@ -396,6 +396,43 @@
   animation: float-bar 5s ease-in-out infinite;
 }
 
+/* Hamburger ↔ X morph for the mobile nav toggle (IconMenuToggle). */
+.tb-hb-line {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.28s ease, opacity 0.25s ease;
+}
+.tb-hb-open .tb-hb-top {
+  transform: translateY(6px) rotate(45deg);
+}
+.tb-hb-open .tb-hb-mid {
+  opacity: 0;
+}
+.tb-hb-open .tb-hb-bottom {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Mobile nav menu panel — collapses via grid-template-rows so it matches
+   the content's actual height (works across BG/EN copy lengths) instead of
+   a guessed max-height. Panel stays mounted; `.mobile-menu-open` reveals it. */
+.mobile-menu-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: grid-template-rows 0.3s ease, opacity 0.25s ease,
+    transform 0.3s ease;
+}
+.mobile-menu-panel.mobile-menu-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-menu-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
 @media (max-width: 1120px) {
   .section-spacing {
     padding: 60px 20px;
@@ -421,5 +458,9 @@
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
+  }
+  .tb-hb-line,
+  .mobile-menu-panel {
+    transition: none;
   }
 }

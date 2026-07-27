@@ -358,13 +358,15 @@ function ChapterExtras({ group, lang }: { group: TimelineGroup; lang: Lang }) {
           padding: "16px 18px",
         }}
       >
-        <SmartImage
-          src="/partners/Teenovator Logo.jpg"
-          alt="Teenovator"
-          width={64}
-          height={64}
-          style={{ height: 56, width: "auto", borderRadius: 12, display: "block", flexShrink: 0 }}
-        />
+        <div style={{ flexShrink: 0 }}>
+          <SmartImage
+            src="/partners/Teenovator Logo.jpg"
+            alt="Teenovator"
+            width={64}
+            height={64}
+            style={{ height: 56, width: "auto", borderRadius: 12, display: "block" }}
+          />
+        </div>
         <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.55 }}>{introLead}</p>
       </div>
 

@@ -1,20 +1,24 @@
 "use client";
 
 import { IconStar } from "@/components/icons";
+import RailArrow from "@/components/rail/RailArrow";
+import RailProgress from "@/components/rail/RailProgress";
 import { pick, YouthBadge } from "@/components/public/impactUi";
+import { useScrollRail } from "@/lib/hooks/useScrollRail";
 import type { PartnerCarouselItem } from "@/lib/public/initiatives";
 import type { Lang } from "@/store/lang";
 import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
-import type { CSSProperties } from "react";
-import { useState } from "react";
+
+const CARD_W = 340;
 
 /**
- * Center-focused, endless carousel for the youth-led partners. Exactly one
- * partner card is centred and fully visible; its neighbours peek in at the
- * container edges (faded by a background-coloured mask). Arrows and dots move
- * between partners and wrap around infinitely. Used in the /about youth power
- * section. Renders nothing when there are no youth partners yet.
+ * Horizontal-scroll rail for the youth-led partners, matching
+ * MoreInitiativesSection's pattern (edge-fade mask, header-row RailArrow
+ * controls, scroll-progress bar, mobile snap-center) instead of the previous
+ * index-driven center-peek carousel. Used in the /about and homepage youth
+ * power sections, which already render their own centred heading above this
+ * component. Renders nothing when there are no youth partners yet.
  */
 export default function YouthPartnerCarousel({
   items,
@@ -24,186 +28,81 @@ export default function YouthPartnerCarousel({
   lang: Lang;
 }) {
   const bg = lang === "bg";
-  const [idx, setIdx] = useState(0);
+  const { ref: scroller, atStart, atEnd, scrollByVisible, maskImage, progress, overflows } =
+    useScrollRail<HTMLDivElement>();
 
   if (items.length === 0) return null;
-
-  const len = items.length;
-  const clamped = ((idx % len) + len) % len;
-
-  // Count-based rules. len === 1 -> no arrows / peeks / masks / dots (all the
-  // flags below are false), so a single card renders centred and alone.
-  const showLeftSide = len >= 3; // left peek + left arrow + left mask
-  const showRightSide = len >= 2; // right peek + right arrow + right mask
-  const showDots = len >= 3;
-
-  const prevItem = items[(clamped - 1 + len) % len];
-  const nextItem = items[(clamped + 1) % len];
-
-  // Endless wrap: modulo keeps the index in range in both directions.
-  const go = (dir: -1 | 1) => setIdx((i) => (((i + dir) % len) + len) % len);
+  const showArrows = !(atStart && atEnd);
 
   return (
-    <div
-      style={
-        {
-          maxWidth: "calc(var(--yp-card-w) + 140px)",
-          margin: "0 auto",
-          "--yp-card-w": "clamp(320px, 82vw, 560px)",
-        } as CSSProperties
-      }
-    >
-      <div className="yp-frame" style={{ position: "relative" }}>
-        {/* Stage clips the off-screen portion of the peeking neighbours so the
-            page never scrolls horizontally. */}
-        <div className="yp-stage" style={{ position: "relative", overflow: "hidden" }}>
-          {showLeftSide && (
-            <div
-              className="yp-peek yp-peek-l"
-              aria-hidden
-              style={{
-                position: "absolute",
-                left: 0,
-                top: "50%",
-                width: "var(--yp-card-w)",
-                transform: "translate(-84%, -50%) scale(0.9)",
-                opacity: 0.5,
-                zIndex: 1,
-                pointerEvents: "none",
-              }}
-            >
-              <PartnerCard item={prevItem} lang={lang} interactive={false} />
-            </div>
-          )}
-
-          {showRightSide && (
-            <div
-              className="yp-peek yp-peek-r"
-              aria-hidden
-              style={{
-                position: "absolute",
-                right: 0,
-                top: "50%",
-                width: "var(--yp-card-w)",
-                transform: "translate(84%, -50%) scale(0.9)",
-                opacity: 0.5,
-                zIndex: 1,
-                pointerEvents: "none",
-              }}
-            >
-              <PartnerCard item={nextItem} lang={lang} interactive={false} />
-            </div>
-          )}
-
-          <div
-            className="yp-center"
-            style={{
-              width: "var(--yp-card-w)",
-              maxWidth: "100%",
-              margin: "0 auto",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
-            <div key={clamped} className="yp-anim">
-              <PartnerCard item={items[clamped]} lang={lang} interactive />
-            </div>
-          </div>
-        </div>
-
-        {/* Edge masks: fade the peeking neighbours from the page background at
-            the outer edge to transparent toward the centre. */}
-        {showLeftSide && (
-          <div
-            aria-hidden
-            className="yp-mask"
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: "clamp(56px, 14%, 170px)",
-              background: "linear-gradient(to right, var(--bg), transparent)",
-              pointerEvents: "none",
-              zIndex: 3,
-            }}
+    <div>
+      {showArrows && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 10,
+            marginBottom: 16,
+          }}
+        >
+          <RailArrow
+            dir="prev"
+            disabled={atStart}
+            onClick={() => scrollByVisible(-1)}
+            label={bg ? "Предишен" : "Previous"}
           />
-        )}
-        {showRightSide && (
-          <div
-            aria-hidden
-            className="yp-mask"
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: "clamp(56px, 14%, 170px)",
-              background: "linear-gradient(to left, var(--bg), transparent)",
-              pointerEvents: "none",
-              zIndex: 3,
-            }}
+          <RailArrow
+            dir="next"
+            disabled={atEnd}
+            onClick={() => scrollByVisible(1)}
+            label={bg ? "Следващ" : "Next"}
           />
-        )}
-
-        {/* Arrows sit over the edges, above the masks. */}
-        {showLeftSide && (
-          <ArrowBtn dir="prev" side="left" onClick={() => go(-1)} label={bg ? "Предишен" : "Previous"} />
-        )}
-        {showRightSide && (
-          <ArrowBtn dir="next" side="right" onClick={() => go(1)} label={bg ? "Следващ" : "Next"} />
-        )}
-      </div>
-
-      {showDots && (
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 20 }}>
-          {items.map((it, i) => (
-            <button
-              key={it.partner.slug}
-              type="button"
-              onClick={() => setIdx(i)}
-              aria-label={`${bg ? "Партньор" : "Partner"} ${i + 1}`}
-              aria-current={i === clamped}
-              style={{
-                width: i === clamped ? 26 : 9,
-                height: 9,
-                borderRadius: 100,
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                background: i === clamped ? "var(--caramel)" : "var(--border)",
-                transition: "width 0.3s, background 0.3s",
-              }}
-            />
-          ))}
         </div>
       )}
 
+      <div
+        ref={scroller}
+        className="yp-scroller"
+        style={{
+          display: "flex",
+          gap: 20,
+          overflowX: "auto",
+          overflowY: "visible",
+          scrollSnapType: "x mandatory",
+          paddingBottom: 6,
+          scrollbarWidth: "none",
+          maskImage,
+          WebkitMaskImage: maskImage,
+        }}
+      >
+        {items.map((it) => (
+          <div
+            key={it.partner.slug}
+            style={{
+              flex: `0 0 ${CARD_W}px`,
+              width: CARD_W,
+              scrollSnapAlign: "start",
+            }}
+          >
+            <PartnerCard item={it} lang={lang} />
+          </div>
+        ))}
+      </div>
+
+      <RailProgress progress={progress} overflows={overflows} />
+
       <style>{`
-        .yp-peek, .yp-center { transition: transform 0.35s ease, opacity 0.35s ease; }
-        .yp-anim { animation: yp-in 0.35s ease both; }
-        @keyframes yp-in {
-          from { opacity: 0; transform: translateY(6px) scale(0.985); }
-          to { opacity: 1; transform: none; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .yp-peek, .yp-center { transition: none; }
-          .yp-anim { animation: none; }
+        .yp-scroller::-webkit-scrollbar { display: none; }
+        @media (max-width: 640px) {
+          .yp-scroller { scroll-padding-inline: clamp(16px, 6vw, 32px); }
+          .yp-scroller > div { scroll-snap-align: center !important; }
         }
       `}</style>
     </div>
   );
 }
 
-function PartnerCard({
-  item,
-  lang,
-  interactive,
-}: {
-  item: PartnerCarouselItem;
-  lang: Lang;
-  interactive: boolean;
-}) {
+function PartnerCard({ item, lang }: { item: PartnerCarouselItem; lang: Lang }) {
   const bg = lang === "bg";
   const { partner, initiativeCount } = item;
   const name = pick(lang, partner.nameBg, partner.nameEn);
@@ -224,16 +123,18 @@ function PartnerCard({
         ? "Предстоящо партньорство"
         : "Upcoming partnership";
 
-  const profileLabel = `${bg ? "Виж профила" : "See profile"} →`;
-
   return (
-    <article
-      className="card"
+    <Link
+      href={`/initiatives/partners/${partner.slug}`}
+      className="card card-hover"
       style={{
         padding: "clamp(24px, 4vw, 36px)",
         display: "flex",
         flexDirection: "column",
         gap: 18,
+        height: "100%",
+        textDecoration: "none",
+        color: "inherit",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -284,7 +185,23 @@ function PartnerCard({
         </div>
       </div>
 
-      {desc && <p style={{ margin: 0, fontSize: "0.98rem", lineHeight: 1.7 }}>{desc}</p>}
+      {desc && (
+        <p
+          style={{
+            margin: 0,
+            fontSize: "0.9rem",
+            lineHeight: 1.6,
+            color: "var(--text-mid)",
+            flex: 1,
+            display: "-webkit-box",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {desc}
+        </p>
+      )}
 
       <div
         style={{
@@ -297,84 +214,19 @@ function PartnerCard({
         }}
       >
         <span style={{ fontSize: "0.84rem", color: "var(--text-soft)" }}>{countLabel}</span>
-        {interactive ? (
-          <Link
-            href={`/initiatives/partners/${partner.slug}`}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 5,
-              color: "var(--caramel)",
-              fontWeight: 600,
-              fontSize: "0.9rem",
-              textDecoration: "none",
-            }}
-          >
-            {profileLabel}
-          </Link>
-        ) : (
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 5,
-              color: "var(--caramel)",
-              fontWeight: 600,
-              fontSize: "0.9rem",
-            }}
-          >
-            {profileLabel}
-          </span>
-        )}
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            color: "var(--caramel)",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+          }}
+        >
+          {bg ? "Виж профила" : "See profile"} →
+        </span>
       </div>
-    </article>
-  );
-}
-
-function ArrowBtn({
-  dir,
-  side,
-  onClick,
-  label,
-}: {
-  dir: "prev" | "next";
-  side: "left" | "right";
-  onClick: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="yp-arrow"
-      style={{
-        position: "absolute",
-        top: "50%",
-        [side]: "clamp(4px, 1.5vw, 16px)",
-        transform: "translateY(-50%)",
-        width: 46,
-        height: 46,
-        zIndex: 4,
-        borderRadius: "50%",
-        border: "1px solid var(--border)",
-        background: "var(--surface)",
-        color: "var(--plum)",
-        cursor: "pointer",
-        fontSize: "1.4rem",
-        lineHeight: 1,
-        boxShadow: "var(--shadow)",
-        transition: "transform 0.2s, box-shadow 0.2s",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {dir === "prev" ? "‹" : "›"}
-      <style>{`
-        .yp-arrow:hover { transform: translateY(-50%) scale(1.06); box-shadow: var(--shadow-lg); }
-        @media (prefers-reduced-motion: reduce) { .yp-arrow { transition: none; } }
-      `}</style>
-    </button>
+    </Link>
   );
 }

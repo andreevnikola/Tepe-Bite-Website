@@ -306,18 +306,14 @@ function TeamSection({ lang }: { lang: "bg" | "en" }) {
         .team-row--right .team-bg-ico { left: 3%; }
         .team-email:hover { color: var(--caramel); }
         @media (max-width: 760px) {
-          .team-row {
+          .team-row,
+          .team-row--right {
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
             gap: 18px;
           }
-          .team-row--right {
-            flex-direction: column;
-            align-items: flex-end;
-            text-align: right;
-          }
-          .team-row--right .team-text { align-items: flex-end; }
+          .team-row--right .team-text { align-items: flex-start; }
           .team-bg-ico { display: none; }
         }
       `}</style>
@@ -1038,20 +1034,24 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
   const partners = [
     {
       logo: "/partners/FantasticoGroupLongLogo.png",
-      w: 261,
-      h: 121,
       name: "Fantastico Group",
       href: "https://www.fantastico.bg/",
+      // Tightly-cropped mark on transparent/white — centre it with room to
+      // breathe so it reads clearly against the white panel.
+      logoFit: "contain" as const,
+      logoInset: 28,
       body: bg
         ? "Най-големият ни партньор — от маркетинг и продажби до основополагащото дарение за първата партида."
         : "Our biggest backer — from marketing and retail to the founding donation for our first batch.",
     },
     {
       logo: "/partners/SuperhostingLogoFullLong.png",
-      w: 1200,
-      h: 630,
       name: "SuperHosting.BG",
       href: "https://www.superhosting.bg/",
+      // Colour is baked into the asset edge-to-edge (1200x630) — panel below
+      // is sized to the same ratio so it fills with zero crop, no inset.
+      logoFit: "cover" as const,
+      logoInset: 0,
       body: bg
         ? "Осигуряват хостинга и домейна, на които живее този сайт."
         : "They provide the hosting and the domain this website runs on.",
@@ -1095,57 +1095,65 @@ function BusinessPartnersSection({ lang }: { lang: "bg" | "en" }) {
               rel="noopener noreferrer"
               className="card card-hover"
               style={{
-                padding: "28px 28px 24px",
                 display: "flex",
                 flexDirection: "column",
-                gap: 16,
                 textDecoration: "none",
                 color: "inherit",
+                overflow: "hidden",
               }}
             >
+              {/* edge-to-edge white panel, rounded to match the card's top
+                  corners — square where the body copy continues below */}
+              <div
+                style={{
+                  position: "relative",
+                  aspectRatio: "1200 / 630",
+                  background: "white",
+                  borderRadius: "var(--r-lg) var(--r-lg) 0 0",
+                }}
+              >
+                <div style={{ position: "absolute", inset: p.logoInset }}>
+                  <SmartImage
+                    src={p.logo}
+                    alt={p.name}
+                    fill
+                    sizes="(max-width: 640px) 90vw, 400px"
+                    style={{ objectFit: p.logoFit }}
+                  />
+                </div>
+              </div>
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "8px 0",
-                }}
-              >
-                <SmartImage
-                  src={p.logo}
-                  alt={p.name}
-                  width={p.w}
-                  height={p.h}
-                  sizes="(max-width: 640px) 90vw, 400px"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    display: "block",
-                  }}
-                />
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "0.92rem",
-                  lineHeight: 1.65,
+                  flexDirection: "column",
+                  gap: 16,
+                  padding: "20px 28px 24px",
                   flex: 1,
                 }}
               >
-                {p.body}
-              </p>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  color: "var(--caramel)",
-                  fontWeight: 600,
-                  fontSize: "0.86rem",
-                }}
-              >
-                {p.name} ↗
-              </span>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "0.92rem",
+                    lineHeight: 1.65,
+                    flex: 1,
+                  }}
+                >
+                  {p.body}
+                </p>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    color: "var(--caramel)",
+                    fontWeight: 600,
+                    fontSize: "0.86rem",
+                  }}
+                >
+                  {p.name} ↗
+                </span>
+              </div>
             </a>
           ))}
         </div>

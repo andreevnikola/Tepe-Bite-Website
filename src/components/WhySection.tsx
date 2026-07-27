@@ -1,13 +1,15 @@
 "use client";
 import { IconArrow, IconStar } from "@/components/icons";
 import { PledgeHeart, PLEDGE_EUR } from "@/components/ImpactPledge";
+import RailArrow from "@/components/rail/RailArrow";
+import RailProgress from "@/components/rail/RailProgress";
 import InitiativeCard from "@/components/public/InitiativeCard";
 import type { InitiativeDTO } from "@/lib/dashboard/dto";
+import { useScrollRail } from "@/lib/hooks/useScrollRail";
 import { langAtom, type Lang } from "@/store/lang";
 import { useAtomValue } from "jotai";
 import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ── Engine-step icons (stroke, sky-tinted) — absorbed from the retired
    InitiativesPromo so the transparency pledge content is preserved. ── */
@@ -100,34 +102,10 @@ function PortfolioRail({
   lang: Lang;
 }) {
   const bg = lang === "bg";
-  const scroller = useRef<HTMLDivElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
-
-  const update = useCallback(() => {
-    const el = scroller.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 2);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
-  }, []);
-
-  useEffect(() => {
-    update();
-    const el = scroller.current;
-    if (!el) return;
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [update]);
-
-  const scrollByCards = (dir: -1 | 1) =>
-    scroller.current?.scrollBy({ left: dir * 320 * 2, behavior: "smooth" });
+  const { ref: scroller, atStart, atEnd, scrollByVisible, maskImage, progress, overflows } =
+    useScrollRail<HTMLDivElement>();
 
   const showArrows = !(atStart && atEnd);
-  const edgeMask = `linear-gradient(to right, ${atStart ? "black" : "transparent"} 0, black 32px, black calc(100% - 32px), ${atEnd ? "black" : "transparent"} 100%)`;
 
   // Trailing card: prefer a "see more" link when more initiatives exist,
   // otherwise a "coming soon" filler when only a single card is shown.
@@ -154,8 +132,8 @@ function PortfolioRail({
         </div>
         {showArrows && (
           <div style={{ display: "flex", gap: 10 }}>
-            <RailArrow dir="prev" disabled={atStart} onClick={() => scrollByCards(-1)} label={bg ? "Назад" : "Back"} />
-            <RailArrow dir="next" disabled={atEnd} onClick={() => scrollByCards(1)} label={bg ? "Напред" : "Forward"} />
+            <RailArrow dir="prev" disabled={atStart} onClick={() => scrollByVisible(-1)} label={bg ? "Назад" : "Back"} />
+            <RailArrow dir="next" disabled={atEnd} onClick={() => scrollByVisible(1)} label={bg ? "Напред" : "Forward"} />
           </div>
         )}
       </div>
@@ -171,8 +149,8 @@ function PortfolioRail({
           scrollSnapType: "x mandatory",
           paddingBottom: 6,
           scrollbarWidth: "none",
-          maskImage: edgeMask,
-          WebkitMaskImage: edgeMask,
+          maskImage,
+          WebkitMaskImage: maskImage,
         }}
       >
         {cards.map((it) => (
@@ -267,6 +245,8 @@ function PortfolioRail({
         )}
       </div>
 
+      <RailProgress progress={progress} overflows={overflows} />
+
       <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
         <Link
           href="/initiatives"
@@ -278,45 +258,6 @@ function PortfolioRail({
         </Link>
       </div>
     </>
-  );
-}
-
-function RailArrow({
-  dir,
-  disabled,
-  onClick,
-  label,
-}: {
-  dir: "prev" | "next";
-  disabled: boolean;
-  onClick: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      style={{
-        width: 44,
-        height: 44,
-        borderRadius: "50%",
-        border: "1px solid var(--border)",
-        background: "var(--surface)",
-        color: disabled ? "var(--text-soft)" : "var(--plum)",
-        cursor: disabled ? "default" : "pointer",
-        opacity: disabled ? 0.45 : 1,
-        fontSize: "1.3rem",
-        boxShadow: "var(--shadow)",
-        transition: "opacity 0.2s, transform 0.2s",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {dir === "prev" ? "‹" : "›"}
-    </button>
   );
 }
 
@@ -489,6 +430,10 @@ export default function MissionSection({
 
       <style>{`
         .rail-scroller::-webkit-scrollbar { display: none; }
+        @media (max-width: 640px) {
+          .rail-scroller { scroll-padding-inline: clamp(16px, 6vw, 32px); }
+          .rail-scroller > * { scroll-snap-align: center !important; }
+        }
         .mission-engine {
           display: grid;
           grid-template-columns: repeat(6, 1fr);

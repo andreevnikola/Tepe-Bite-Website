@@ -1,6 +1,6 @@
 "use client";
 import CartNavIcon from "@/components/cart/CartNavIcon";
-import { IconArrow, IconClose, IconMenu, IconShop } from "@/components/icons";
+import { IconArrow, IconMenuToggle, IconShop } from "@/components/icons";
 import { langAtom, writeLangCookie, type Lang } from "@/store/lang";
 import { useAtom } from "jotai";
 import SmartImage from "@/components/SmartImage";
@@ -359,98 +359,109 @@ export default function Nav() {
                 display: "flex",
               }}
             >
-              {mobileOpen ? <IconClose /> : <IconMenu />}
+              <IconMenuToggle open={mobileOpen} />
             </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div
-            style={{
-              background: "var(--surface)",
-              padding: "20px clamp(20px, 4vw, 60px) 28px",
-              borderTop: "1px solid var(--border)",
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            {navLinks.map(([href, label]) => {
-              const active = isActive(href);
-              return (
-                <Link
-                  key={href + label}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    textDecoration: "none",
-                    color: active ? "var(--plum)" : "var(--text-mid)",
-                    fontSize: "1.1rem",
-                    fontWeight: active ? 700 : 500,
-                    padding: "8px 0",
-                    cursor: "pointer",
-                    position: "relative",
-                    transition: "color 0.2s",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "var(--plum)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = active
-                      ? "var(--plum)"
-                      : "var(--text-mid)")
-                  }
-                >
-                  {href === "/impact" ? (
-                    <span
-                      style={{
-                        fontFamily: "var(--font-brush)",
-                        fontSize: "1.45rem",
-                        fontWeight: 700,
-                        color: "var(--caramel)",
-                        lineHeight: 1,
-                      }}
-                    >
-                      Impact<span>·</span>
-                    </span>
-                  ) : (
-                    label
-                  )}
-                </Link>
-              );
-            })}
-            <Link
-              href="/legal"
-              onClick={() => setMobileOpen(false)}
+        {/* Mobile menu — stays mounted so the close transition can play;
+            `.mobile-menu-open` reveals it, `inert` keeps it out of tab/AT
+            order while collapsed. */}
+        <div
+          className={`mobile-menu-panel${mobileOpen ? " mobile-menu-open" : ""}`}
+          inert={!mobileOpen}
+        >
+          {/* The grid item collapsing to `0fr` must carry no intrinsic
+              padding/border of its own — those don't shrink with the track
+              — so the visual padding/border/background live one level
+              deeper, on a plain wrapper the collapsing item just clips. */}
+          <div className="mobile-menu-panel-inner">
+            <div
               style={{
-                textDecoration: "none",
-                color: "var(--text-soft)",
-                fontSize: "0.95rem",
-                fontWeight: 500,
-                padding: "8px 0",
+                background: "var(--surface)",
+                padding: "20px clamp(20px, 4vw, 60px) 28px",
                 borderTop: "1px solid var(--border)",
-                marginTop: 4,
-                paddingTop: 16,
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
               }}
             >
-              {lang === "bg" ? "Правна информация" : "Legal"}
-            </Link>
-            <Link
-              href="/order"
-              onClick={() => setMobileOpen(false)}
-              className="btn btn-primary"
-              style={{
-                marginTop: 8,
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-            >
-              <IconShop />
-              {lang === "bg" ? "Поръчай" : "Order"}
-            </Link>
+              {navLinks.map(([href, label]) => {
+                const active = isActive(href);
+                return (
+                  <Link
+                    key={href + label}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                      textDecoration: "none",
+                      color: active ? "var(--plum)" : "var(--text-mid)",
+                      fontSize: "1.1rem",
+                      fontWeight: active ? 700 : 500,
+                      padding: "8px 0",
+                      cursor: "pointer",
+                      position: "relative",
+                      transition: "color 0.2s",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = "var(--plum)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = active
+                        ? "var(--plum)"
+                        : "var(--text-mid)")
+                    }
+                  >
+                    {href === "/impact" ? (
+                      <span
+                        style={{
+                          fontFamily: "var(--font-brush)",
+                          fontSize: "1.45rem",
+                          fontWeight: 700,
+                          color: "var(--caramel)",
+                          lineHeight: 1,
+                        }}
+                      >
+                        Impact<span>·</span>
+                      </span>
+                    ) : (
+                      label
+                    )}
+                  </Link>
+                );
+              })}
+              <Link
+                href="/legal"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  textDecoration: "none",
+                  color: "var(--text-soft)",
+                  fontSize: "0.95rem",
+                  fontWeight: 500,
+                  padding: "8px 0",
+                  borderTop: "1px solid var(--border)",
+                  marginTop: 4,
+                  paddingTop: 16,
+                }}
+              >
+                {lang === "bg" ? "Правна информация" : "Legal"}
+              </Link>
+              <Link
+                href="/order"
+                onClick={() => setMobileOpen(false)}
+                className="btn btn-primary"
+                style={{
+                  marginTop: 8,
+                  justifyContent: "center",
+                  cursor: "pointer",
+                }}
+              >
+                <IconShop />
+                {lang === "bg" ? "Поръчай" : "Order"}
+              </Link>
+            </div>
           </div>
-        )}
+        </div>
       </nav>
     </header>
   );

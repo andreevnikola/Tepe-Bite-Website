@@ -1,13 +1,15 @@
 "use client";
 
 import { IconStar } from "@/components/icons";
+import RailArrow from "@/components/rail/RailArrow";
+import RailProgress from "@/components/rail/RailProgress";
 import { pick, YouthBadge } from "@/components/public/impactUi";
 import { PhaseBarMini } from "@/components/public/PhaseBreakdown";
+import { useScrollRail } from "@/lib/hooks/useScrollRail";
 import type { PartnerCarouselItem } from "@/lib/public/initiatives";
 import type { Lang } from "@/store/lang";
 import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 const CARD_W = 300;
 
@@ -21,35 +23,11 @@ export default function PartnersCarousel({
   background?: string;
 }) {
   const bg = lang === "bg";
-  const scroller = useRef<HTMLDivElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
-
-  const update = useCallback(() => {
-    const el = scroller.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 2);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
-  }, []);
-
-  useEffect(() => {
-    update();
-    const el = scroller.current;
-    if (!el) return;
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [update]);
-
-  const scrollBy = (dir: -1 | 1) =>
-    scroller.current?.scrollBy({ left: dir * (CARD_W + 20) * 2, behavior: "smooth" });
+  const { ref: scroller, atStart, atEnd, scrollByVisible, maskImage, progress, overflows } =
+    useScrollRail<HTMLDivElement>();
 
   if (items.length === 0) return null;
   const showArrows = !(atStart && atEnd); // only when overflowing
-  const edgeMask = `linear-gradient(to right, ${atStart ? "black" : "transparent"} 0, black 32px, black calc(100% - 32px), ${atEnd ? "black" : "transparent"} 100%)`;
 
   return (
     <section className="section-spacing" style={{ background }}>
@@ -74,8 +52,8 @@ export default function PartnersCarousel({
           </div>
           {showArrows && (
             <div style={{ display: "flex", gap: 10 }}>
-              <ArrowBtn dir="prev" disabled={atStart} onClick={() => scrollBy(-1)} label={bg ? "Назад" : "Back"} />
-              <ArrowBtn dir="next" disabled={atEnd} onClick={() => scrollBy(1)} label={bg ? "Напред" : "Forward"} />
+              <RailArrow dir="prev" disabled={atStart} onClick={() => scrollByVisible(-1)} label={bg ? "Назад" : "Back"} />
+              <RailArrow dir="next" disabled={atEnd} onClick={() => scrollByVisible(1)} label={bg ? "Напред" : "Forward"} />
             </div>
           )}
         </div>
@@ -87,11 +65,12 @@ export default function PartnersCarousel({
             display: "flex",
             gap: 20,
             overflowX: "auto",
+            overflowY: "visible",
             scrollSnapType: "x mandatory",
             paddingBottom: 6,
             scrollbarWidth: "none",
-            maskImage: edgeMask,
-            WebkitMaskImage: edgeMask,
+            maskImage,
+            WebkitMaskImage: maskImage,
           }}
         >
           {items.map(({ partner, initiativeCount, financial }) => {
@@ -223,50 +202,17 @@ export default function PartnersCarousel({
             );
           })}
         </div>
+
+        <RailProgress progress={progress} overflows={overflows} />
       </div>
 
       <style>{`
         .partners-scroller::-webkit-scrollbar { display: none; }
+        @media (max-width: 640px) {
+          .partners-scroller { scroll-padding-inline: clamp(16px, 6vw, 32px); }
+          .partners-scroller > a { scroll-snap-align: center !important; }
+        }
       `}</style>
     </section>
-  );
-}
-
-function ArrowBtn({
-  dir,
-  disabled,
-  onClick,
-  label,
-}: {
-  dir: "prev" | "next";
-  disabled: boolean;
-  onClick: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      style={{
-        width: 44,
-        height: 44,
-        borderRadius: "50%",
-        border: "1px solid var(--border)",
-        background: "var(--surface)",
-        color: disabled ? "var(--text-soft)" : "var(--plum)",
-        cursor: disabled ? "default" : "pointer",
-        opacity: disabled ? 0.45 : 1,
-        fontSize: "1.3rem",
-        boxShadow: "var(--shadow)",
-        transition: "opacity 0.2s, transform 0.2s",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {dir === "prev" ? "‹" : "›"}
-    </button>
   );
 }
