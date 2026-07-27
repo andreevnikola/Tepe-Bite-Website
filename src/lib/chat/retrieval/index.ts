@@ -72,6 +72,9 @@ const INITIATIVE_SURVEY: Record<Lang, string> = {
   en: "TEPE bite Impact initiatives in Plovdiv",
 };
 
+/** A comparison needs at least this many distinct initiative pages to be one. */
+const MIN_COMPARABLE_PAGES = 2;
+
 /** Passages a single page may contribute when several pages must be compared. */
 const MAX_CHUNKS_PER_PAGE_DIVERSE = 2;
 const MAX_CHUNKS_PER_PAGE_DEFAULT = 3;
@@ -142,20 +145,6 @@ export async function retrieve({
     }
   };
 
-  // ── Queries ────────────────────────────────────────────────────────────────
-  await runQuery(plan.searchQuery);
-
-  if (needsDiversity) {
-    // Only issue variants while the pool is short of distinct pages: an extra
-    // search costs 1.7–3.5 s, which the visitor waits through.
-    if (distinctPages(pool) < targetSources) {
-      await runQuery(`${plan.searchQuery} ${INITIATIVE_BIAS[plan.language]}`);
-    }
-    if (distinctInitiativePages(pool) < 2) {
-      await runQuery(INITIATIVE_SURVEY[plan.language]);
-    }
-  }
-
   // ── Staged fallback ────────────────────────────────────────────────────────
   const attempts: Attempt[] = [
     // 1. Everything the planner asked for, in the visitor's language.
@@ -198,6 +187,30 @@ export async function retrieve({
     preferredLang: plan.language,
   };
 
+  /** What the first stage would return from the pool as it stands. */
+  const strictSources = (): ChatSource[] =>
+    select(pool, attempts[0].filter, selectOptions);
+
+  // ── Queries ────────────────────────────────────────────────────────────────
+  await runQuery(plan.searchQuery);
+
+  if (needsDiversity) {
+    // Judged through the same lens the first stage will apply, not on the raw
+    // pool. Counting the pool overstates diversity: the English twin of the page
+    // we already have looks like a second initiative right up until the language
+    // filter runs, and a ranking question then reaches the model with exactly
+    // one initiative in hand — which is correctly answered "insufficient
+    // evidence", from a corpus that does hold the others. Each extra search
+    // costs 1.7–3.5 s the visitor waits through, so they run only while the
+    // comparison is genuinely short of comparable pages.
+    if (countInitiativePages(strictSources()) < MIN_COMPARABLE_PAGES) {
+      await runQuery(`${plan.searchQuery} ${INITIATIVE_BIAS[plan.language]}`);
+    }
+    if (countInitiativePages(strictSources()) < MIN_COMPARABLE_PAGES) {
+      await runQuery(INITIATIVE_SURVEY[plan.language]);
+    }
+  }
+
   // The planner's reformulation is usually the better query, but it can be
   // strictly worse: padding a precise question with brand words ("<subject> ТЕПЕ
   // bite инициатива описание") pulls the reranker toward every page that merely
@@ -206,7 +219,7 @@ export async function retrieve({
   // pool, that is the signal — the visitor's literal wording is then the
   // cheapest second opinion we have, and it is the wording the corpus was
   // written to answer.
-  if (userMessage && select(pool, attempts[0].filter, selectOptions).length < minimumSources) {
+  if (userMessage && strictSources().length < minimumSources) {
     await runQuery(userMessage);
   }
 
@@ -378,12 +391,13 @@ function isAggregatePage(pageType: PageType | null): boolean {
   return pageType !== null && AGGREGATE_PAGE_TYPES.has(pageType);
 }
 
-function distinctPages(chunks: RetrievedChunk[]): number {
-  return new Set(chunks.map((chunk) => pageIdentity(chunk.url))).size;
-}
-
-function distinctInitiativePages(chunks: RetrievedChunk[]): number {
-  return distinctPages(chunks.filter((chunk) => chunk.pageType === "initiative"));
+/**
+ * Initiative detail pages among selected sources. Counted on sources rather
+ * than on raw chunks so it measures what the answer will actually see: one page
+ * per entry, already language-filtered and deduplicated.
+ */
+function countInitiativePages(sources: readonly ChatSource[]): number {
+  return sources.filter((source) => source.pageType === "initiative").length;
 }
 
 export { CloudflareSearchError, aiSearch } from "./cloudflare";
