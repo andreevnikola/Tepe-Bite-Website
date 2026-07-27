@@ -28,6 +28,7 @@ import {
   inflowPhaseTotals,
 } from "@/components/public/PhaseBreakdown";
 import Gallery from "@/components/public/Gallery";
+import InitiativeKeyFacts from "@/components/public/InitiativeKeyFacts";
 import type { InitiativeDetail as InitiativeDetailData } from "@/lib/public/initiatives";
 import type { ExpenseDTO, InflowDTO, PartnerDTO } from "@/lib/dashboard/dto";
 import { SITE_INFO } from "@/lib/config/site-info";
@@ -154,40 +155,16 @@ function Hero({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   );
 }
 
-/* ═══ KEY FACTS + DESCRIPTION ═══ */
+/* ═══ DESCRIPTION ═══ */
+/* The small "Ключови факти" card that used to sit beside this text was removed
+   when the full `InitiativeKeyFacts` section landed directly below — two "key
+   facts" boxes back to back read as repetition, and the new one is a superset
+   (it carries the same location / expenses / expected-cost / available-funds
+   figures with explicit labels). */
 function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
   const bg = lang === "bg";
   const i = detail.initiative;
   const desc = pick(lang, i.descriptionBg, i.descriptionEn);
-  const isDone = i.status === "done";
-  const expensesTotal = expenseTotalCents(i.expenses);
-
-  const facts: [string, string][] = [];
-  if (i.locationBg || i.locationEn)
-    facts.push([
-      bg ? "Локация" : "Location",
-      pick(lang, i.locationBg, i.locationEn),
-    ]);
-  if (isDone) {
-    if (expensesTotal > 0)
-      facts.push([
-        bg ? "Усчетоводени разходи" : "Accounted expenses",
-        formatMoneyEUR(expensesTotal),
-      ]);
-  } else {
-    if (i.expectedCostCents > 0)
-      facts.push([
-        bg ? "Очаквана цена" : "Expected cost",
-        formatMoneyEUR(i.expectedCostCents),
-      ]);
-    if (i.status === "in_progress") {
-      const available = inflowPhaseTotals(i.inflows).available;
-      facts.push([
-        bg ? "Налични средства" : "Available funds",
-        formatMoneyEUR(available),
-      ]);
-    }
-  }
 
   return (
     <section
@@ -227,79 +204,16 @@ function Intro({ detail, lang }: { detail: InitiativeDetailData; lang: Lang }) {
         )}
 
         <div
-          className="intro-detail-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: facts.length ? "1.6fr 1fr" : "1fr",
-            gap: "clamp(24px, 4vw, 48px)",
-            alignItems: "center",
+            fontSize: "1.05rem",
+            lineHeight: 1.8,
+            color: "var(--text-mid)",
+            whiteSpace: "pre-line",
           }}
         >
-          <div
-            style={{
-              fontSize: "1.05rem",
-              lineHeight: 1.8,
-              color: "var(--text-mid)",
-              whiteSpace: "pre-line",
-            }}
-          >
-            {desc}
-          </div>
-
-          {facts.length > 0 && (
-            <div className="card" style={{ padding: "22px 24px" }}>
-              <div
-                style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "var(--text-soft)",
-                  marginBottom: 12,
-                }}
-              >
-                {bg ? "Ключови факти" : "Key facts"}
-              </div>
-              {facts.map(([k, v], idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 14,
-                    padding: "9px 0",
-                    borderBottom:
-                      idx < facts.length - 1
-                        ? "1px solid var(--border)"
-                        : "none",
-                  }}
-                >
-                  <span
-                    style={{ color: "var(--text-soft)", fontSize: "0.85rem" }}
-                  >
-                    {k}
-                  </span>
-                  <span
-                    style={{
-                      fontWeight: 600,
-                      color: "var(--plum)",
-                      fontSize: "0.85rem",
-                      textAlign: "right",
-                    }}
-                  >
-                    {v}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          {desc}
         </div>
       </div>
-      <style>{`
-        @media (max-width: 760px) {
-          .intro-detail-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   );
 }
@@ -1566,6 +1480,9 @@ export default function InitiativeDetail({
     <main>
       <Hero detail={detail} lang={lang} />
       <Intro detail={detail} lang={lang} />
+      {/* Facts sit high in the document, right after the description, so both a
+          reader and a retrieval crawler get the real numbers before the media. */}
+      <InitiativeKeyFacts detail={detail} lang={lang} />
       <GallerySection detail={detail} lang={lang} />
       <Progress detail={detail} lang={lang} />
       <Partners detail={detail} lang={lang} />

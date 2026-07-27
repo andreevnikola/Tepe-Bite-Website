@@ -3,9 +3,16 @@
 type Props = {
   value: string
   onChange: (v: string) => void
+  /**
+   * DOM id for the hidden input. Defaults to the original `website` so existing
+   * callers are unaffected; override it when a second form (e.g. the site
+   * assistant, which is mounted globally) can be on the page at the same time,
+   * because two elements sharing an id break label association.
+   */
+  fieldId?: string
 }
 
-export default function HoneypotField({ value, onChange }: Props) {
+export default function HoneypotField({ value, onChange, fieldId = 'website' }: Props) {
   return (
     <div
       aria-hidden="true"
@@ -20,9 +27,9 @@ export default function HoneypotField({ value, onChange }: Props) {
         overflow: 'hidden',
       }}
     >
-      <label htmlFor="website">Website</label>
+      <label htmlFor={fieldId}>Website</label>
       <input
-        id="website"
+        id={fieldId}
         name="website"
         type="text"
         value={value}

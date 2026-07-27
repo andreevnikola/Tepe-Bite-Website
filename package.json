@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "chat:eval": "node --env-file=.env.local scripts/chat-eval.mjs",
     "hash": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/hash.ts",
     "admin:create": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/admin-create.ts",
     "partners:backfill-slugs": "TS_NODE_PROJECT=tsconfig.typeorm.json ts-node scripts/backfill-partner-slugs.ts",

@@ -1,3 +1,4 @@
+import ChatWidget from "@/components/chat/ChatWidget";
 import Nav from "@/components/Nav";
 import Providers from "@/components/Providers";
 import { SITE_URL } from "@/lib/config/site-info";
@@ -93,6 +94,7 @@ export default async function RootLayout({
         <Providers initialLang={initialLang}>
           <Nav />
           {children}
+          <ChatWidget />
         </Providers>
       </body>
     </html>

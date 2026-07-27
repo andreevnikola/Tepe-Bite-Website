@@ -1,5 +1,6 @@
 import "server-only";
 import { getAllLocations, getAllNewsPosts } from "@/sanity/queries";
+import { withContentSchemaFloor } from "./content-schema";
 import {
   getPublicPartnerSlugs,
   getPublishedInitiativeSlugs,
@@ -75,13 +76,17 @@ export async function getPublicPagesResult(): Promise<PublicPagesResult> {
 
   const pages = [
     ...STATIC_PATHS.map((path) => ({ path })),
+    // Initiative and partner pages carry a rendering-version floor as well as
+    // their own `updatedAt` — a code change to how their facts are rendered
+    // must invalidate them once, even though the records never moved. See
+    // `content-schema.ts`. News/locations come from Sanity and are unaffected.
     ...(initiatives ?? []).map((i) => ({
       path: `/initiatives/${i.slug}`,
-      lastModified: i.updatedAt,
+      lastModified: withContentSchemaFloor(i.updatedAt),
     })),
     ...(partners ?? []).map((p) => ({
       path: `/initiatives/partners/${p.slug}`,
-      lastModified: p.updatedAt,
+      lastModified: withContentSchemaFloor(p.updatedAt),
     })),
     ...(news ?? []).map((n) => ({
       path: `/news/${n.slug.current}`,
