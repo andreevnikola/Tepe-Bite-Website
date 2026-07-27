@@ -40,6 +40,12 @@ import { assignSourceIds, groupChunksIntoSources, pageIdentity } from "./sources
 
 export type RetrieveArgs = {
   plan: PlannerResult;
+  /**
+   * The visitor's message, verbatim. Used only as a second-opinion query when
+   * the planner's reformulation retrieves nothing of the kind it asked for —
+   * see the note above the staged fallback.
+   */
+  userMessage?: string;
   signal?: AbortSignal;
 };
 
@@ -80,7 +86,11 @@ type MetaFilter = {
 
 type Attempt = { stage: RetrievalStage; filter: MetaFilter };
 
-export async function retrieve({ plan, signal }: RetrieveArgs): Promise<RetrievalResult> {
+export async function retrieve({
+  plan,
+  userMessage,
+  signal,
+}: RetrieveArgs): Promise<RetrievalResult> {
   const startedAt = Date.now();
   const profile = RETRIEVAL_PROFILE_SETTINGS[plan.retrievalProfile];
   const targetSources = Math.min(profile.targetSources, MAX_CONTEXT_SOURCES);
@@ -181,15 +191,29 @@ export async function retrieve({ plan, signal }: RetrieveArgs): Promise<Retrieva
   });
 
   const minimumSources = needsDiversity ? 2 : 1;
+  const selectOptions: SelectOptions = {
+    profile: plan.retrievalProfile,
+    maxPerPage,
+    targetSources,
+    preferredLang: plan.language,
+  };
+
+  // The planner's reformulation is usually the better query, but it can be
+  // strictly worse: padding a precise question with brand words ("<subject> ТЕПЕ
+  // bite инициатива описание") pulls the reranker toward every page that merely
+  // MENTIONS the brand, and the one page that answers the question drops out of
+  // the top ten entirely. When the planner's own filters match nothing in the
+  // pool, that is the signal — the visitor's literal wording is then the
+  // cheapest second opinion we have, and it is the wording the corpus was
+  // written to answer.
+  if (userMessage && select(pool, attempts[0].filter, selectOptions).length < minimumSources) {
+    await runQuery(userMessage);
+  }
+
   let best: { sources: ChatSource[]; stage: RetrievalStage } | null = null;
 
   for (const attempt of attempts) {
-    const sources = select(pool, attempt.filter, {
-      profile: plan.retrievalProfile,
-      maxPerPage,
-      targetSources,
-      preferredLang: plan.language,
-    });
+    const sources = select(pool, attempt.filter, selectOptions);
     if (sources.length >= minimumSources) {
       return finish(sources, attempt.stage);
     }

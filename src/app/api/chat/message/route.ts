@@ -146,7 +146,7 @@ export async function POST(
   let retrievalStage: string = "none";
   let queries: string[] = [];
   try {
-    const retrieved = await retrieve({ plan });
+    const retrieved = await retrieve({ plan, userMessage: message });
     sources = retrieved.sources;
     retrievalMs = retrieved.latencyMs;
     retrievalStage = retrieved.stage;

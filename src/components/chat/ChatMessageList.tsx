@@ -280,7 +280,11 @@ export default function ChatMessageList({
           border-top: 1px solid var(--border);
           font-size: 0.74rem;
           line-height: 1.5;
-          color: var(--text-soft);
+          /* --text-soft would be the usual choice at this size, but it lands
+             around 3.4:1 on the panel — under AA. This one line is where we tell
+             the visitor an AI wrote the answer, so it is the last line that may
+             be hard to read; --text-mid keeps the quiet hierarchy and passes. */
+          color: var(--text-mid);
         }
         .tb-degraded {
           font-size: 0.85rem;
